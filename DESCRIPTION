@@ -2,7 +2,7 @@ Package: AGHmatrix
 Version: 0.17
 Date: 22/jan/2015
 Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
-    by G) matrices for diploid and autotetraploid species.
+    by G) matrices for diploid and autotetraploid species. A matrix is fully working.
 Authors: Rodrigo R Amadeu, Catherine Cellon, Patricio R Munoz, Antonio A F Garcia
 Maintainer: Rodrigo R Amadeu <rramadeu@gmail.com>
 RoxygenNote: 5.0.1
