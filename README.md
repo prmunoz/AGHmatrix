@@ -5,8 +5,6 @@ The orignal manuscript about `AGHmatrix` development and application has just be
 
 This github page is under develpment and is based upon the `OneMap` (https://github.com/augusto-garcia/onemap) software git.
 
-Please go to the tutorial inside the vignettes folder for more information.
-
 # How to install
 
 ## From github
@@ -30,3 +28,5 @@ Then, to install `AGHmatrix` from github:
 ```R
 install_github("prmunoz/AGHmatrix")
 ```
+
+Please go to the tutorial inside the vignettes folder for a complete tutorial.
