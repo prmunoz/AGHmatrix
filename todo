@@ -1,0 +1,17 @@
+To Fix
++ Round 12 as default. **DONE**
++ Add devtools option for install the package in the tutorial **DONE**
++ Remake the tutorial using Statgen Template **DONE**
++ Check all the functions
++ Simulate Molecular Data for the ped.mrode
++ Doublecheck/Rewrite the Molecular Matrix
++ Include the graphical part/trees in the package - look at dendextend package!
++ Verify Function data.treat, it is not letting in chronological order! Use new blueberry data to verify it.
++ How to treat duplicate data in the pedigree?! Little thing
+
+1st UPDATE
++ Include Dominance Model for Diploid Pedigree (as in Mrode)
++ Include Dominance Model for Molecular Markers
+
+
+Fix the order of algoritm

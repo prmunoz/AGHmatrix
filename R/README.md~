@@ -1,0 +1,2 @@
+# AGH-matrix
+This R package aims to compute A (pedigree), G (genomic-base), and H (A corrected by G) matrices for diploid and autotetraploid species to later be used in prediction models.
