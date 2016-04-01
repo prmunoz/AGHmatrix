@@ -4,28 +4,32 @@
 \alias{Gmatrix}
 \title{Construction of Relationship Matrix G}
 \usage{
-Gmatrix(SNPdata = NULL, SNPfile = NULL, method = 2, missingValue = NA,
-  maf = 0.05)
+Gmatrix(SNPdata = NULL, method = 2, missingValue = NA, maf = 0,
+  verify.posdef = TRUE)
 }
 \arguments{
-\item{SNPdata}{data from 'converttofrequency' function.}
+\item{SNPdata}{matrix (n x m), where n is marker information (coded as 0,1,2,NA) and m is individual names (a string).}
 
-\item{SNPfile}{file created with 'converttofrequency' function.}
+\item{method}{"Powell" (1), "VanRaden" (2), shared markers between individual (3). Default=2.}
 
-\item{method}{"Powell" (1), "VanRaden" (2), shared markers (3). Default=2.}
+\item{missingValue}{missing value in data. Default=NA.}
 
-\item{missingValue}{which is the missing value in data. Default=NA.}
+\item{maf}{max of missing data accepted to each marker. Default=0.}
 
-\item{maf}{max of missing data accepted to each marker. Default=0.05.}
+\item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=TRUE.}
 }
 \value{
 Matrix with the Relationship between the individuals
 }
 \description{
-Given a molecular data from 'converttofrequency' function and choosing a method ((1) Powell or (2) VanRaden), a missing value, and a maf threshold, return a G matrix. Also the function can calculate the number of markers shared two-by-two individuals (method 3)
+Given a matrix (markers x individual) choosing a method ((1) Powell or (2) VanRaden), a missing value, and a maf threshold, return a G matrix. Also the function can calculate the number of markers shared two-by-two individuals (method 3).
 }
 \examples{
-Gmatrix()
+data(snp.table)
+#Verifying if data is coded as 0,1,2 and missing value.
+snp.table
+#Build Gmatrix
+Gmatrix(snp.table,missingValue=-9)
 
 }
 \author{

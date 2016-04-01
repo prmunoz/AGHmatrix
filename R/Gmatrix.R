@@ -8,24 +8,29 @@
 # Written by Rodrigo Rampazo Amadeu 					#
 # 									#
 # First version: Feb-2014 						#
-# Last update: 14-Apr-2015 						#
+# Last update: 31-Mar-2016 						#
 # License: GNU General Public License version 2 (June, 1991) or later 	#
 # 									#
 #########################################################################
 
 #' Construction of Relationship Matrix G
 #'
-#' Given a molecular data from 'converttofrequency' function and choosing a method ((1) Powell or (2) VanRaden), a missing value, and a maf threshold, return a G matrix. Also the function can calculate the number of markers shared two-by-two individuals (method 3)
+#' Given a matrix (markers x individual) choosing a method ((1) Powell or (2) VanRaden), a missing value, and a maf threshold, return a G matrix. Also the function can calculate the number of markers shared two-by-two individuals (method 3).
 #'
-#' @param SNPdata data from 'converttofrequency' function.
-#' @param SNPfile file created with 'converttofrequency' function.
-#' @param method "Powell" (1), "VanRaden" (2), shared markers (3). Default=2.
-#' @param missingValue which is the missing value in data. Default=NA.
-#' @param maf max of missing data accepted to each marker. Default=0.05.
+#' @param SNPdata matrix (n x m), where n is marker information (coded as 0,1,2,NA) and m is individual names (a string). 
+#' @param method "Powell" (1), "VanRaden" (2), shared markers between individual (3). Default=2.
+#' @param missingValue missing value in data. Default=NA.
+#' @param maf max of missing data accepted to each marker. Default=0.
+#' @param verify.posdef verify if the resulting matrix is positive-definite. Default=TRUE.
 #'
 #' @return Matrix with the Relationship between the individuals
 #'
-#' @examples Gmatrix()
+#' @examples
+#' data(snp.table)
+#' #Verifying if data is coded as 0,1,2 and missing value.
+#' snp.table
+#' #Build Gmatrix
+#' Gmatrix(snp.table,missingValue=-9)
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #'
@@ -35,27 +40,18 @@
 #' @export
 
 Gmatrix = function( SNPdata = NULL,
-                    SNPfile = NULL,
                     method = 2,
-                    missingValue=NA,
-                    maf = 0.05){
+                    missingValue = NA,
+                    maf = 0,
+                    verify.posdef=TRUE){
 
     Time = proc.time()
 
-    if(is.null(SNPdata)&is.null(SNPfile)){
-        stop(deparse("Please define the variable SNPdata or the path for SNPfile"))
+    if(is.null(SNPdata)){
+        stop(deparse("Please define the variable SNPdata"))
     }
-    if(!is.null(SNPdata)&!is.null(SNPfile)){
-        stop(deparse("SNPdata and SNPfile are mutually exclusive. Please choose only one."))
-  }
     if (missing(missingValue)){ stop(deparse("missingValue not defined"))}
-
-    if (!is.null(SNPdata)){
-        SNPdata = as.matrix(SNPdata)
-    } else {
-        file = read.csv(SNPfile,header = TRUE,check.names = FALSE,row.names = 1)
-        SNPdata = as.matrix(file)
-    }
+    
     if(method==1)
         method="Powell"
     if(method==2)
@@ -65,68 +61,93 @@ Gmatrix = function( SNPdata = NULL,
 
     if (all(method != c("Powell","VanRaden","MarkersMatrix"))){ stop("Method to build Gmatrix has to be either (1) Powell or (2) VanRaden or (3) for the Amount of Markers Between Individuals  Matrix") }
 
-    SNPmatrix = matrix(as.numeric(SNPdata),ncol = ncol(SNPdata),dimnames = list(c(rownames(SNPdata)),c(colnames(SNPdata))))
+    SNPmatrix = as.matrix(SNPdata)
 
     if (!is.na(missingValue)){
         m <- match(SNPmatrix, missingValue ,0)
         SNPmatrix[m > 0] <- NA
     }
 
-    NumberMarkers = ncol(SNPmatrix)
-    nindTotal = colSums(!is.na(SNPmatrix))
+    NumberMarkers = nrow(SNPmatrix)
+    nindTotal = rowSums(!is.na(SNPmatrix))
+    nindAbs = max(nindTotal)
 
-    cat("	Number of Markers:",max(NumberMarkers),"\n")
-    cat("	Number of Individuals:",max(nindTotal),"\n\n")
+    cat("	Number of Markers:", NumberMarkers ,"\n")
+    cat("	Number of Individuals:", max(nindTotal),"\n\n")
 
-    alelleFreq = colSums(SNPmatrix,na.rm=TRUE)/nindTotal
+    alelleFreq = rowSums(SNPmatrix,na.rm=TRUE)/(2*nindTotal)
 
-    if( maf > 0){
-        exclude <- c(which(alelleFreq<=maf),which(alelleFreq>=(1-maf)))
+    ##############################################
+    #Swap major with minor alelle (0,1,2 to 2,1,0)
+    major.minor <- which(alelleFreq < 0.5)
+    if( length(major.minor>0) )
+        SNPmatrix[major.minor,] <- 1+ (SNPmatrix[major.minor,] - 1)*-1
+    ##############################################
+   
+    if( maf == 0){
+        exclude <- c(which(alelleFreq==0))
+
         if(length(exclude)>0){
-            SNPmatrix <- SNPmatrix[,-exclude]
-            alelleFreq = alelleFreq[-exclude]
+            SNPmatrix <- SNPmatrix[-exclude]
+            alelleFreq <- alelleFreq[-exclude]
+        }
+    }
+    
+    if( maf > 0){
+        exclude <- c(which(alelleFreq<maf),which(alelleFreq>(1-maf)))
+        if(length(exclude)>0){
+            SNPmatrix <- SNPmatrix[-exclude,]
+            alelleFreq = alelleFreq[-exclude,]
         }
     }
 
     if(method=="MarkersMatrix"){ #calculate the number of markers for each ind pair
-        Gmatrix <- t(!is.na(SNPmatrix))
+        Gmatrix <- !is.na(SNPmatrix)
         Gmatrix <- crossprod(Gmatrix,Gmatrix)
         return(Gmatrix)
     }
 
-    NumberMarkers = ncol(SNPmatrix)
+    NumberMarkers = nrow(SNPmatrix)
 
     Frequency = cbind((1-alelleFreq),alelleFreq)
     FreqP<-alelleFreq
 
-    Pmatrix <- matrix(rep(alelleFreq,max(nindTotal)),nrow=max(nindTotal),byrow=TRUE)
+#    Pmatrix <- matrix(rep(alelleFreq,max(nindTotal)),nrow=max(nindTotal),byrow=TRUE)
+    Pmatrix <- matrix(rep(alelleFreq,max(nindTotal)),ncol=max(nindTotal))
+    
 
     if( method=="VanRaden"){
-        Zmatrix <- 2*(SNPmatrix-Pmatrix)
+        Zmatrix <- SNPmatrix-2*Pmatrix
         Zmatrix[is.na(Zmatrix)] = 0 #Missing Values
-        Gmatrix <- crossprod(t(Zmatrix),t(Zmatrix))
+        Gmatrix <- crossprod(Zmatrix,Zmatrix)
         sumpi <- sum(alelleFreq*(1-alelleFreq))
         Gmatrix <- Gmatrix/(2*sumpi)
     }
 
     if( method == "Powell"){
-        SNPmatrix <- t(SNPmatrix)
-        SNP.Visscher <- 2*as.matrix(t(SNPmatrix))
-        FreqPQ = matrix(rep(2*Frequency[,1] * Frequency[,2],each = ncol(SNPmatrix)),ncol = nrow(SNPmatrix))
+        SNP.Visscher <- SNPmatrix
+        FreqPQ = matrix(rep(2*Frequency[,1] * Frequency[,2],nindAbs),ncol=nindAbs)
         G.all = (SNP.Visscher^2 - (1+2*Pmatrix)*SNP.Visscher + 2*Pmatrix^2)/FreqPQ
-        G.ii = as.matrix(colSums(t(G.all),na.rm = T))
         SNP.Visscher= (SNP.Visscher-(2*Pmatrix))/sqrt(FreqPQ)
-        G.ii.hat = 1+(G.ii)/max(NumberMarkers)
         SNP.Visscher[is.na(SNP.Visscher)] <- 0
-        Gmatrix = (crossprod(t(SNP.Visscher),t(SNP.Visscher)))/max(NumberMarkers)
+        Gmatrix = (crossprod(SNP.Visscher,SNP.Visscher))/max(NumberMarkers)
+      
+        G.ii = as.matrix(colSums(G.all,na.rm = T))
+        G.ii.hat = 1+(G.ii)/max(NumberMarkers)
         diag(Gmatrix) = G.ii.hat
     }
-
+    
+   ##############################################
+   #Verifying if it is positive definite
+    if( verify.posdef ){
+        e.values<-eigen(Gmatrix,symmetric=TRUE)$values
+        indicator<-length(which(e.values <= 0))
+        if( indicator > 0)
+            cat("Matrix is NOT posiive definite. It has ", indicator," eigenvalues <= 0")
+    }
+     ##############################################
 
     Time = as.matrix(proc.time()-Time)
     cat("Completed! Time =", Time[3]," seconds \n")
     return(Gmatrix)
-
-                                        # save(output, file=paste("Gmatrix_",method,".RData",sep=""))
-   # print(paste("Saved  as 'Gmatrix_",method,".RData",sep=""))
 }
