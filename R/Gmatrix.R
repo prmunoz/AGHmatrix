@@ -88,7 +88,7 @@ Gmatrix = function( SNPdata = NULL,
         exclude <- c(which(alelleFreq==0))
 
         if(length(exclude)>0){
-            SNPmatrix <- SNPmatrix[-exclude]
+            SNPmatrix <- SNPmatrix[-exclude,]
             alelleFreq <- alelleFreq[-exclude]
         }
     }
@@ -97,7 +97,7 @@ Gmatrix = function( SNPdata = NULL,
         exclude <- c(which(alelleFreq<maf),which(alelleFreq>(1-maf)))
         if(length(exclude)>0){
             SNPmatrix <- SNPmatrix[-exclude,]
-            alelleFreq = alelleFreq[-exclude,]
+            alelleFreq = alelleFreq[-exclude]
         }
     }
 
