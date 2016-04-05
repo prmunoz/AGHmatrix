@@ -72,8 +72,8 @@ Gmatrix = function( SNPdata = NULL,
     nindTotal = rowSums(!is.na(SNPmatrix))
     nindAbs = max(nindTotal)
 
-    cat("	Number of Markers:", NumberMarkers ,"\n")
     cat("	Number of Individuals:", max(nindTotal),"\n\n")
+    cat("	Number of Markers:", NumberMarkers ,"\n")
 
     alelleFreq = rowSums(SNPmatrix,na.rm=TRUE)/(2*nindTotal)
 
@@ -98,7 +98,9 @@ Gmatrix = function( SNPdata = NULL,
         if(length(exclude)>0){
             SNPmatrix <- SNPmatrix[-exclude,]
             alelleFreq = alelleFreq[-exclude]
+            NumberMarkers = nrow(SNPmatrix)
         }
+        cat("	Number of Markers after maf:", NumberMarkers ,"\n")
     }
 
     if(method=="MarkersMatrix"){ #calculate the number of markers for each ind pair
