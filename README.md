@@ -30,5 +30,5 @@ Then, to install `AGHmatrix` from github:
 install_github("prmunoz/AGHmatrix")
 ```
 
-Please go to the tutorial inside the vignettes folder for a complete tutorial.
+Please go to the tutorial inside the vignettes folder for a complete tutorial!
 
