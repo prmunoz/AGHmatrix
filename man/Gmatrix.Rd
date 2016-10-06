@@ -33,7 +33,7 @@ Gmatrix(snp.table,missingValue=-9)
 
 }
 \author{
-Rodrigo R Amadeu, \email{rramadeu@gmail.com}
+Rodrigo R Amadeu, \email{rramadeu@gmail.com} and Marcio Resende Jr.
 }
 \references{
 \emph{Van Raden, P. M. (2008). Efficient methods to compute genomic predictions. Journal of Dairy Science, 91(11), 4414-4423.}
