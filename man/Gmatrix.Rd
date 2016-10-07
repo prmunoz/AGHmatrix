@@ -4,15 +4,15 @@
 \alias{Gmatrix}
 \title{Construction of Relationship Matrix G}
 \usage{
-Gmatrix(SNPdata = NULL, method = 2, missingValue = NA, maf = 0,
+Gmatrix(SNPdata = NULL, method = 2, missingValue = -9, maf = 0,
   verify.posdef = TRUE)
 }
 \arguments{
-\item{SNPdata}{matrix (n x m), where n is marker information (coded as 0,1,2,NA) and m is individual names (a string).}
+\item{SNPdata}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0,1,2,missingValue).}
 
 \item{method}{"Powell" (1), "VanRaden" (2), shared markers between individual (3). Default=2.}
 
-\item{missingValue}{missing value in data. Default=NA.}
+\item{missingValue}{missing value in data. Default=-9.}
 
 \item{maf}{max of missing data accepted to each marker. Default=0.}
 
@@ -22,14 +22,14 @@ Gmatrix(SNPdata = NULL, method = 2, missingValue = NA, maf = 0,
 Matrix with the Relationship between the individuals
 }
 \description{
-Given a matrix (markers x individual) choosing a method ((1) Powell or (2) VanRaden), a missing value, and a maf threshold, return a G matrix. Also the function can calculate the number of markers shared two-by-two individuals (method 3).
+Given a matrix (individual x markers), a method ((1) Powell or (2) VanRaden), a missing value, and a maf threshold, return a G matrix. Also the function can calculate the number of markers shared two-by-two individuals (method 3).
 }
 \examples{
-data(snp.table)
+data(snp.pine)
 #Verifying if data is coded as 0,1,2 and missing value.
-snp.table
+str(snp.pine)
 #Build Gmatrix
-Gmatrix(snp.table,missingValue=-9)
+PineGmatrix <- Gmatrix(snp.pine,missingValue=-9,maf=0.05)
 
 }
 \author{
