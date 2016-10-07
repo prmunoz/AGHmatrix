@@ -4,11 +4,11 @@
 \alias{Gmatrix}
 \title{Construction of Relationship Matrix G}
 \usage{
-Gmatrix(SNPdata = NULL, method = 2, missingValue = -9, maf = 0,
+Gmatrix(SNPmatrix = NULL, method = 2, missingValue = -9, maf = 0,
   verify.posdef = TRUE)
 }
 \arguments{
-\item{SNPdata}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0,1,2,missingValue).}
+\item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0,1,2,missingValue).}
 
 \item{method}{"Powell" (1), "VanRaden" (2), shared markers between individual (3). Default=2.}
 

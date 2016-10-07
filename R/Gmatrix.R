@@ -17,7 +17,7 @@
 #'
 #' Given a matrix (individual x markers), a method ((1) Powell or (2) VanRaden), a missing value, and a maf threshold, return a G matrix. Also the function can calculate the number of markers shared two-by-two individuals (method 3).
 #'
-#' @param SNPdata matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0,1,2,missingValue). 
+#' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0,1,2,missingValue). 
 #' @param method "Powell" (1), "VanRaden" (2), shared markers between individual (3). Default=2.
 #' @param missingValue missing value in data. Default=-9.
 #' @param maf max of missing data accepted to each marker. Default=0.
@@ -39,10 +39,10 @@
 #'
 #' @export
 
-Gmatrix <- function (SNPdata = NULL, method = 2, missingValue = -9, maf = 0, verify.posdef = TRUE) 
+Gmatrix <- function (SNPmatrix = NULL, method = 2, missingValue = -9, maf = 0, verify.posdef = TRUE) 
 {
     Time = proc.time()
-    if (is.null(SNPdata)) {
+    if (is.null(SNPmatrix)) {
         stop(deparse("Please define the variable SNPdata"))
     }
     if (missing(missingValue)) {
