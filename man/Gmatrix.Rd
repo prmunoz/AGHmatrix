@@ -4,40 +4,44 @@
 \alias{Gmatrix}
 \title{Construction of Relationship Matrix G}
 \usage{
-Gmatrix(SNPmatrix = NULL, method = 2, missingValue = -9, maf = 0,
+Gmatrix(SNPmatrix = NULL, method = "Yang", missingValue = -9, maf = 0,
   verify.posdef = TRUE)
 }
 \arguments{
-\item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0,1,2,missingValue).}
+\item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, missingValue).}
 
-\item{method}{"Powell" (1), "VanRaden" (2), shared markers between individual (3). Default=2.}
+\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default="Yang".}
 
 \item{missingValue}{missing value in data. Default=-9.}
 
-\item{maf}{max of missing data accepted to each marker. Default=0.}
+\item{maf}{max of missing data accepted to each marker. Default=0.05.}
 
 \item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=TRUE.}
 }
 \value{
-Matrix with the Relationship between the individuals
+Matrix with the marker-bases relationships between the individuals
 }
 \description{
-Given a matrix (individual x markers), a method ((1) Powell or (2) VanRaden), a missing value, and a maf threshold, return a G matrix. Also the function can calculate the number of markers shared two-by-two individuals (method 3).
+Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or dominance relationship matrix.
 }
 \examples{
 data(snp.pine)
 #Verifying if data is coded as 0,1,2 and missing value.
 str(snp.pine)
 #Build Gmatrix
-PineGmatrix <- Gmatrix(snp.pine,missingValue=-9,maf=0.05)
+Gmatrix.Yang <- Gmatrix(snp.pine,method="Yang",missingValue=-9,maf=0.05) 
 
 }
 \author{
-Rodrigo R Amadeu, \email{rramadeu@gmail.com} and Marcio Resende Jr.
+Rodrigo R Amadeu \email{rramadeu@gmail.com} and Marcio Resende Jr.
 }
 \references{
-\emph{Van Raden, P. M. (2008). Efficient methods to compute genomic predictions. Journal of Dairy Science, 91(11), 4414-4423.}
+\emph{Su, G., Christensen, O.F., Ostersen, T., Henryon, M. and Lund, M.S., 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
 
-\emph{Powell, J. E. (2010). Reconciling the analysis of IBD and IBS in complex trait studies. Nature Reviews Genetics, 11(11), 800-805.}
+\emph{VanRaden, P.M., 2008. Efficient methods to compute genomic predictions. Journal of dairy science, 91(11), pp.4414-4423.}
+
+\emph{Vitezica, Z.G., Varona, L. and Legarra, A., 2013. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genetics, 195(4), pp.1223-1230.}
+
+\emph{Yang, J., Benyamin, B., McEvoy, B.P., Gordon, S., Henders, A.K., Nyholt, D.R., Madden, P.A., Heath, A.C., Martin, N.G., Montgomery, G.W. and Goddard, M.E., 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
 }
 

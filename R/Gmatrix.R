@@ -8,54 +8,49 @@
 # Written by Rodrigo Rampazo Amadeu and Marcio Resende Jr.		#
 # 									#
 # First version: Feb-2014 						#
-# Last update: 06-Oct-2016 						#
+# Last update: 08-Oct-2016 						#
 # License: GNU General Public License version 2 (June, 1991) or later 	#
 # 									#
 #########################################################################
 
 #' Construction of Relationship Matrix G
 #'
-#' Given a matrix (individual x markers), a method ((1) Powell or (2) VanRaden), a missing value, and a maf threshold, return a G matrix. Also the function can calculate the number of markers shared two-by-two individuals (method 3).
+#' Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or dominance relationship matrix.
 #'
-#' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0,1,2,missingValue). 
-#' @param method "Powell" (1), "VanRaden" (2), shared markers between individual (3). Default=2.
+#' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, missingValue). 
+#' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default="Yang".
 #' @param missingValue missing value in data. Default=-9.
-#' @param maf max of missing data accepted to each marker. Default=0.
+#' @param maf max of missing data accepted to each marker. Default=0.05.
 #' @param verify.posdef verify if the resulting matrix is positive-definite. Default=TRUE.
 #'
-#' @return Matrix with the Relationship between the individuals
+#' @return Matrix with the marker-bases relationships between the individuals
 #'
 #' @examples
 #' data(snp.pine)
 #' #Verifying if data is coded as 0,1,2 and missing value.
 #' str(snp.pine)
 #' #Build Gmatrix
-#' PineGmatrix <- Gmatrix(snp.pine,missingValue=-9,maf=0.05)
-#'
-#' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com} and Marcio Resende Jr.
-#'
-#' @references \emph{Van Raden, P. M. (2008). Efficient methods to compute genomic predictions. Journal of Dairy Science, 91(11), 4414-4423.}
-#' @references \emph{Powell, J. E. (2010). Reconciling the analysis of IBD and IBS in complex trait studies. Nature Reviews Genetics, 11(11), 800-805.}
+#' Gmatrix.Yang <- Gmatrix(snp.pine,method="Yang",missingValue=-9,maf=0.05) 
+#' 
+#' @author Rodrigo R Amadeu \email{rramadeu@@gmail.com} and Marcio Resende Jr.
+#' 
+#' @references \emph{Su, G., Christensen, O.F., Ostersen, T., Henryon, M. and Lund, M.S., 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
+#' @references \emph{VanRaden, P.M., 2008. Efficient methods to compute genomic predictions. Journal of dairy science, 91(11), pp.4414-4423.}
+#' @references \emph{Vitezica, Z.G., Varona, L. and Legarra, A., 2013. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genetics, 195(4), pp.1223-1230.}
+#' @references \emph{Yang, J., Benyamin, B., McEvoy, B.P., Gordon, S., Henders, A.K., Nyholt, D.R., Madden, P.A., Heath, A.C., Martin, N.G., Montgomery, G.W. and Goddard, M.E., 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
 #'
 #' @export
 
-Gmatrix <- function (SNPmatrix = NULL, method = 2, missingValue = -9, maf = 0, verify.posdef = TRUE) 
+Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf = 0, verify.posdef = TRUE) 
 {
     Time = proc.time()
     if (is.null(SNPmatrix)) {
         stop(deparse("Please define the variable SNPdata"))
     }
-    if (missing(missingValue)) {
-        stop(deparse("missingValue not defined"))
-    }
-    if (method == 1) 
-        method = "Powell"
-    if (method == 2) 
-        method = "VanRaden"
-    if (method == 3) 
-        method = "MarkersMatrix"
-    if (all(method != c("Powell", "VanRaden", "MarkersMatrix"))) {
-        stop("Method to build Gmatrix has to be either (1) Powell or (2) VanRaden or (3) for the Amount of Markers Between Individuals  Matrix")
+    if (all(method != c("Yang", "VanRaden", "Su", "Vitezica", "MarkersMatrix"))) {
+        stop("Method to build Gmatrix has to be either `Yang` or `VanRaden` for marker-based additive relationship matrix, or
+`Su` or `Vitezica` for marker-based dominance relationship matrx, or
+ `MarkersMatrix` for the a matrix with amount of shared-marks by individuals pairs")
     }
     if(class(SNPmatrix)!="matrix"){
         cat("SNPmatrix class is:",class(SNPmatrix),"\n")
@@ -93,12 +88,11 @@ Gmatrix <- function (SNPmatrix = NULL, method = 2, missingValue = -9, maf = 0, v
         return(Gmatrix)
     }
     if (method == "VanRaden") {
-       # SNP.VanRaden = SNPmatrix
         SNPmatrix = SNPmatrix- 2 * FreqP
         SNPmatrix[is.na(SNPmatrix)] <- 0
         Gmatrix = (tcrossprod(SNPmatrix, SNPmatrix))/as.numeric(Sum2pq)
     }
-    if (method == "Powell") {
+    if (method == "Yang") {
         FreqPQ = matrix(rep(2 * Frequency[, 1] * Frequency[, 
             2], each = nrow(SNPmatrix)), ncol = ncol(SNPmatrix))
         G.all = (SNPmatrix^2 - (1 + 2 * FreqP) * SNPmatrix + 
@@ -110,11 +104,27 @@ Gmatrix <- function (SNPmatrix = NULL, method = 2, missingValue = -9, maf = 0, v
         Gmatrix = (tcrossprod(SNPmatrix, SNPmatrix))/NumberMarkers
         diag(Gmatrix) = G.ii.hat
     }
+    if (method == "Su"){
+        TwoPQ <- 2*(FreqP)*(1-FreqP)
+        SNPmatrix[SNPmatrix==2 | SNPmatrix==0] <- 0
+        SNPmatrix <- SNPmatrix - TwoPQ
+        SNPmatrix[is.na(SNPmatrix)] <- 0
+        Gmatrix <- tcrossprod(SNPmatrix,SNPmatrix)/
+            sum(TwoPQ[1,]*(1-TwoPQ[1,]))        
+    }
+    if (method == "Vitezica"){
+        TwoPQ <- 2*(FreqP[1,])*(1-FreqP[1,])
+        SNPmatrix[is.na(SNPmatrix)] <- -9
+        SNPmatrix <- (SNPmatrix==0)*-2*(FreqP^2) +
+            (SNPmatrix==1)*2*(FreqP)*(1-FreqP) +
+            (SNPmatrix==2)*-2*((1-FreqP)^2)
+        Gmatrix <- tcrossprod(SNPmatrix,SNPmatrix)/sum(TwoPQ^2)
+    }
     if (verify.posdef) {
         e.values <- eigen(Gmatrix, symmetric = TRUE)$values
         indicator <- length(which(e.values <= 0))
         if (indicator > 0) 
-            cat("\t Matrix is NOT posiive definite. It has ", indicator, 
+            cat("\t Matrix is NOT positive definite. It has ", indicator, 
                 " eigenvalues <= 0 \n \n")
     }
     Time = as.matrix(proc.time() - Time)
