@@ -8,21 +8,22 @@
 # Written by Rodrigo Rampazo Amadeu 					#
 # 									#
 # First version: Feb-2014 						#
-# Last update: 14-Apr-2015 						#
+# Last update: 09-Oct-2015 						#
 # License: GNU General Public License version 2 (June, 1991) or later 	#
 # 									#
 #########################################################################
 
 #' Construction of Relationship Matrix A
 #'
-#' Creates a Relationship Matrix A from a pedigree data in a 3-column way format based on ploidy level (2 or 4) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction.
+#' Creates a additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (2 or 4) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only). 
 #'
 #' @param data pedigree data name (3-column way format).
 #' @param ploidy 2 or 4 (default=2).
 #' @param w proportion of parental gametas IBD due to double reduction (default=0). 
 #' @param unk string or number indicating the unknown value related in the pedigree file (default=0).
 #' @param verify verifies pedigree file for conflictuos entries (default=TRUE).
-#'
+#' @param dominance if true, returns the dominance relationship matrix
+#' 
 #' @return Matrix with the Relationship between the individuals.
 #'
 #' @examples
@@ -34,7 +35,7 @@
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #'
-#' @references \emph{Chapter 2: Genetic Covariance Between Relatives in Mrode, R. A., and Thompson, R. Linear models for the prediction of animal breeding values. Cabi, 2005.}
+#' @references \emph{Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, R. A., and Thompson, R. Linear models for the prediction of animal breeding values. Cabi, 2005.}
 #' @references \emph{Slater, A. T., Wilson, G. M., Cogan, N. O., Forster, J. W., & Hayes, B. J. (2013). Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and Applied Genetics, 1-12.}
 #'
 #' @export
@@ -43,11 +44,15 @@ Amatrix <- function(data = NULL,
                     ploidy=2,
                     w=0,
                     unk=0,
-		    verify=TRUE)
+		    verify=TRUE,
+                    dominance=FALSE)
     {
   if(ploidy!=2)
       if(ploidy!=4)
           stop(deparse("Ploidy should be 2 or 4"))
+
+  if(ploidy==4 & dominance)
+      stop(deparse("Dominance relationship matrix is implemented only for ploidy=2"))
 
   if( is.null(data))
     stop(deparse("Please define the variable data"))
@@ -122,8 +127,21 @@ Amatrix <- function(data = NULL,
   if( length(NA.errors) > 0 )
       cat("Please verify your original data with the function 'verifyped', there are some data missing/conflicting data \n")
 
+  if(dominance){
+      cat("Constructing dominance relationship matrix \n")
+      D <- matrix(NA,ncol=n,nrow=n)
+      for(i in 1:n)
+          for(j in 1:n){
+              u1 <- ifelse(length(A[s[i],s[j]])>0,A[s[i],s[j]],0)
+              u2 <- ifelse(length(A[d[i],d[j]])>0,A[d[i],d[j]],0)
+              u3 <- ifelse(length(A[s[i],d[j]])>0,A[s[i],d[j]],0)
+              u4 <- ifelse(length(A[s[j],d[i]])>0,A[s[j],d[i]],0)
+              D[i,j] <- D[j,i] <- 0.25*(u1*u2+u3*u4)
+          }
+      A<-D
+      D<-NULL
   }
-
+}
 #### For ploidy 4 ####
   if(ploidy == 4){
     listA <- list()
