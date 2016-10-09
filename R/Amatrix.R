@@ -130,7 +130,7 @@ Amatrix <- function(data = NULL,
   if(dominance){
       cat("Constructing dominance relationship matrix \n")
       D <- matrix(NA,ncol=n,nrow=n)
-      for(i in 1:n)
+      for(i in 1:n){
           for(j in 1:n){
               u1 <- ifelse(length(A[s[i],s[j]])>0,A[s[i],s[j]],0)
               u2 <- ifelse(length(A[d[i],d[j]])>0,A[d[i],d[j]],0)
@@ -138,6 +138,8 @@ Amatrix <- function(data = NULL,
               u4 <- ifelse(length(A[s[j],d[i]])>0,A[s[j],d[i]],0)
               D[i,j] <- D[j,i] <- 0.25*(u1*u2+u3*u4)
           }
+	}
+      diag(D)<-1
       A<-D
       D<-NULL
   }
