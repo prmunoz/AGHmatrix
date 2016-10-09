@@ -79,7 +79,6 @@ Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf =
             maf), ])
         NumberMarkers = ncol(SNPmatrix)
     }
-    Sum2pq = 2 * t(Frequency[, 1]) %*% Frequency[, 2]
     FreqP = matrix(rep(Frequency[, 2], each = nrow(SNPmatrix)), 
         ncol = ncol(SNPmatrix))
     if (method == "MarkersMatrix") {
@@ -88,13 +87,13 @@ Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf =
         return(Gmatrix)
     }
     if (method == "VanRaden") {
+        Sum2pq = 2 * crossprod(Frequency[,1],Frequency[,2])
         SNPmatrix = SNPmatrix- 2 * FreqP
         SNPmatrix[is.na(SNPmatrix)] <- 0
         Gmatrix = (tcrossprod(SNPmatrix, SNPmatrix))/as.numeric(Sum2pq)
     }
     if (method == "Yang") {
-        FreqPQ = matrix(rep(2 * Frequency[, 1] * Frequency[, 
-            2], each = nrow(SNPmatrix)), ncol = ncol(SNPmatrix))
+        FreqPQ = matrix(rep(2 * Frequency[, 1] * Frequency[,2], each = nrow(SNPmatrix)), ncol = ncol(SNPmatrix))
         G.all = (SNPmatrix^2 - (1 + 2 * FreqP) * SNPmatrix + 
             2 * FreqP^2)/FreqPQ
         G.ii = as.matrix(colSums(t(G.all), na.rm = T))
