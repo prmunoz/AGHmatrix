@@ -1,6 +1,6 @@
 Package: AGHmatrix
 Version: 0.18
-Date: 09/oct/2016
+Date: 29/sep/2016
 Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
     by G) matrices for diploid and autotetraploid species.
 Authors: Rodrigo R Amadeu, Marcio Resende Jr, Catherine Cellon, Patricio R Munoz, Antonio A F Garcia

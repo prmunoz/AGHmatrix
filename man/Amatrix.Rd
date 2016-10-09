@@ -4,7 +4,8 @@
 \alias{Amatrix}
 \title{Construction of Relationship Matrix A}
 \usage{
-Amatrix(data = NULL, ploidy = 2, w = 0, unk = 0, verify = TRUE)
+Amatrix(data = NULL, ploidy = 2, w = 0, unk = 0, verify = TRUE,
+  dominance = FALSE)
 }
 \arguments{
 \item{data}{pedigree data name (3-column way format).}
@@ -16,12 +17,14 @@ Amatrix(data = NULL, ploidy = 2, w = 0, unk = 0, verify = TRUE)
 \item{unk}{string or number indicating the unknown value related in the pedigree file (default=0).}
 
 \item{verify}{verifies pedigree file for conflictuos entries (default=TRUE).}
+
+\item{dominance}{if true, returns the dominance relationship matrix}
 }
 \value{
 Matrix with the Relationship between the individuals.
 }
 \description{
-Creates a Relationship Matrix A from a pedigree data in a 3-column way format based on ploidy level (2 or 4) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction.
+Creates a additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (2 or 4) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only).
 }
 \examples{
 data(ped.mrode)
@@ -35,7 +38,7 @@ Amatrix(data=ped.mrode,ploidy=4,w=0.1,unk=0)
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}
 }
 \references{
-\emph{Chapter 2: Genetic Covariance Between Relatives in Mrode, R. A., and Thompson, R. Linear models for the prediction of animal breeding values. Cabi, 2005.}
+\emph{Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, R. A., and Thompson, R. Linear models for the prediction of animal breeding values. Cabi, 2005.}
 
 \emph{Slater, A. T., Wilson, G. M., Cogan, N. O., Forster, J. W., & Hayes, B. J. (2013). Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and Applied Genetics, 1-12.}
 }
