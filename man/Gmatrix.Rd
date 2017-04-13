@@ -5,24 +5,26 @@
 \title{Construction of Relationship Matrix G}
 \usage{
 Gmatrix(SNPmatrix = NULL, method = "Yang", missingValue = -9, maf = 0,
-  verify.posdef = TRUE)
+  verify.posdef = TRUE, ploidy = 2)
 }
 \arguments{
 \item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, missingValue).}
 
-\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default="Yang".}
+\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default="Yang".}
 
 \item{missingValue}{missing value in data. Default=-9.}
 
 \item{maf}{max of missing data accepted to each marker. Default=0.05.}
 
 \item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=TRUE.}
+
+\item{ploidy}{data ploidy (an even number between 2 and 20). Default=2.}
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
 }
 \description{
-Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or dominance relationship matrix.
+Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or dominance relationship matrix. Uses pseudodiploid model (Slater, 2016) on polyploid data for methods "Yang", "VanRaden", "Su" and "Vitezica".
 }
 \examples{
 data(snp.pine)
@@ -33,9 +35,11 @@ Gmatrix.Yang <- Gmatrix(snp.pine,method="Yang",missingValue=-9,maf=0.05)
 
 }
 \author{
-Rodrigo R Amadeu \email{rramadeu@gmail.com} and Marcio Resende Jr.
+Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, and Letícia Aparecida de Castro Lara
 }
 \references{
+\emph{Slater, A.T., Cogan, N.O., Forster, J.W., Hayes, B.J., Daetwyler, H.D, 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
+
 \emph{Su, G., Christensen, O.F., Ostersen, T., Henryon, M. and Lund, M.S., 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
 
 \emph{VanRaden, P.M., 2008. Efficient methods to compute genomic predictions. Journal of dairy science, 91(11), pp.4414-4423.}
