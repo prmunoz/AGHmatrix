@@ -1,5 +1,5 @@
 Package: AGHmatrix
-Title: Relationship matrices for diploid and autopolyploid species.
+Title: Relationship matrices for diploid and autopolyploid species TESTE
 Version: 0.20
 Date: 12/apr/2017
 Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
