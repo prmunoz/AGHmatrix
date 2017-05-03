@@ -8,18 +8,18 @@
 # Written by Rodrigo Rampazo Amadeu 					#
 # 									#
 # First version: Feb-2014 						#
-# Last update: 09-Oct-2015 						#
+# Last update: 12-Apr-2017 						#
 # License: GNU General Public License version 2 (June, 1991) or later 	#
 # 									#
 #########################################################################
 
 #' Construction of Relationship Matrix A
 #'
-#' Creates a additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (2 or 4) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only). 
+#' Creates a additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (an even number) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only). Autopolyploid matrices based on Kerr (2012). Construction is based on the Henderson's recursive method described in Mrode (2005).
 #'
 #' @param data pedigree data name (3-column way format).
-#' @param ploidy 2 or 4 (default=2).
-#' @param w proportion of parental gametas IBD due to double reduction (default=0). 
+#' @param ploidy an even number (default=2).
+#' @param w proportion of parental gametas IBD due to double reduction (default=0), only if ploidy=4. 
 #' @param unk string or number indicating the unknown value related in the pedigree file (default=0).
 #' @param verify verifies pedigree file for conflictuos entries (default=TRUE).
 #' @param dominance if true, returns the dominance relationship matrix
@@ -32,26 +32,27 @@
 #' Amatrix(data=ped.mrode,ploidy=2,unk=0)
 #' #Build Amatrix autotetraploidy (double reduction proportion=0.1)
 #' Amatrix(data=ped.mrode,ploidy=4,w=0.1,unk=0)
+#' #' #Build Amatrix autooctaploid (no double reduction proportion)
+#' Amatrix(data=ped.mrode,ploidy=8,unk=0)
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #'
 #' @references \emph{Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, R. A., and Thompson, R. Linear models for the prediction of animal breeding values. Cabi, 2005.}
 #' @references \emph{Slater, A. T., Wilson, G. M., Cogan, N. O., Forster, J. W., & Hayes, B. J. (2013). Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and Applied Genetics, 1-12.}
-#'
+#' @references \emph{Kerr, Richard J., et al. "Use of the numerator relationship matrix in genetic analysis of autopolyploid species." Theoretical and Applied Genetics 124.7 (2012): 1271-1282.}
+#' 
 #' @export
 
 Amatrix <- function(data = NULL,
                     ploidy=2,
                     w=0,
                     unk=0,
-		    verify=TRUE,
-                    dominance=FALSE)
-    {
-  if(ploidy!=2)
-      if(ploidy!=4)
-          stop(deparse("Ploidy should be 2 or 4"))
+		                verify=TRUE,
+                    dominance=FALSE){
+  if(ploidy%%2!=0)
+        stop(deparse("Ploidy should be an even number"))
 
-  if(ploidy==4 & dominance)
+  if(ploidy!=2 & dominance)
       stop(deparse("Dominance relationship matrix is implemented only for ploidy=2"))
 
   if( is.null(data))
@@ -122,10 +123,7 @@ Amatrix <- function(data = NULL,
           A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
       }
     }
-
-  NA.errors <- which(is.na(A))
-  if( length(NA.errors) > 0 )
-      cat("Please verify your original data with the function 'verifyped', there are some data missing/conflicting data \n")
+  }
 
   if(dominance){
       cat("Constructing dominance relationship matrix \n")
@@ -143,7 +141,7 @@ Amatrix <- function(data = NULL,
       A<-D
       D<-NULL
   }
-}
+  
 #### For ploidy 4 ####
   if(ploidy == 4){
     listA <- list()
@@ -170,11 +168,11 @@ Amatrix <- function(data = NULL,
 
         ## Dire is unknown
         if( d[i] == 0 && s[i] != 0 ){
-          A[i,i] <- (5 + 7*w + 4*A[s[i],s[i]]*(1-w) ) / 24
+          A[i,i] <- (5 + 8*w + 4*A[s[i],s[i]]*(1-w) ) / 24 ##On Slater in 7w, deriving from hand based on Kerr is 8w
           for( j in 1:(i-1))
             A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]])
         }
-
+        
         ## Both are known
         if( d[i] != 0 && s[i] != 0 ){
           A[i,i] <- (1 + 2*w + (1-w)*(A[s[i],s[i]]) + (1-w)*(A[d[i],d[i]]) + 3*A[s[i],d[i]] ) / 6
@@ -182,20 +180,57 @@ Amatrix <- function(data = NULL,
             A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
         }
       }
-
-    NA.errors <- which(is.na(A))
-    if( length(NA.errors) > 0 )
-      cat("Please verify your original data with the function 'verifyped', there are some data missing/conflicting data \n")
-    A <- 4*A
-}
-
+      
+      A <- 4*A
+  }
+      if(ploidy>4){ ## It does not use double-reduction proportion, need to double-check formula on kerr 2012 for higher ploidies...
+        listA <- list()
+        
+        cat(paste("Constructing matrix A using ploidy = ",ploidy," without double reduction \n"))
+        start.time <- Sys.time()
+        v = ploidy/2
+        A[1,1] <- (1)/(2*v)
+        for( i in 2:n){
+          ## Both are unknown
+          if( s[i] == 0 && d[i] == 0 ){
+            A[i,i] <- (1)/(2*v)
+            for( j in 1:(i-1))
+              A[j,i] <- A[i,j] <- 0
+          }
+          
+          ## Sire is unknown
+          if( s[i] == 0 && d[i] != 0 ){
+            A[i,i] <- (1 + ((v-1)*(v*A[d[i],d[i]] + 1/2 - 1))/(2*v-1))/(2*v)
+            for( j in 1:(i-1))
+              A[j,i] <- A[i,j] <- 0.5*(A[j,d[i]])
+          }
+          
+          ## Dire is unknown
+          if( d[i] == 0 && s[i] != 0 ){
+            A[i,i] <- (1 + ((v-1)*(v*A[s[i],s[i]] + 1/2 - 1))/(2*v-1))/(2*v)
+            for( j in 1:(i-1))
+              A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]])
+          }
+          
+          ## Both are known
+          if( d[i] != 0 && s[i] != 0 ){
+            A[i,i] <- (1  + ((v-1)*(v*A[d[i],d[i]] + v*A[s[i],s[i]] - 1))/(2*v-1))/(2*v) + A[d[i],s[i]]/2
+            for( j in 1:(i-1))
+              A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
+          }
+        }
+        
+      A <- 2*v*A
+      }
+  
+  NA.errors <- which(is.na(A))
+  if( length(NA.errors) > 0 )
+    cat("Please verify your original data with the function 'verifyped', there are some data missing/conflicting data \n")
+    
   Time = as.matrix(proc.time()-Time)
   cat("Completed! Time =", Time[3]/60," minutes \n")
 #      "Visualization options: (matrix, w) \n ")
-
   rownames(A) <- colnames(A) <- data$ind.data
 
-  #listA <- list(w=w,matrix=A)
-  #structure(listA,class="gen.data")
   return(A)
 }

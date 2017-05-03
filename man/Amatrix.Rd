@@ -10,9 +10,9 @@ Amatrix(data = NULL, ploidy = 2, w = 0, unk = 0, verify = TRUE,
 \arguments{
 \item{data}{pedigree data name (3-column way format).}
 
-\item{ploidy}{2 or 4 (default=2).}
+\item{ploidy}{an even number (default=2).}
 
-\item{w}{proportion of parental gametas IBD due to double reduction (default=0).}
+\item{w}{proportion of parental gametas IBD due to double reduction (default=0), only if ploidy=4.}
 
 \item{unk}{string or number indicating the unknown value related in the pedigree file (default=0).}
 
@@ -24,7 +24,7 @@ Amatrix(data = NULL, ploidy = 2, w = 0, unk = 0, verify = TRUE,
 Matrix with the Relationship between the individuals.
 }
 \description{
-Creates a additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (2 or 4) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only).
+Creates a additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (an even number) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only). Autopolyploid matrices based on Kerr (2012). Construction is based on the Henderson's recursive method described in Mrode (2005).
 }
 \examples{
 data(ped.mrode)
@@ -32,6 +32,8 @@ data(ped.mrode)
 Amatrix(data=ped.mrode,ploidy=2,unk=0)
 #Build Amatrix autotetraploidy (double reduction proportion=0.1)
 Amatrix(data=ped.mrode,ploidy=4,w=0.1,unk=0)
+#' #Build Amatrix autooctaploid (no double reduction proportion)
+Amatrix(data=ped.mrode,ploidy=8,unk=0)
 
 }
 \author{
@@ -41,5 +43,7 @@ Rodrigo R Amadeu, \email{rramadeu@gmail.com}
 \emph{Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, R. A., and Thompson, R. Linear models for the prediction of animal breeding values. Cabi, 2005.}
 
 \emph{Slater, A. T., Wilson, G. M., Cogan, N. O., Forster, J. W., & Hayes, B. J. (2013). Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and Applied Genetics, 1-12.}
+
+\emph{Kerr, Richard J., et al. "Use of the numerator relationship matrix in genetic analysis of autopolyploid species." Theoretical and Applied Genetics 124.7 (2012): 1271-1282.}
 }
 
