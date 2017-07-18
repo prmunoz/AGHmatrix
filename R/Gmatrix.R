@@ -1,12 +1,18 @@
-# Package: AGHmatrix
+#########################################
+# 									
+# Package: AGHmatrix 							
+# 									
 # File: Gmatrix.R
-# Contains: Gmatrix slater_par
-# Written by Rodrigo Rampazo Amadeu
-# Collaborators: Marcio Resende Jr. and Leticia AC Lara
-# First version: Feb-2014
-# Last update: 22-Feb-2017
-# License: GNU General Public License version 2 (June, 1991) or later 
-#########################################################################
+# Contains: Gmatrix slater_par						
+# 									
+# Written by Rodrigo Rampazo Amadeu 			
+# Collaborators: Marcio Resende Jr and Leticia AC Lara
+# 									
+# First version: Feb-2014 					
+# Last update: 22-Feb-2017 						
+# License: GPL-3	
+# 									
+#########################################
 
 #' Construction of Relationship Matrix G
 #'
@@ -39,7 +45,6 @@
 #' @export
 
 Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf = 0, verify.posdef = TRUE, ploidy=2){
-  require(Matrix)
   Time = proc.time()
   
   if (!is.na(missingValue)) {

@@ -1,16 +1,16 @@
 #########################################################################
-# 									#
-# Package: AGHmatrix 							#
-# 									#
-# File: Amatrix.R 							#
-# Contains: Amatrix 							#
-# 									#
-# Written by Rodrigo Rampazo Amadeu 					#
-# 									#
-# First version: Feb-2014 						#
-# Last update: 12-Apr-2017 						#
-# License: GNU General Public License version 2 (June, 1991) or later 	#
-# 									#
+# 									
+# Package: AGHmatrix 							
+# 									
+# File: Amatrix.R
+# Contains: Amatrix 							
+# 									
+# Written by Rodrigo Rampazo Amadeu
+# 									
+# First version: Feb-2014 
+# Last update: 12-Apr-2017 						
+# License: GPL-3
+# 								
 #########################################################################
 
 #' Construction of Relationship Matrix A
@@ -65,7 +65,7 @@ Amatrix <- function(data = NULL,
     
 
   cat("Organizing data... \n")
-  data <- data.treat(data=data,unk=unk,n.max=50,save=FALSE)
+  data <- datatreat(data=data,unk=unk,n.max=50,save=FALSE)
 
   s <- data$sire
   d <- data$dire

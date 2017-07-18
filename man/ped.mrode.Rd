@@ -19,4 +19,3 @@ data(pedigree.mrode)
 R. A. Mrode, R. Thompson. Linear Models for the Prediction of Animal Breeding Values. CABI, 2005.
 }
 \keyword{datasets}
-

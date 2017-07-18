@@ -1,17 +1,17 @@
-#########################################################################
-# 									#
-# Package: AGHmatrix 							#
-# 									#
-# File: converttofrequency.R						#
-# Contains: convertofrequency						#
-# 									#
-# Written by Rodrigo Rampazo Amadeu 					#
-# 									#
-# First version: Feb-2014 						#
-# Last update: 14-Apr-2015 						#
-# License: GNU General Public License version 2 (June, 1991) or later 	#
-# 									#
-#########################################################################
+#########################################
+# 									
+# Package: AGHmatrix 							
+# 									
+# File: converttofrequency.R						
+# Contains: convertofrequency						
+# 									
+# Written by Rodrigo Rampazo Amadeu 				
+# 									
+# First version: Feb-2014 						
+# Last update: 14-Apr-2015 						
+# License: GPL-3
+# 									
+#########################################
 
 #' Converts molecular (AA,AB,BB) data in a frequency format (0,0.5,1).
 #'
@@ -23,10 +23,13 @@
 #' @param unk unknown value assumed (default=NA)
 #' @param genotype available if format=4. Please insert your genotype categories here as a list. e.g.:  genotype=c("CCCC","CGGG","CCGG","CGGG","GGGG") in this example CCCC will be coded as 0, CGGG as 0.25, CCGG as 0.5, CGGG as 0.75, G as 1. Default=NULL.
 #' @param output choose a the name of output file. Default="convdata".
+#' @param dominant if TRUE, returns the dominant parameterization.
+#' @param transpose if TRUE, returns the transposable matrix.
 #'
 #' @return csv file markers x individuals with frequencies instead of molecular code.
 #' 
-#' @examples converttofrequency()
+#' @examples 
+#' converttofrequency()
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #'

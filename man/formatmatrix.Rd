@@ -5,8 +5,7 @@
 \title{Transform a matrix in 3 columns}
 \usage{
 formatmatrix(data = NULL, save = TRUE, return = FALSE,
-  name = deparse(substitute(data)), format = "columns", round.by = 12,
-  exclude.0 = TRUE)
+  name = deparse(substitute(data)), round.by = 12, exclude.0 = TRUE)
 }
 \arguments{
 \item{data}{matrix (nxn).}
@@ -20,8 +19,6 @@ formatmatrix(data = NULL, save = TRUE, return = FALSE,
 \item{round.by}{select the number of digits after 0 you want in your data. Default = 12}
 
 \item{exclude.0}{if TRUE, remove all lines equal to zero (ASREML option). Default = TRUE}
-
-\item{columns}{by default (param to be expanded later).}
 }
 \value{
 a object or a csv file with a table with 3 columns representing the matrix.
@@ -35,14 +32,18 @@ data<-matrix(c(1,0.1,0,0.1,1,0,0,0,1.1),3)
 formatmatrix(data=data,save=FALSE,return=TRUE,exclude.0=TRUE)
 
 #Example with pedigree matrix
-data(ped.mrode) #Reading the example data
-Amrode<-Amatrix(ped.mrode) #Making Relationship Matrix
-Amrode.inv<-solve(Amrode) #Inverting the Matrix
-Amrode.inv.ASREML<-formatmatrix(Amrode,save=FALSE,return=TRUE,exclude.0=TRUE) #Making the 3 columns format
-Amrode.inv.ASREML #Printing it
+#Reading the example data
+data(ped.mrode)
+#Making Relationship Matrix
+Amrode<-Amatrix(ped.mrode)
+#Inverting the Matrix
+Amrode.inv<-solve(Amrode)
+#Making the 3 columns format
+Amrode.inv.ASREML<-formatmatrix(Amrode,save=FALSE,return=TRUE,exclude.0=TRUE)
+#Printing it
+Amrode.inv.ASREML 
 
 }
 \author{
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}
 }
-

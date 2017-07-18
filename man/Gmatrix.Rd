@@ -34,9 +34,6 @@ str(snp.pine)
 Gmatrix.Yang <- Gmatrix(snp.pine,method="Yang",missingValue=-9,maf=0.05) 
 
 }
-\author{
-Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, and Letícia Aparecida de Castro Lara
-}
 \references{
 \emph{Slater, A.T., Cogan, N.O., Forster, J.W., Hayes, B.J., Daetwyler, H.D, 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
 
@@ -48,4 +45,6 @@ Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, and Letícia Apa
 
 \emph{Yang, J., Benyamin, B., McEvoy, B.P., Gordon, S., Henders, A.K., Nyholt, D.R., Madden, P.A., Heath, A.C., Martin, N.G., Montgomery, G.W. and Goddard, M.E., 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
 }
-
+\author{
+Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, and Letícia Aparecida de Castro Lara
+}

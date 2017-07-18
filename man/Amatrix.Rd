@@ -36,9 +36,6 @@ Amatrix(data=ped.mrode,ploidy=4,w=0.1,unk=0)
 Amatrix(data=ped.mrode,ploidy=8,unk=0)
 
 }
-\author{
-Rodrigo R Amadeu, \email{rramadeu@gmail.com}
-}
 \references{
 \emph{Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, R. A., and Thompson, R. Linear models for the prediction of animal breeding values. Cabi, 2005.}
 
@@ -46,4 +43,6 @@ Rodrigo R Amadeu, \email{rramadeu@gmail.com}
 
 \emph{Kerr, Richard J., et al. "Use of the numerator relationship matrix in genetic analysis of autopolyploid species." Theoretical and Applied Genetics 124.7 (2012): 1271-1282.}
 }
-
+\author{
+Rodrigo R Amadeu, \email{rramadeu@gmail.com}
+}

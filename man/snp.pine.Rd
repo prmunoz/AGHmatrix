@@ -19,4 +19,3 @@ data(snp.pine)
 Resende, Márcio FR, Patricio Muñoz, Marcos DV Resende, Dorian J. Garrick, Rohan L. Fernando, John M. Davis, Eric J. Jokela, Timothy A. Martin, Gary F. Peter, and Matias Kirst. "Accuracy of genomic selection methods in a standard data set of loblolly pine (Pinus taeda L.)." Genetics 190, no. 4 (2012): 1503-1510.
 }
 \keyword{datasets}
-

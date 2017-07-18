@@ -1,17 +1,17 @@
-#########################################################################
-# 									#
-# Package: AGHmatrix 							#
-# 									#
-# File: Amatrix.R 							#
-# Contains: Amatrix 							#
-# 									#
-# Written by Rodrigo Rampazo Amadeu 					#
-# 									#
-# First version: Feb-2014 						#
-# Last update: 22-Apr-2015 						#
-# License: GNU General Public License version 2 (June, 1991) or later 	#
-# 									#
-#########################################################################
+########################################
+# 									
+# Package: AGHmatrix 							
+# 									
+# File: Hmatrix.R 							
+# Contains: Hmatrix 							
+# 									
+# Written by Rodrigo Rampazo Amadeu 					
+# 									
+# First version: Feb-2014 						
+# Last update: 22-Apr-2015 						
+# License: GPL-3
+# 									
+#######################################
 
 #' Construction of Relationship Matrix H
 #'
@@ -19,16 +19,24 @@
 #'
 #' @param A A matrix from function Amatrix
 #' @param G G matrix from function Gmatrix
-#' @param c constant value of H computation
+#' @param markers matrix marker which generated Gmatrix
+#' @param c constant value of H computation, default: c=0
 #' @param explore if TRUE performs exploratory analysis of the matrix
 #'
 #' @return H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
 #'
-#' @examples Hmatrix()
+#' @examples 
+#' data(ped.mrode)
+#' #Build Amatrix diploid (no double reduction proportion)
+#' Amat <- Amatrix(data=ped.mrode,ploidy=2,unk=0)
+#' markers <- matrix(c(0,0,0,0, 2,2,1,1, 1,1,0,1, 1,1,2,0, 2,1,1,0, 2,0,1,2),nrow=6, byrow=TRUE)
+#' rownames(markers) <- rownames(Amat)
+#' Gmat <- Gmatrix(markers)
+#' Hmatrix(Amat,Gmat,markers)
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
-#'
-#' @references Patricio Munoz ?
+#' 
+#' @references \emph{Munoz, P. R., Resende, M. F. R., Gezan, S. A., Resende, M. D. V., de los Campos, G., Kirst, M., Huber, D., Peter, G. F. (2014). Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics, 198.4: 1759-1768.}
 #'
 #' @export
 
@@ -40,6 +48,7 @@ Hmatrix <- function(A=NULL,
                     ){
     Aorig <- A
     Gorig <- G
+    markersmatrix <- Gmatrix(markers,method="MarkersMatrix")
 
     Time = proc.time()
     cat("Comparing the matrices... \n")
@@ -47,8 +56,18 @@ Hmatrix <- function(A=NULL,
     Gn <- rownames(Gorig)
     missingGmatrix <- which(is.na(match(An,Gn)))
     missingAmatrix <- which(is.na(match(Gn,An)))
-    Anhat <- An[-missingGmatrix]
-    Gnhat <- Gn[-missingAmatrix]
+    if(length(missingGmatrix)>0){
+      Gnhat <- Gn[-missingAmatrix]
+    }else{
+      Gnhat <- Gn
+    }
+    
+    if(length(missingAmatrix)>0){
+      Anhat <- An[-missingGmatrix]    
+    }else{
+      Anhat <- An
+    }
+  
     A <- Aorig[Anhat,Anhat]
     G <- Gorig[Gnhat,Gnhat]
 
@@ -73,13 +92,13 @@ Hmatrix <- function(A=NULL,
     varA[is.na(varA)]<-mean(varAclasses,na.rm=TRUE)
 
     #Computaing beta and H
-    beta <- 1 - (c+(1/(markers[Gnhat,Gnhat]))/varA)
+    beta <- 1 - (c+(1/(markersmatrix[Gnhat,Gnhat]))/varA)
     H <- beta*(G-A)+A ######
     Aorig[Anhat,Anhat] = H
     cat("\n","Individuals in A but not in G:",missingAmatrix,"\n")
     cat("\n","Individuals in G but not in A:",missingGmatrix,"\n")
     Time = as.matrix(proc.time()-Time)
     cat("\n","Completed! Time =", Time[3]/60," minutes \n")
-    cat("\n","Returning H = A matrix corrected by G...")
+    cat("\n","Returning H = A matrix corrected by G... \n")
     return(Aorig)
 }

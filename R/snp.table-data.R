@@ -10,9 +10,6 @@
 #'
 #' @keywords datasets
 #'
-#'
-#' @references 
-#'
 #' @examples data(snp.table)
 #'
 #' @name snp.table

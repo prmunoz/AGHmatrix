@@ -15,8 +15,4 @@ Dummy data for construction of relationship matrix based on SNPs. Matrix (marker
 data(snp.table)
 
 }
-\references{
-
-}
 \keyword{datasets}
-
