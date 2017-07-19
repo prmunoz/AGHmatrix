@@ -4,16 +4,23 @@
 \alias{Hmatrix}
 \title{Construction of Relationship Matrix H}
 \usage{
-Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0, explore = FALSE)
+Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0, explore = FALSE,
+  missingValue = -9, maf = 0)
 }
 \arguments{
 \item{A}{A matrix from function Amatrix}
 
 \item{G}{G matrix from function Gmatrix}
 
-\item{c}{constant value of H computation}
+\item{markers}{matrix marker which generated Gmatrix}
+
+\item{c}{constant value of H computation, default: c=0}
 
 \item{explore}{if TRUE performs exploratory analysis of the matrix}
+
+\item{missingValue}{missing value in data. Default=-9.}
+
+\item{maf}{max of missing data accepted to each marker. Default=0.05.}
 }
 \value{
 H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
@@ -22,13 +29,18 @@ H Matrix with the relationship between the individuals based on pedigree and cor
 Given a matrix A and a matrix G returns a H matrix - A matrix corrected by G.
 }
 \examples{
-Hmatrix()
+data(ped.mrode)
+#Build Amatrix diploid (no double reduction proportion)
+Amat <- Amatrix(data=ped.mrode,ploidy=2,unk=0)
+markers <- matrix(c(0,0,0,0, 2,2,1,1, 1,1,0,1, 1,1,2,0, 2,1,1,0, 2,0,1,2),nrow=6, byrow=TRUE)
+rownames(markers) <- rownames(Amat)
+Gmat <- Gmatrix(markers)
+Hmatrix(Amat,Gmat,markers)
 
+}
+\references{
+\emph{Munoz, P. R., Resende, M. F. R., Gezan, S. A., Resende, M. D. V., de los Campos, G., Kirst, M., Huber, D., Peter, G. F. (2014). Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics, 198.4: 1759-1768.}
 }
 \author{
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}
 }
-\references{
-Patricio Munoz ?
-}
-

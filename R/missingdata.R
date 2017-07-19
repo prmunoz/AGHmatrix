@@ -1,17 +1,17 @@
-#########################################################################
-# 									#
-# Package: AGHmatrix 							#
-# 									#
-# File: Amatrix.R 							#
-# Contains: Amatrix 							#
-# 									#
-# Written by Rodrigo Rampazo Amadeu 					#
-# 									#
-# First version: Feb-2014 						#
-# Last update: 14-Apr-2015 						#
-# License: GNU General Public License version 2 (June, 1991) or later 	#
-# 									#
-#########################################################################
+#########################################
+# 									
+# Package: AGHmatrix 							
+# 									
+# File: missingdata.R							
+# Contains: missingdata							
+# 									
+# Written by Rodrigo Rampazo Amadeu 					
+# 									
+# First version: Feb-2014 						
+# Last update: 14-Apr-2015 						
+# License: GPL-3
+# 									
+#########################################
 
 #' Survying on missing data
 #'
@@ -19,18 +19,18 @@
 #'
 #' @param data data name from a pedigree list
 #' @param unk unknown value of your data
-#' @param molecular FALSE
-#' @param csv if your data is in csv format
 #'
 #' @return list with $conflict: rows of the data which are at least one parental name equal to the individual. $missing.sire: rows of the data which arie missing data sire (Parental 1) information. $missing.dire: same as above for dire (Parental 2). $summary.missing: summary of the missing data. 2 columns, 1st for the name of the parental listed, 2nd for the how many times appeared in the data.
 #'
-#' @examples missing.data()
+#' @examples 
+#' data(ped.mrode)
+#' missingdata(ped.mrode)
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #'
 #' @export
 
-missing.data <- function(data,
+missingdata <- function(data,
 			unk=0
                         ){
     pedigree.data<-data
@@ -42,7 +42,7 @@ missing.data <- function(data,
     }
 
     #Treating all as numeric
-    ind.data <- as.vector(c(unk,pedigree.data[,1]))
+    ind.data <- as.vector(c(unk,as.character(pedigree.data[,1])))
     sire.data <- as.vector(pedigree.data[,2])
     dire.data <- as.vector(pedigree.data[,3])
     sire <- match(sire.data, ind.data)

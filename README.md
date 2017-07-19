@@ -30,5 +30,11 @@ Then, to install `AGHmatrix` from github:
 install_github("prmunoz/AGHmatrix")
 ```
 
-Please go to the tutorial inside the vignettes folder for a complete tutorial!
+# Tutorials
+
+You can read the _AGHmatrix_ tutorial going to the vignettes of the
+installed package, or clicking below. Please, start with the overview,
+that will guide you through other chapters.
+
+[AGHmatrix Tutorial](http://htmlpreview.github.io/?https://github.com/rramadeu/aghmatrix/blob/master/inst/doc/Tutorial_AGHmatrix.html)
 

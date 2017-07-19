@@ -1,17 +1,17 @@
-#########################################################################
-# 									#
-# Package: AGHmatrix 							#
-# 									#
-# File: explore.matrix.R 						#
-# Contains: explore.matrix 						#
-# 									#
-# Written by Rodrigo Rampazo Amadeu 					#
-# 									#
-# First version: Feb-2014 						#
-# Last update: 14-Apr-2015 						#
-# License: GNU General Public License version 2 (June, 1991) or later 	#
-# 									#
-#########################################################################
+##########################################
+# 									
+# Package: AGHmatrix 		
+#
+# File: explore_matrix.R 						
+# Contains: explorematrix 						
+# 									
+# Written by Rodrigo Rampazo Amadeu 					
+# 									
+# First version: Feb-2014 						
+# Last update: 14-Apr-2015 						
+# License: GPL-3
+# 									
+#########################################
 
 #' Explore a relationship matrix
 #'
@@ -25,17 +25,20 @@
 #'
 #' @return list with exploratory analysis about the matrix: summary off-diagonal, summary diagonal, sort data (top shared genotypes)...
 #'
-#' @examples explore.matrix()
+#' @examples 
+#' data(ped.mrode)
+#' Amat <- Amatrix(ped.mrode)
+#' explorematrix(Amat)
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #'
 #' @export
 
-explore.matrix <- function(data = NULL,
-                           type=NULL,
-                           print=TRUE,
-                           w=0,
-                           name=NULL){
+explorematrix <- function(data = NULL,
+                          type=NULL,
+                          print=TRUE,
+                          w=0,
+                          name=NULL){
 
     cat("Doing the exploratory analysis... \n")
     Time = proc.time()
