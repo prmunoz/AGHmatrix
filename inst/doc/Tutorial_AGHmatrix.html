@@ -29,14 +29,14 @@ pre, code{font-size:90%;}
     <div class="page">
 <!--
   %\VignetteEngine{knitr::docco_linear}
-%\VignetteIndexEntry{Outcrossing populations}
+%\VignetteIndexEntry{AGHmatrix Tutorial}
 -->
 
 <h1>AGHmatrix Tutorial</h1>
 
 <p><strong>AGHmatrix: An R package to compute relationship matrices for diploid and autopolyploid species</strong></p>
 
-<h1>Overview</h1>
+<h2>Overview</h2>
 
 <p>AGH software is an R-package under development mainly to build relationship matrices using pedigree (A matrix) and/or molecular markers (G matrix) with the possibility to build a combined matrix of Pedigree corrected by Molecular (H matrix). The package also works with Diploid and Autopolyploid Data.</p>
 
@@ -100,13 +100,13 @@ pre, code{font-size:90%;}
 
 <p></center></p>
 
-<h1>Citation</h1>
+<h2>Citation</h2>
 
 <p>To cite this R package:</p>
 
 <p>Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. F. Garcia, M. F. R. Resende, and P. R. Muñoz. 2016. AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example. <em>The Plant Genome</em> 9. doi:10.3835/plantgenome2016.01.0009</p>
 
-<h1>Installing the Package</h1>
+<h2>Installing the Package</h2>
 
 <p>Within R:</p>
 
@@ -123,7 +123,7 @@ install_github(&quot;prmunoz/AGHmatrix&quot;)
 <pre><code class="r">library(AGHmatrix)
 </code></pre>
 
-<h1>Relationship matrices using the pedigree data - A matrix</h1>
+<h2>Relationship matrices using the pedigree data - A matrix</h2>
 
 <p>In this section we presented how to load the data into the software and how to construct the pedigree-based relationship matrix (A-matrix) for diploid and autotetraploid species. In the package, the function Amatrix handles the pedigree and build the A-matrix related to that given pedigree. The matrix is build according to the recursive method presented in Mrode (2014) and described by Henderson (1976). This method is expanded for higher ploidy (n-ploidy) according with Kerr et al. (2012). After loading the package you have to load your data file into the software. To do this, you can use the function <code>read.data()</code> or <code>read.csv()</code> (If specifically the format <code>.csv</code> file is used) for example. Your data should be available in R as a <code>dataframe</code> structure in the following order: column 1 must be the individual/genotype names (id), columns 2 and 3 must be the parent names. In the package there is a pedigree data example (<code>ped.mrode</code>) that can be used to look at the structure and order the data. </p>
 
@@ -154,7 +154,7 @@ in Mrode (2014) for diploid - for additive or dominance relationship - and as in
 ## Organizing data... 
 ## Your data was chronologically organized with success. 
 ## Constructing matrix A using ploidy = 2 
-## Completed! Time = 1.666667e-05  minutes
+## Completed! Time = 0  minutes
 </code></pre>
 
 <pre><code>##      Anc1  Anc2   Var1   Var2   Var3   Var4
@@ -186,7 +186,7 @@ Amatrix(ped.mrode, ploidy=4, unk=0, w=0.1)
 <pre><code class="r">?Amatrix
 </code></pre>
 
-<h1>Relationship matrices using the molecular data - G matrix for diploids</h1>
+<h2>Relationship matrices using the molecular data - G matrix for diploids</h2>
 
 <p>This section presents how to load the data and how to construct the genomic-based relationship matrix for diploid species. In the package, the function Gmatrix is the one that handles the molecular-markers matrix and builds the relationship matrix. Molecular markers data should be organized in a matrix format (individual in rows and markers in columns) coded as 0,1,2 and missing data value (numeric or NA). Import your molecular marker data into R with the function read.table() and convert to a matrix format with the function as.matrix(). The function Gmatrix can be used then to construct the additive relationship either as proposed by Yang et al. (2010) or the proposed by VanRaden (2008). The function can also construct the dominance relationship matrix either as proposed by Su et al. (2012) or as proposed by Vitezica et al. (2013). As an example, here we build the four matrices using real data from Resende et al. (2012).</p>
 
@@ -224,9 +224,7 @@ G_Yang &lt;- Gmatrix(SNPmatrix=snp.pine, missingValue=-9, maf=0.05, method=&quot
 <pre><code class="r">?Gmatrix
 </code></pre>
 
-<h1>Relationship matrices using the molecular data - G matrix for diploids</h1>
-
-<h1>Combined relationship matrix - H matrix</h1>
+<h2>Combined relationship matrix - H matrix</h2>
 
 <p>Here we present how to compute the H matrix using the package. This matrix is computed based on the matrix A using matrix G as a correction and it is presented in Munoz et al. 2014. In this example we consider the A matrix as an identity (<em>e.g</em> we do not have pedigree information and assume the individuals in Hardy-Weinberg equilibrium). It is important to pass to <code>Hmatrix</code> the same arguments of <code>missingValue</code> and <code>maf</code> of <code>Gmatrix</code>. If the <code>Hmat</code> gives singularity problem, you can try to add a small constant to its calculus changing argument <code>c</code> to a small value (<em>e.g</em>, <code>0.001</code>).</p>
 
@@ -243,7 +241,7 @@ rownames(Amat) &lt;- colnames(Amat) &lt;- rownames(Gmat)
 Hmat &lt;- Hmatrix(A=Amat, G=Gmat, markers=snp.pine, missingValue=-9, maf=0.05)
 </code></pre>
 
-<h1>Covariance matrices due to epistatic terms</h1>
+<h2>Covariance matrices due to epistatic terms</h2>
 
 <p>Here we present how to easily compute the epistasis relationship matrices using Hadamard
 products (i.e. cell-by-cell product), denoted by <code>*</code>. For more information please see Muñoz
@@ -277,8 +275,9 @@ D_D_D &lt;- D*D*D
 
 <p>And so on&hellip;</p>
 
-<p>#Exporting your data to be used in ASReml - csv format
-In this section, we present how to use the function formatmatrix to export a recently build matrix in the format compatible with ASReml standalone version. That is the lower diagonal matrix formatted in three columns in .csv format (other ASCII extension could be used as well). In order to do this, we need to build a matrix, its inverse, and export it using <code>formatmatrix</code> function. ASReml can invert the relationship matrix as well, probably more efficiently than R for large matrices (i.e. <code>solve()</code> function), so no need to invert the matrix in R if matrix is large. This function has as options: <code>round.by</code>, which let you decide the number of decimals you want; <code>exclude.0</code>, if <code>TRUE</code>, remove all the zeros from your data; and, name that defines the name to be used in the exported file. Use the default if not sure what parameter use in these function. Here an example using <code>ped.mrode</code> data:</p>
+<h2>Exporting your data to be used in ASReml - csv format</h2>
+
+<p>In this section, we present how to use the function formatmatrix to export a recently build matrix in the format compatible with ASReml standalone version. That is the lower diagonal matrix formatted in three columns in .csv format (other ASCII extension could be used as well). In order to do this, we need to build a matrix, its inverse, and export it using <code>formatmatrix</code> function. ASReml can invert the relationship matrix as well, probably more efficiently than R for large matrices (i.e. <code>solve()</code> function), so no need to invert the matrix in R if matrix is large. This function has as options: <code>round.by</code>, which let you decide the number of decimals you want; <code>exclude.0</code>, if <code>TRUE</code>, remove all the zeros from your data; and, name that defines the name to be used in the exported file. Use the default if not sure what parameter use in these function. Here an example using <code>ped.mrode</code> data:</p>
 
 <pre><code class="r">#Loading the data example
 data(ped.mrode)
@@ -293,7 +292,7 @@ Ainv &lt;- solve(A)
 formatmatrix(Ainv, round.by=12, exclude.0=TRUE, name=&quot;Ainv&quot;)
 </code></pre>
 
-<h1>Making a loop in order to get several matrices</h1>
+<h2>Making a loop in order to get several matrices</h2>
 
 <p>In this section, we present a simple <code>for</code> function for the user to be able to obtain in a practical way several matrices for different double reduction values (if polyploidy) to later be used in <code>ASReml</code> (for example). Similar to one made in Amadeu et al. (2016).</p>
 
@@ -323,7 +322,7 @@ for(i in 1:n){
 }
 </code></pre>
 
-<h1>Plotting the genealogy of a given individual</h1>
+<h2>Plotting the genealogy of a given individual</h2>
 
 <p>The user can plot the genealogy of a given individual through the function <code>plot_genealogy</code>, there is also the option to plot the inbreeding coefficient for the individual computed with <code>Amatrix</code>. It follows an example:</p>
 
@@ -351,7 +350,7 @@ plot_genealogy(data=ped.mrode,ind=&quot;Var4&quot;,Amatrix=Amat)
 
 <p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-17"/></p>
 
-<h1>Bibliography</h1>
+<h2>Bibliography</h2>
 
 <p>Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. <em>The Plant Genome</em> 9.</p>
 

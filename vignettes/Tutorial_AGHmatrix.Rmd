@@ -14,7 +14,7 @@
 library(AGHmatrix)
 ```
 
-# Overview
+## Overview
 AGH software is an R-package under development mainly to build relationship matrices using pedigree (A matrix) and/or molecular markers (G matrix) with the possibility to build a combined matrix of Pedigree corrected by Molecular (H matrix). The package also works with Diploid and Autopolyploid Data.
 
 If you are not familiar with `R`, we recommend the reading of vignette [Introduction to R](http://htmlpreview.github.io/?https://github.com/augusto-garcia/onemap/blob/master/inst/doc/Introduction_R.html).
@@ -35,12 +35,13 @@ If you are not familiar with `R`, we recommend the reading of vignette [Introduc
 | **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Yang (2010), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Su (2012), Vitezica (2013) |
 | **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Yang (2010), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016)              |
 </center>
-# Citation
+
+## Citation
 To cite this R package:
 
 Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. F. Garcia, M. F. R. Resende, and P. R. Muñoz. 2016. AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example. *The Plant Genome* 9. doi:10.3835/plantgenome2016.01.0009
 
-# Installing the Package
+## Installing the Package
 Within R:
 ```{r, eval=FALSE}
 ## Installing and loading devtools
@@ -56,7 +57,7 @@ To load the package
 library(AGHmatrix)
 ```
 
-# Relationship matrices using the pedigree data - A matrix
+## Relationship matrices using the pedigree data - A matrix
 In this section we presented how to load the data into the software and how to construct the pedigree-based relationship matrix (A-matrix) for diploid and autotetraploid species. In the package, the function Amatrix handles the pedigree and build the A-matrix related to that given pedigree. The matrix is build according to the recursive method presented in Mrode (2014) and described by Henderson (1976). This method is expanded for higher ploidy (n-ploidy) according with Kerr et al. (2012). After loading the package you have to load your data file into the software. To do this, you can use the function `read.data()` or `read.csv()` (If specifically the format `.csv` file is used) for example. Your data should be available in R as a `dataframe` structure in the following order: column 1 must be the individual/genotype names (id), columns 2 and 3 must be the parent names. In the package there is a pedigree data example (`ped.mrode`) that can be used to look at the structure and order the data. 
 
 To load `ped.mrode`:
@@ -94,7 +95,7 @@ More information about `Amatrix` can be found with:
 ?Amatrix
 ```
 
-# Relationship matrices using the molecular data - G matrix for diploids
+## Relationship matrices using the molecular data - G matrix for diploids
 This section presents how to load the data and how to construct the genomic-based relationship matrix for diploid species. In the package, the function Gmatrix is the one that handles the molecular-markers matrix and builds the relationship matrix. Molecular markers data should be organized in a matrix format (individual in rows and markers in columns) coded as 0,1,2 and missing data value (numeric or NA). Import your molecular marker data into R with the function read.table() and convert to a matrix format with the function as.matrix(). The function Gmatrix can be used then to construct the additive relationship either as proposed by Yang et al. (2010) or the proposed by VanRaden (2008). The function can also construct the dominance relationship matrix either as proposed by Su et al. (2012) or as proposed by Vitezica et al. (2013). As an example, here we build the four matrices using real data from Resende et al. (2012).
 
 To load `snp.pine` and to check its structure:
@@ -126,9 +127,7 @@ More information about `Gmatrix` can be found with:
 ?Gmatrix
 ```
 
-# Relationship matrices using the molecular data - G matrix for diploids
-
-# Combined relationship matrix - H matrix
+## Combined relationship matrix - H matrix
 Here we present how to compute the H matrix using the package. This matrix is computed based on the matrix A using matrix G as a correction and it is presented in Munoz et al. 2014. In this example we consider the A matrix as an identity (*e.g* we do not have pedigree information and assume the individuals in Hardy-Weinberg equilibrium). It is important to pass to `Hmatrix` the same arguments of `missingValue` and `maf` of `Gmatrix`. If the `Hmat` gives singularity problem, you can try to add a small constant to its calculus changing argument `c` to a small value (*e.g*, `0.001`).
 
 ```{r, eval=FALSE}
@@ -145,7 +144,7 @@ rownames(Amat) <- colnames(Amat) <- rownames(Gmat)
 Hmat <- Hmatrix(A=Amat, G=Gmat, markers=snp.pine, missingValue=-9, maf=0.05)
 ```
 
-# Covariance matrices due to epistatic terms
+## Covariance matrices due to epistatic terms
 Here we present how to easily compute the epistasis relationship matrices using Hadamard
 products (i.e. cell-by-cell product), denoted by `*`. For more information please see Muñoz
 et al. (2014). In this example we are using the molecular-based relationship matrix. First, build the additive and dominance matrices:
@@ -179,7 +178,7 @@ D_D_D <- D*D*D
 
 And so on...
 
-#Exporting your data to be used in ASReml - csv format
+## Exporting your data to be used in ASReml - csv format
 In this section, we present how to use the function formatmatrix to export a recently build matrix in the format compatible with ASReml standalone version. That is the lower diagonal matrix formatted in three columns in .csv format (other ASCII extension could be used as well). In order to do this, we need to build a matrix, its inverse, and export it using `formatmatrix` function. ASReml can invert the relationship matrix as well, probably more efficiently than R for large matrices (i.e. `solve()` function), so no need to invert the matrix in R if matrix is large. This function has as options: `round.by`, which let you decide the number of decimals you want; `exclude.0`, if `TRUE`, remove all the zeros from your data; and, name that defines the name to be used in the exported file. Use the default if not sure what parameter use in these function. Here an example using `ped.mrode` data:
 
 ```{r, eval=FALSE}
@@ -196,7 +195,7 @@ Ainv <- solve(A)
 formatmatrix(Ainv, round.by=12, exclude.0=TRUE, name="Ainv")
 ```
 
-# Making a loop in order to get several matrices
+## Making a loop in order to get several matrices
 In this section, we present a simple `for` function for the user to be able to obtain in a practical way several matrices for different double reduction values (if polyploidy) to later be used in `ASReml` (for example). Similar to one made in Amadeu et al. (2016).
 
 ```{r, eval=FALSE}
@@ -227,7 +226,7 @@ for(i in 1:n){
 
 ```
 
-# Plotting the genealogy of a given individual
+## Plotting the genealogy of a given individual
 The user can plot the genealogy of a given individual through the function `plot_genealogy`, there is also the option to plot the inbreeding coefficient for the individual computed with `Amatrix`. It follows an example:
 
 ```{r}
@@ -241,7 +240,8 @@ plot_genealogy(data=ped.mrode,ind="Var4",Amatrix=Amat)
 ```
 
 
-# Bibliography
+
+## Bibliography
 Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. *The Plant Genome* 9.
 
 Henderson, C., 1976 A simple method for computing the inverse of a numerator relationship matrix used in prediction of breeding values. *Biometrics* pp. 69–83.
