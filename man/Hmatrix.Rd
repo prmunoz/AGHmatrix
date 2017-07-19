@@ -4,7 +4,8 @@
 \alias{Hmatrix}
 \title{Construction of Relationship Matrix H}
 \usage{
-Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0, explore = FALSE)
+Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0, explore = FALSE,
+  missingValue = -9, maf = 0)
 }
 \arguments{
 \item{A}{A matrix from function Amatrix}
@@ -16,6 +17,10 @@ Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0, explore = FALSE)
 \item{c}{constant value of H computation, default: c=0}
 
 \item{explore}{if TRUE performs exploratory analysis of the matrix}
+
+\item{missingValue}{missing value in data. Default=-9.}
+
+\item{maf}{max of missing data accepted to each marker. Default=0.05.}
 }
 \value{
 H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
