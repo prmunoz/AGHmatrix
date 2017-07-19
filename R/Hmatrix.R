@@ -22,6 +22,8 @@
 #' @param markers matrix marker which generated Gmatrix
 #' @param c constant value of H computation, default: c=0
 #' @param explore if TRUE performs exploratory analysis of the matrix
+#' @param missingValue missing value in data. Default=-9.
+#' @param maf max of missing data accepted to each marker. Default=0.05.
 #'
 #' @return H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
 #'
@@ -44,11 +46,13 @@ Hmatrix <- function(A=NULL,
                     G=NULL,
                     markers=NULL,
                     c=0,
-                    explore=FALSE
+                    explore=FALSE,
+                    missingValue=-9,
+                    maf=0
                     ){
     Aorig <- A
     Gorig <- G
-    markersmatrix <- Gmatrix(markers,method="MarkersMatrix")
+    markersmatrix <- Gmatrix(markers,method="MarkersMatrix",missingValue=missingValue,maf=maf)
 
     Time = proc.time()
     cat("Comparing the matrices... \n")
