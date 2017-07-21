@@ -8,7 +8,8 @@ Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
 Authors@R: c(person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rodrigo.amadeu@usp.br"),
              person("Catherine", "Cellon", role = "ctb"),
              person("Leticia", "Lara", role = "ctb"),
-             person("Marcio", "Resende", role = "ctb"), 
+             person("Marcio", "Resende", role = "ctb"),
+             person("Ivone", "Oliveira", role = "ctb", email = "ivonedebem@gmail.com"),
              person("Patricio", "Munoz", role = "ctb", email = "p.munoz@ufl.edu"),
              person("Augusto", "Garcia", role = "ctb", email = "augusto.garcia@usp.br"))
 Author: Rodrigo Amadeu [aut]

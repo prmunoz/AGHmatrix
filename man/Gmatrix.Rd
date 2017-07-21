@@ -4,13 +4,14 @@
 \alias{Gmatrix}
 \title{Construction of Relationship Matrix G}
 \usage{
-Gmatrix(SNPmatrix = NULL, method = "Yang", missingValue = -9, maf = 0,
-  verify.posdef = TRUE, ploidy = 2)
+Gmatrix(SNPmatrix = NULL, method = NULL, missingValue = -9, maf = 0,
+  verify.posdef = TRUE, ploidy = 2, pseudo.diplod = FALSE,
+  ratio = FALSE)
 }
 \arguments{
 \item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, missingValue).}
 
-\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default="Yang".}
+\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden" for diploids and a scaled product for autopolyploids (similar to Covarrubias-Pazaran, 2006).}
 
 \item{missingValue}{missing value in data. Default=-9.}
 
@@ -19,6 +20,10 @@ Gmatrix(SNPmatrix = NULL, method = "Yang", missingValue = -9, maf = 0,
 \item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=TRUE.}
 
 \item{ploidy}{data ploidy (an even number between 2 and 20). Default=2.}
+
+\item{pseudo.diplod}{if TRUE, uses pseudodiploid parametrization of Slater (2016).}
+
+\item{ratio}{if TRUE, molecular data is considered ratios and its computed the scaled product of the matrix.}
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
@@ -35,6 +40,8 @@ Gmatrix.Yang <- Gmatrix(snp.pine,method="Yang",missingValue=-9,maf=0.05)
 
 }
 \references{
+\emph{Covarrubias-Pazaran G., 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
+
 \emph{Slater, A.T., Cogan, N.O., Forster, J.W., Hayes, B.J., Daetwyler, H.D, 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
 
 \emph{Su, G., Christensen, O.F., Ostersen, T., Henryon, M. and Lund, M.S., 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
