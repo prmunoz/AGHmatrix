@@ -1,29 +1,31 @@
-#########################################
+#####################################################################
 # 									
 # Package: AGHmatrix 							
 # 									
 # File: Gmatrix.R
-# Contains: Gmatrix slater_par						
+# Contains: Gmatrix slater_par check_Gmatrix_data						
 # 									
 # Written by Rodrigo Rampazo Amadeu 			
-# Collaborators: Marcio Resende Jr and Leticia AC Lara
+# Contributors: Marcio Resende Jr, Leticia AC Lara, Ivone Oliveira 
 # 									
 # First version: Feb-2014 					
 # Last update: 22-Feb-2017 						
 # License: GPL-3	
 # 									
-#########################################
+#####################################################################
 
 #' Construction of Relationship Matrix G
 #'
 #' Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or dominance relationship matrix. Uses pseudodiploid model (Slater, 2016) on polyploid data for methods "Yang", "VanRaden", "Su" and "Vitezica".
 #'
 #' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, missingValue). 
-#' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default="Yang".
+#' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden" for diploids and a scaled product for autopolyploids (similar to Covarrubias-Pazaran, 2006).
 #' @param missingValue missing value in data. Default=-9.
 #' @param maf max of missing data accepted to each marker. Default=0.05.
 #' @param verify.posdef verify if the resulting matrix is positive-definite. Default=TRUE.
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
+#' @param pseudo.diplod if TRUE, uses pseudodiploid parametrization of Slater (2016).
+#' @param ratio if TRUE, molecular data is considered ratios and its computed the scaled product of the matrix.
 #'
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
@@ -36,6 +38,7 @@
 #' 
 #' @author Rodrigo R Amadeu \email{rramadeu@@gmail.com}, Marcio Resende Jr, and Letícia Aparecida de Castro Lara
 #' 
+#' @references \emph{Covarrubias-Pazaran G., 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
 #' @references \emph{Slater, A.T., Cogan, N.O., Forster, J.W., Hayes, B.J., Daetwyler, H.D, 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
 #' @references \emph{Su, G., Christensen, O.F., Ostersen, T., Henryon, M. and Lund, M.S., 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
 #' @references \emph{VanRaden, P.M., 2008. Efficient methods to compute genomic predictions. Journal of dairy science, 91(11), pp.4414-4423.}
@@ -44,15 +47,28 @@
 #' 
 #' @export
 
-Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf = 0, verify.posdef = TRUE, ploidy=2){
+Gmatrix <- function (SNPmatrix = NULL, method = NULL, 
+                     missingValue = -9, maf = 0, 
+                     verify.posdef = TRUE, ploidy=2,
+                     pseudo.diplod = FALSE,
+                     ratio = FALSE){
   Time = proc.time()
+  
+  if(is.null(method)){
+    method="VanRaden"
+  }
+  
+  if(ratio){ #This allows to enter in the scaled crossprod condition
+    method="VanRaden"
+    ploidy=8
+  }
   
   if (!is.na(missingValue)) {
     m <- match(SNPmatrix, missingValue, 0)
     SNPmatrix[m > 0] <- NA
   }
   
-  check_Gmatrix_data(SNPmatrix=SNPmatrix,method=method,ploidy=ploidy)
+  check_Gmatrix_data(SNPmatrix=SNPmatrix,method=method,ploidy=ploidy,ratio=ratio)
   
   NumberMarkers <- ncol(SNPmatrix)
   nindTotal <- colSums(!is.na(SNPmatrix))
@@ -90,7 +106,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf =
                     ncol = ncol(SNPmatrix))
   }
   
-  if(ploidy>2 && method!="Slater"){## Uses Pseudodiploid model
+  if(ploidy>2 && pseudo.diplod){## Uses Pseudodiploid model
     P <- colSums(SNPmatrix,na.rm = TRUE)/nrow(SNPmatrix)
     SNPmatrix[,which(P>ploidy/2)] <- ploidy-SNPmatrix[,which(P>(ploidy/2))]
     Frequency <- colSums(SNPmatrix,na.rm=TRUE)/(ploidy*nrow(SNPmatrix))
@@ -106,12 +122,22 @@ Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf =
     Gmatrix <- tcrossprod(Gmatrix, Gmatrix)
     return(Gmatrix)
   }
-  if (method == "VanRaden") {
+  
+  ## VanRaden or NULL ##
+  if (method == "VanRaden" && ploidy==2) {
     TwoPQ <- 2 * t(Frequency[, 1]) %*% Frequency[, 2]
     SNPmatrix <- SNPmatrix- 2 * FreqP
     SNPmatrix[is.na(SNPmatrix)] <- 0
     Gmatrix <- (tcrossprod(SNPmatrix, SNPmatrix))/as.numeric(TwoPQ)
+  }else{
+    if(ploidy>2){
+      SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE) 
+      K<-sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
+      SNPmatrix[which(is.na(SNPmatrix))] <- 0
+      Gmatrix<-tcrossprod(SNPmatrix)/K
+    }
   }
+  
   if (method == "Yang") {
     FreqPQ <- matrix(rep(2 * Frequency[, 1] * Frequency[, 
                                                         2], each = nrow(SNPmatrix)), ncol = ncol(SNPmatrix))
@@ -124,6 +150,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf =
     Gmatrix <- (tcrossprod(SNPmatrix, SNPmatrix))/NumberMarkers
     diag(Gmatrix) <- G.ii.hat
   }
+  
   if (method == "Su"){
     TwoPQ <- 2*(FreqP)*(1-FreqP)
     SNPmatrix[SNPmatrix==2 | SNPmatrix==0] <- 0
@@ -132,6 +159,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf =
     Gmatrix <- tcrossprod(SNPmatrix,SNPmatrix)/
       sum(TwoPQ[1,]*(1-TwoPQ[1,]))        
   }
+  
   if (method == "Vitezica"){
     TwoPQ <- 2*(FreqP[1,])*(1-FreqP[1,])
     SNPmatrix[is.na(SNPmatrix)] <- 0
@@ -158,6 +186,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf =
     Gmatrix <- (tcrossprod(SNPmatrix, SNPmatrix))/NumberMarkers
     diag(Gmatrix) <- G.ii
   }
+  
   if (verify.posdef) {
     e.values <- eigen(Gmatrix, symmetric = TRUE)$values
     indicator <- length(which(e.values <= 0))
@@ -165,6 +194,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "Yang", missingValue = -9, maf =
       cat("\t Matrix is NOT positive definite. It has ", indicator, 
           " eigenvalues <= 0 \n \n")
   }
+  
   Time = as.matrix(proc.time() - Time)
   cat("Completed! Time =", Time[3], " seconds \n")
   gc()
@@ -207,7 +237,7 @@ slater_par <- function(X,ploidy){
 }
 
 # Internal function to check input Gmatrix arguments
-check_Gmatrix_data <- function(SNPmatrix,ploidy,method){
+check_Gmatrix_data <- function(SNPmatrix,ploidy,method, ratio=FALSE){
   if (is.null(SNPmatrix)) {
     stop(deparse("Please define the variable SNPdata"))
   }
@@ -219,6 +249,7 @@ check_Gmatrix_data <- function(SNPmatrix,ploidy,method){
     stop("SNPmatrix class must be matrix. Please verify it.")
   }
   
+  if(!ratio){
   if( ploidy > 20 | (ploidy %% 2) != 0)
     stop(deparse("Only even ploidy from 2 to 20"))
   
@@ -232,4 +263,15 @@ check_Gmatrix_data <- function(SNPmatrix,ploidy,method){
   
   if(prod(SNPmatrix == round(SNPmatrix),na.rm = TRUE)==0)
     stop(deparse("Check your data, it has not integer values"))
+  }
+
+  if(ratio){
+    t <- max(SNPmatrix,na.rm = TRUE)
+    if( t > 1)
+      stop(deparse("Check your data, it has values above 1. It is expected a ratio values [0;1]."))
+    
+    t <- min(SNPmatrix,na.rm=TRUE)
+    if( t < 0 )
+      stop(deparse("Check your data, it has values under 0. It is expected a ratio values [0;1]."))
+  }
 }
