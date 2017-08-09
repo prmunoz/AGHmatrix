@@ -32,11 +32,26 @@ Matrix with the marker-bases relationships between the individuals
 Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or non-additive relationship matrix. For diploids, the methods "Yang" and "VanRaden" for additive relationship matrices, and "Su" and "Vitezica" for non-additive relationship matrices are implemented. For autopolyploids, the method "VanRaden" for additive relationship, method "Slater" for full-autopolyploid model including non-additive effects, and pseudo-diploid parametrization are implemented.
 }
 \examples{
+## Diploid Example
 data(snp.pine)
 #Verifying if data is coded as 0,1,2 and missing value.
 str(snp.pine)
-#Build Gmatrix
-Gmatrix.Yang <- Gmatrix(snp.pine,method="Yang",missingValue=-9,maf=0.05) 
+#Build G matrices
+Gmatrix.Yang <- Gmatrix(snp.pine, method="Yang", missingValue=-9, maf=0.05)
+Gmatrix.VanRaden <- Gmatrix(snp.pine, method="VanRaden", missingValue=-9, maf=0.05)
+Gmatrix.Su <- Gmatrix(snp.pine, method="Su", missingValue=-9, maf=0.05)
+Gmatrix.Vitezica <- Gmatrix(snp.pine, method="Vitezica", missingValue=-9, maf=0.05)
+
+## Autetraploid example
+#Generating fake data
+inds <- 10
+markers <- 100
+markersdata <- matrix(sample(x=0:4, size=inds*markers, replace=TRUE), nrow=inds, ncol=markers)
+
+#Build G matrices
+Gmatrix.VanRaden <- Gmatrix(markersdata, method="VanRaden", ploidy=4)
+Gmatrix.Slater <- Gmatrix(markersdata, method="Slater", ploidy=4)
+Gmatrix.Pseudodiploid <- Gmatrix(markersdata, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
 
 }
 \references{
