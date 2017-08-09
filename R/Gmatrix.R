@@ -18,14 +18,14 @@
 #'
 #' Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or dominance relationship matrix. Uses pseudodiploid model (Slater, 2016) on polyploid data for methods "Yang", "VanRaden", "Su" and "Vitezica".
 #'
-#' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, missingValue). 
-#' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden" for diploids and a scaled product for autopolyploids (similar to Covarrubias-Pazaran, 2006).
+#' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue). 
+#' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).
 #' @param missingValue missing value in data. Default=-9.
 #' @param maf max of missing data accepted to each marker. Default=0.05.
 #' @param verify.posdef verify if the resulting matrix is positive-definite. Default=TRUE.
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
-#' @param pseudo.diplod if TRUE, uses pseudodiploid parametrization of Slater (2016).
-#' @param ratio if TRUE, molecular data is considered ratios and its computed the scaled product of the matrix.
+#' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
+#' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
 #'
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
@@ -36,7 +36,7 @@
 #' #Build Gmatrix
 #' Gmatrix.Yang <- Gmatrix(snp.pine,method="Yang",missingValue=-9,maf=0.05) 
 #' 
-#' @author Rodrigo R Amadeu \email{rramadeu@@gmail.com}, Marcio Resende Jr, and Letícia Aparecida de Castro Lara
+#' @author Rodrigo R Amadeu \email{rramadeu@@gmail.com}, Marcio Resende Jr, Letícia AC Lara, and Ivone Oliveira
 #' 
 #' @references \emph{Covarrubias-Pazaran G., 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
 #' @references \emph{Slater, A.T., Cogan, N.O., Forster, J.W., Hayes, B.J., Daetwyler, H.D, 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
@@ -47,16 +47,12 @@
 #' 
 #' @export
 
-Gmatrix <- function (SNPmatrix = NULL, method = NULL, 
+Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden", 
                      missingValue = -9, maf = 0, 
                      verify.posdef = TRUE, ploidy=2,
-                     pseudo.diplod = FALSE,
+                     pseudo.diploid = FALSE,
                      ratio = FALSE){
   Time = proc.time()
-  
-  if(is.null(method)){
-    method="VanRaden"
-  }
   
   if(ratio){ #This allows to enter in the scaled crossprod condition
     method="VanRaden"
@@ -106,7 +102,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = NULL,
                     ncol = ncol(SNPmatrix))
   }
   
-  if(ploidy>2 && pseudo.diplod){## Uses Pseudodiploid model
+  if(ploidy>2 && pseudo.diploid){## Uses Pseudodiploid model
     P <- colSums(SNPmatrix,na.rm = TRUE)/nrow(SNPmatrix)
     SNPmatrix[,which(P>ploidy/2)] <- ploidy-SNPmatrix[,which(P>(ploidy/2))]
     Frequency <- colSums(SNPmatrix,na.rm=TRUE)/(ploidy*nrow(SNPmatrix))
@@ -123,18 +119,20 @@ Gmatrix <- function (SNPmatrix = NULL, method = NULL,
     return(Gmatrix)
   }
   
-  ## VanRaden or NULL ##
-  if (method == "VanRaden" && ploidy==2) {
-    TwoPQ <- 2 * t(Frequency[, 1]) %*% Frequency[, 2]
-    SNPmatrix <- SNPmatrix- 2 * FreqP
-    SNPmatrix[is.na(SNPmatrix)] <- 0
-    Gmatrix <- (tcrossprod(SNPmatrix, SNPmatrix))/as.numeric(TwoPQ)
-  }else{
-    if(ploidy>2){
-      SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE) 
-      K<-sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
-      SNPmatrix[which(is.na(SNPmatrix))] <- 0
-      Gmatrix<-tcrossprod(SNPmatrix)/K
+  ## VanRaden ##
+  if (method == "VanRaden") {
+    if(ploidy==2){
+      TwoPQ <- 2 * t(Frequency[, 1]) %*% Frequency[, 2]
+      SNPmatrix <- SNPmatrix- 2 * FreqP
+      SNPmatrix[is.na(SNPmatrix)] <- 0
+      Gmatrix <- (tcrossprod(SNPmatrix, SNPmatrix))/as.numeric(TwoPQ)
+    }else{
+      if(ploidy>2){
+        SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE) 
+        K<-sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
+        SNPmatrix[which(is.na(SNPmatrix))] <- 0
+        Gmatrix<-tcrossprod(SNPmatrix)/K
+      }
     }
   }
   
@@ -244,6 +242,16 @@ check_Gmatrix_data <- function(SNPmatrix,ploidy,method, ratio=FALSE){
   if (all(method != c("Yang", "VanRaden", "Slater", "Su", "Vitezica", "MarkersMatrix"))) {
     stop("Method to build Gmatrix has to be either `Yang` or `VanRaden` for marker-based additive relationship matrix, or `Su` or `Vitezica` for marker-based dominance relationship matrx, or `MarkersMatrix` for matrix with amount of shared-marks by individuals pairs")
   }
+  
+  if( method=="Yang" && ploidy>2)
+    stop("Change method to 'VanRaden' for ploidies higher than 2 for marker-based additive relationship matrix")
+  
+  if( method=="Su" && ploidy>2)
+    stop("Change method to 'Slater' for ploidies higher than 2 for marker-based non-additive relationship matrix")
+
+  if( method=="Vitezica" && ploidy>2)
+    stop("Change method to 'Slater' for ploidies higher than 2 for marker-based non-additive relationship matrix")
+  
   if(class(SNPmatrix)!="matrix"){
     cat("SNPmatrix class is:",class(SNPmatrix),"\n")
     stop("SNPmatrix class must be matrix. Please verify it.")

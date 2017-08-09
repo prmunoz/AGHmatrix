@@ -4,14 +4,14 @@
 \alias{Gmatrix}
 \title{Construction of Relationship Matrix G}
 \usage{
-Gmatrix(SNPmatrix = NULL, method = NULL, missingValue = -9, maf = 0,
-  verify.posdef = TRUE, ploidy = 2, pseudo.diplod = FALSE,
+Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
+  maf = 0, verify.posdef = TRUE, ploidy = 2, pseudo.diploid = FALSE,
   ratio = FALSE)
 }
 \arguments{
-\item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, missingValue).}
+\item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue).}
 
-\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden" for diploids and a scaled product for autopolyploids (similar to Covarrubias-Pazaran, 2006).}
+\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).}
 
 \item{missingValue}{missing value in data. Default=-9.}
 
@@ -21,9 +21,9 @@ Gmatrix(SNPmatrix = NULL, method = NULL, missingValue = -9, maf = 0,
 
 \item{ploidy}{data ploidy (an even number between 2 and 20). Default=2.}
 
-\item{pseudo.diplod}{if TRUE, uses pseudodiploid parametrization of Slater (2016).}
+\item{pseudo.diploid}{if TRUE, uses pseudodiploid parametrization of Slater (2016).}
 
-\item{ratio}{if TRUE, molecular data is considered ratios and its computed the scaled product of the matrix.}
+\item{ratio}{if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).}
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
@@ -53,5 +53,5 @@ Gmatrix.Yang <- Gmatrix(snp.pine,method="Yang",missingValue=-9,maf=0.05)
 \emph{Yang, J., Benyamin, B., McEvoy, B.P., Gordon, S., Henders, A.K., Nyholt, D.R., Madden, P.A., Heath, A.C., Martin, N.G., Montgomery, G.W. and Goddard, M.E., 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
 }
 \author{
-Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, and Letícia Aparecida de Castro Lara
+Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, Letícia AC Lara, and Ivone Oliveira
 }
