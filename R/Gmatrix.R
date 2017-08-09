@@ -16,7 +16,7 @@
 
 #' Construction of Relationship Matrix G
 #'
-#' Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or dominance relationship matrix. Uses pseudodiploid model (Slater, 2016) on polyploid data for methods "Yang", "VanRaden", "Su" and "Vitezica".
+#' Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or non-additive relationship matrix. For diploids, the methods "Yang" and "VanRaden" for additive relationship matrices, and "Su" and "Vitezica" for non-additive relationship matrices are implemented. For autopolyploids, the method "VanRaden" for additive relationship, method "Slater" for full-autopolyploid model including non-additive effects, and pseudo-diploid parametrization are implemented.
 #'
 #' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue). 
 #' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).
@@ -169,9 +169,11 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   
   if (method == "Slater"){
     drop.alleles <- which(Frequency==0)
-    Frequency <- Frequency[-drop.alleles]
-    SNPmatrix <- SNPmatrix[,-drop.alleles]
-    FreqP <- FreqP[,-drop.alleles]
+    if(length(drop.alleles)>0){
+      Frequency <- Frequency[-drop.alleles]
+      SNPmatrix <- SNPmatrix[,-drop.alleles]
+      FreqP <- FreqP[,-drop.alleles]
+    }
     FreqPQ <- matrix(rep(Frequency * (1-Frequency),
                          each = nrow(SNPmatrix)),
                      ncol = ncol(SNPmatrix))

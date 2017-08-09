@@ -29,7 +29,7 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 Matrix with the marker-bases relationships between the individuals
 }
 \description{
-Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or dominance relationship matrix. Uses pseudodiploid model (Slater, 2016) on polyploid data for methods "Yang", "VanRaden", "Su" and "Vitezica".
+Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or non-additive relationship matrix. For diploids, the methods "Yang" and "VanRaden" for additive relationship matrices, and "Su" and "Vitezica" for non-additive relationship matrices are implemented. For autopolyploids, the method "VanRaden" for additive relationship, method "Slater" for full-autopolyploid model including non-additive effects, and pseudo-diploid parametrization are implemented.
 }
 \examples{
 data(snp.pine)
