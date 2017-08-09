@@ -169,9 +169,11 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   
   if (method == "Slater"){
     drop.alleles <- which(Frequency==0)
-    Frequency <- Frequency[-drop.alleles]
-    SNPmatrix <- SNPmatrix[,-drop.alleles]
-    FreqP <- FreqP[,-drop.alleles]
+    if(length(drop.alleles)>0){
+      Frequency <- Frequency[-drop.alleles]
+      SNPmatrix <- SNPmatrix[,-drop.alleles]
+      FreqP <- FreqP[,-drop.alleles]
+    }
     FreqPQ <- matrix(rep(Frequency * (1-Frequency),
                          each = nrow(SNPmatrix)),
                      ncol = ncol(SNPmatrix))
