@@ -33,7 +33,7 @@ If you are not familiar with `R`, we recommend the reading of vignette [Introduc
 |           |&nbsp; &nbsp; &nbsp; &nbsp; |  Additive                     |&nbsp; &nbsp; &nbsp; &nbsp; | Non-Additive               |
 |-----------|--------------|:----------------------------:|----|:---------------------------:|
 | **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Yang (2010), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Su (2012), Vitezica (2013) |
-| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Yang (2010), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016)              |
+| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016)              |
 </center>
 
 ## Citation
@@ -127,6 +127,33 @@ More information about `Gmatrix` can be found with:
 ?Gmatrix
 ```
 
+## Relationship matrices using the molecular data - G matrix for autopolyploids
+This section presents how to load the data and how to construct the genomic-based relationship matrix for autopolyploid species. In the package, the function Gmatrix is the one that handles the molecular-markers matrix and builds the relationship matrix. Molecular markers data should be organized in a matrix format (individual in rows and markers in columns) coded according to the dosage level: 0,1,2,...,ploidy level, and missing data value (numeric or NA). As an example, an autohexaploid should be coded as 0,1,2,3,4,5,6, and missing data value. Import your molecular marker data into R with the function read.table() and convert to a matrix format with the function as.matrix(). In autopolyploids, the function Gmatrix can be used then to construct: i) the additive relationship based on VanRaden (2008) and also implemented at the `sommer` package (Covarrubias-Pazaran 2016); ii) the full-autopolyploid including non-additive model as Slater et al. (2016); iii) the pseudo-diploid model as Slater et al. (2016). As an example, here we build the three matrices using simulated data.
+
+Simulating data with 10 individuals and 100 markers.
+```{r}
+inds <- 10
+markers <- 100
+markersdata <- matrix(sample(x=0:4, size=inds*markers, replace=TRUE), nrow=inds, ncol=markers)
+```
+
+Computing the matrices:
+```{r, eval=FALSE}
+#Computing the additive relationship matrix based on VanRaden 2008
+G_VanRaden <- Gmatrix(markersdata, method="VanRaden", ploidy=4)
+
+#Computing the full-autopolyploid matrix based on Slater 2016
+G_Slater <- Gmatrix(markersdata, method="Slater", ploidy=4)
+
+#Computing the pseudodiploid matrix based on Slater 2016
+G_Pseudodiploid <- Gmatrix(markersdata, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
+```
+
+More information about `Gmatrix` can be found with:
+```{r, eval=FALSE}
+?Gmatrix
+```
+
 ## Combined relationship matrix - H matrix
 Here we present how to compute the H matrix using the package. This matrix is computed based on the matrix A using matrix G as a correction and it is presented in Munoz et al. 2014. In this example we consider the A matrix as an identity (*e.g* we do not have pedigree information and assume the individuals in Hardy-Weinberg equilibrium). It is important to pass to `Hmatrix` the same arguments of `missingValue` and `maf` of `Gmatrix`. If the `Hmat` gives singularity problem, you can try to add a small constant to its calculus changing argument `c` to a small value (*e.g*, `0.001`).
 
@@ -177,6 +204,24 @@ D_D_D <- D*D*D
 ```
 
 And so on...
+
+## Inverting your matrix to be used in mixed models equations:
+To invert your matrix you can use the `R` base function `solve` if your matrix has an unique inverse:
+```{r, eval=FALSE}
+#Computing the matrix
+A <- Amatrix(data=ped.mrode, ploidy=4, w=0.1, unk=0)
+
+#Building its unique inverse
+Ainv <- solve(A)
+```
+However, it is common a genomic-based relationship matrix not be positive-definite and, therefore, has non-unique inverse. In such case, you may use one generalized inverse computation or cholesky decomposition. Here we show how to compute the Moore-Penrose inverse implemented in the `MASS` package:
+```{r, eval=FALSE}
+#Computing the matrix
+Gmat <- Gmatrix(SNPmatrix=snp.pine, missingValue=-9, maf=0.05, method="VanRaden")
+
+#Building its Moore-Penrose generalized inverse
+Ginv <- MASS::ginv(Gmat)
+```
 
 ## Exporting your data to be used in ASReml - csv format
 In this section, we present how to use the function formatmatrix to export a recently build matrix in the format compatible with ASReml standalone version. That is the lower diagonal matrix formatted in three columns in .csv format (other ASCII extension could be used as well). In order to do this, we need to build a matrix, its inverse, and export it using `formatmatrix` function. ASReml can invert the relationship matrix as well, probably more efficiently than R for large matrices (i.e. `solve()` function), so no need to invert the matrix in R if matrix is large. This function has as options: `round.by`, which let you decide the number of decimals you want; `exclude.0`, if `TRUE`, remove all the zeros from your data; and, name that defines the name to be used in the exported file. Use the default if not sure what parameter use in these function. Here an example using `ped.mrode` data:
@@ -243,6 +288,8 @@ plot_genealogy(data=ped.mrode,ind="Var4",Amatrix=Amat)
 
 ## Bibliography
 Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. *The Plant Genome* 9.
+
+Covarrubias-Pazaran, G. 2016 Genome-assisted prediction of quantitative traits using the R package sommer. *PloS one* 11.6: e0156744.
 
 Henderson, C., 1976 A simple method for computing the inverse of a numerator relationship matrix used in prediction of breeding values. *Biometrics* pp. 69–83.
 

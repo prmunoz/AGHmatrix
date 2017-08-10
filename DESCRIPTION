@@ -1,7 +1,7 @@
 Package: AGHmatrix
 Title: Relationship matrices for diploid and autopolyploid species
-Version: 0.0.3001
-Date: 08/09/2017
+Version: 0.0.3002
+Date: 09/09/2017
 Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
     by G) relationship matrices for diploid and autopolyploid species. Several methods
     are implemented considering additive and non-additive models.
@@ -17,7 +17,8 @@ Imports:
     Matrix (>= 1.2-7.1),
     ggplot2 (>= 2.2.1)
 Suggests:
-    knitr
+    knitr,
+    MASS
 VignetteBuilder: knitr
 Encoding: UTF-8
 License: GPL-3
