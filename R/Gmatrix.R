@@ -3,7 +3,7 @@
 # Package: AGHmatrix 							
 # 									
 # File: Gmatrix.R
-# Contains: Gmatrix slater_par check_Gmatrix_data						
+# Contains: Gmatrix slater_par check_Gmatrix_data	snp.check				
 # 									
 # Written by Rodrigo Rampazo Amadeu 			
 # Contributors: Marcio Resende Jr, Leticia AC Lara, Ivone Oliveira, Luis Felipe V Ferrao
@@ -21,12 +21,14 @@
 #' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue). 
 #' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).
 #' @param missingValue missing value in data. Default=-9.
+#' @param thresh.missing threshold on missing data,  SNPs below of this frequency value will be maintained. Default = 
 #' @param maf max of missing data accepted to each marker. Default=0.05.
 #' @param verify.posdef verify if the resulting matrix is positive-definite. Default=TRUE.
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
-#'
+#' @param impute.method if TRUE, missing data imputed by the mode
+#' 
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
 #' @examples
@@ -63,10 +65,10 @@
 #' @export
 
 Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden", 
-                     missingValue = -9, maf = 0, 
+                     missingValue = -9, maf = 0, thresh.missing = 0.9,
                      verify.posdef = TRUE, ploidy=2,
                      pseudo.diploid = FALSE,
-                     ratio = FALSE){
+                     ratio = FALSE, impute.method = FALSE){
   Time = proc.time()
   
   if(ratio){ #This allows to enter in the scaled crossprod condition
@@ -84,21 +86,16 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   NumberMarkers <- ncol(SNPmatrix)
   nindTotal <- colSums(!is.na(SNPmatrix))
   nindAbs <- max(nindTotal)
+  cat("Initial data: \n")
   cat("\tNumber of Individuals:", max(nindTotal), "\n")
   cat("\tNumber of Markers:", NumberMarkers, "\n")
   
   if(ratio==FALSE){
-    MAF <- apply(SNPmatrix, 2, function(x) {
-      AF <- mean(x, na.rm = T)/ploidy
-      MAF <- ifelse(AF > 0.5, 1 - AF, AF) # Minor allele freq pode ser o alelos de ref ou não ref
-    })
-    snps.low <- MAF < maf
-    if(any(snps.low)){
-      idx.rm <- which(snps.low)
-      SNPmatrix <- SNPmatrix[, -idx.rm, drop=FALSE]
-      cat("\t", length(idx.rm), "markers dropped due to maf cutoff of", maf, "\n")
-      cat("\t", ncol(SNPmatrix), "markers kept \n")
-    }
+    SNPmatrix <- snp.check(SNPmatrix,
+                           ploidy = ploidy, 
+                           thresh.maf = maf, 
+                           thresh.missing = thresh.missing,
+                           impute.method = impute.method)
   }
   
   if(method=="Slater"){
@@ -263,6 +260,74 @@ slater_par <- function(X,ploidy){
   }
   gc()
   return(X_out)
+}
+
+# Function by Luis F. V. Ferrao
+# Internal function to maf cutoff and impute data
+snp.check = function(M = NULL,
+                     ploidy=4,
+                     thresh.maf = 0.05,
+                     thresh.missing = 0.9,
+                     impute.method = TRUE){
+  # SNP missing data
+  ncol.init <- ncol(M)
+  
+  missing <- apply(M, 2, function(x) sum(is.na(x))/nrow(M))
+  missing.low = missing <= thresh.missing
+  cat("\nMissing data check: \n")
+  if(any(missing.low)){
+    cat("\tTotal SNPs:", ncol(M),"\n")
+    cat("\t",ncol(M) - sum(missing.low), "SNPs dropped due to missing data threshold of", thresh.missing,"\n")
+    cat("\tTotal of:",sum(missing.low), " SNPs \n")
+    idx.rm <- which(missing.low)
+    M <- M[, idx.rm, drop=FALSE]
+  } else{
+    cat("\tNo SNPs with missing data, missing threshold of = ", thresh.missing,"\n")
+  }
+  
+  # Minor alele frequency
+  MAF <- apply(M, 2, function(x) {
+    AF <- mean(x, na.rm = T)/ploidy
+    MAF <- ifelse(AF > 0.5, 1 - AF, AF) # Minor allele freq can be ref allele or not
+  })
+  snps.low <- MAF < thresh.maf
+  cat("MAF check: \n")
+  if(any(snps.low)){
+    cat("\t",sum(snps.low), "SNPs dropped with MAF below", thresh.maf,"\n")
+    cat("\tTotal:",ncol(M) - sum(snps.low), " SNPs \n")
+    idx.rm <- which(snps.low)
+    M <- M[, -idx.rm, drop=FALSE]
+  } else{
+    cat("\tNo SNPs with MAF below", thresh.maf,"\n")
+  }
+  
+  # SNPs monomorficos
+  mono <- apply(M, 2, function(x) {
+    equal <- isTRUE(all.equal(x, rep(x[1], length(x))))
+  })
+  cat("Monomorphic check: \n")
+  if(any(mono)){
+    cat("\t",sum(mono), "monomorphic SNPs \n")
+    print("\tTotal:",ncol(M) - sum(mono), "SNPs \n")
+    idx.rm <- which(mono)
+    M <- M[, -idx.rm, drop=FALSE]
+  } else{
+    cat("\tNo monomorphic SNPs \n")
+  }
+  
+  # Imputing by mode
+  if(impute.method==TRUE){
+    ix <- which(is.na(M))
+    if (length(ix) > 0) {
+      M[ix] <- as.integer(names(which.max(table(M))))
+    }
+  }
+  
+  # Total of SNPs
+  cat("Summary check: \n")
+  cat("\tInitial: ", ncol.init, "SNPs \n")
+  cat("\tFinal: ", ncol(M), " SNPs (", ncol.init - ncol(M), " SNPs removed) \n \n")
+  return(M)
 }
 
 # Internal function to check input Gmatrix arguments

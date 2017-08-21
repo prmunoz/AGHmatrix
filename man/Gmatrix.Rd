@@ -5,8 +5,8 @@
 \title{Construction of Relationship Matrix G}
 \usage{
 Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
-  maf = 0, verify.posdef = TRUE, ploidy = 2, pseudo.diploid = FALSE,
-  ratio = FALSE)
+  maf = 0, thresh.missing = 0.9, verify.posdef = TRUE, ploidy = 2,
+  pseudo.diploid = FALSE, ratio = FALSE, impute.method = FALSE)
 }
 \arguments{
 \item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue).}
@@ -17,6 +17,8 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 
 \item{maf}{max of missing data accepted to each marker. Default=0.05.}
 
+\item{thresh.missing}{threshold on missing data,  SNPs below of this frequency value will be maintained. Default =}
+
 \item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=TRUE.}
 
 \item{ploidy}{data ploidy (an even number between 2 and 20). Default=2.}
@@ -24,6 +26,8 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 \item{pseudo.diploid}{if TRUE, uses pseudodiploid parametrization of Slater (2016).}
 
 \item{ratio}{if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).}
+
+\item{impute.method}{if TRUE, missing data imputed by the mode}
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
