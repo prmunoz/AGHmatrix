@@ -6,10 +6,10 @@
 # Contains: Gmatrix slater_par check_Gmatrix_data						
 # 									
 # Written by Rodrigo Rampazo Amadeu 			
-# Contributors: Marcio Resende Jr, Leticia AC Lara, Ivone Oliveira 
+# Contributors: Marcio Resende Jr, Leticia AC Lara, Ivone Oliveira, Luis Felipe V Ferrao
 # 									
 # First version: Feb-2014 					
-# Last update: 22-Feb-2017 						
+# Last update: 21-Aug-2017 						
 # License: GPL-3	
 # 									
 #####################################################################
@@ -87,6 +87,20 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   cat("\tNumber of Individuals:", max(nindTotal), "\n")
   cat("\tNumber of Markers:", NumberMarkers, "\n")
   
+  if(ratio==FALSE){
+    MAF <- apply(SNPmatrix, 2, function(x) {
+      AF <- mean(x, na.rm = T)/ploidy
+      MAF <- ifelse(AF > 0.5, 1 - AF, AF) # Minor allele freq pode ser o alelos de ref ou não ref
+    })
+    snps.low <- MAF < maf
+    if(any(snps.low)){
+      idx.rm <- which(snps.low)
+      SNPmatrix <- SNPmatrix[, -idx.rm, drop=FALSE]
+      cat("\t", length(idx.rm), "markers dropped due to maf cutoff of", maf, "\n")
+      cat("\t", ncol(SNPmatrix), "markers kept \n")
+    }
+  }
+  
   if(method=="Slater"){
     P <- colSums(SNPmatrix,na.rm = TRUE)/nrow(SNPmatrix)
     SNPmatrix[,which(P>ploidy/2)] <- ploidy-SNPmatrix[,which(P>(ploidy/2))]
@@ -105,14 +119,14 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
     Frequency <- cbind(apply(SNPmatrix, 2, function(x) alelleFreq(x,0))
                        , apply(SNPmatrix, 2, function(x) alelleFreq(x, 2)))
     
-    if (any(Frequency[, 1] <= maf) & maf != 0) {
-      cat("\t", length(which(Frequency[, 1] <= maf)), "markers dropped due to maf cutoff of", maf, "\n")
-      SNPmatrix <- SNPmatrix[,-which(Frequency[, 1] <= maf)]
-      cat("\t", ncol(SNPmatrix), "markers kept \n")
-      Frequency <- as.matrix(Frequency[-which(Frequency[,1] <= 
-                                                maf), ])
-      NumberMarkers <- ncol(SNPmatrix)
-    }
+#   if (any(Frequency[, 1] <= maf) & maf != 0) {
+#      cat("\t", length(which(Frequency[, 1] <= maf)), "markers dropped due to maf cutoff of", maf, "\n")
+#      SNPmatrix <- SNPmatrix[,-which(Frequency[, 1] <= maf)]
+#      cat("\t", ncol(SNPmatrix), "markers kept \n")
+#      Frequency <- as.matrix(Frequency[-which(Frequency[,1] <= 
+#                                                maf), ])
+#      NumberMarkers <- ncol(SNPmatrix)
+#    }
     FreqP <- matrix(rep(Frequency[, 2], each = nrow(SNPmatrix)), 
                     ncol = ncol(SNPmatrix))
   }
