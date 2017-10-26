@@ -339,8 +339,8 @@ check_Gmatrix_data <- function(SNPmatrix,ploidy,method, ratio=FALSE){
     stop("Method to build Gmatrix has to be either `Yang` or `VanRaden` for marker-based additive relationship matrix, or `Su` or `Vitezica` for marker-based dominance relationship matrx, or `MarkersMatrix` for matrix with amount of shared-marks by individuals pairs")
   }
   
-  if( method=="Yang" && ploidy>2)
-    stop("Change method to 'VanRaden' for ploidies higher than 2 for marker-based additive relationship matrix")
+#  if( method=="Yang" && ploidy>2)
+#    stop("Change method to 'VanRaden' for ploidies higher than 2 for marker-based additive relationship matrix")
   
   if( method=="Su" && ploidy>2)
     stop("Change method to 'Slater' for ploidies higher than 2 for marker-based non-additive relationship matrix")
