@@ -119,7 +119,7 @@ G_Yang <- Gmatrix(SNPmatrix=snp.pine, missingValue=-9, maf=0.05, method="Yang")
 G_Su <- Gmatrix(SNPmatrix=snp.pine, missingValue=-9, maf=0.05, method="Su")
 
 #Computing the dominance relationship matrix based on Vitezica 2013
-G_Yang <- Gmatrix(SNPmatrix=snp.pine, missingValue=-9, maf=0.05, method="Vitezica")
+G_Vitezica <- Gmatrix(SNPmatrix=snp.pine, missingValue=-9, maf=0.05, method="Vitezica")
 ```
 
 More information about `Gmatrix` can be found with:
@@ -139,13 +139,13 @@ markersdata <- matrix(sample(x=0:4, size=inds*markers, replace=TRUE), nrow=inds,
 
 Computing the matrices:
 ```{r, eval=FALSE}
-#Computing the additive relationship matrix based on VanRaden 2008
+#Computing the additive relationship matrix based on VanRaden 2008 and adapter by Ashraf 2016
 G_VanRaden <- Gmatrix(markersdata, method="VanRaden", ploidy=4)
 
-#Computing the full-autopolyploid matrix based on Slater 2016
-G_Slater <- Gmatrix(markersdata, method="Slater", ploidy=4)
+#Computing the full-autopolyploid matrix based on Slater 2016 (Eq. 8 and 9)
+G_FullAutopolyploid <- Gmatrix(markersdata, method="Slater", ploidy=4)
 
-#Computing the pseudodiploid matrix based on Slater 2016
+#Computing the pseudodiploid matrix based on Slater 2016 (Eq. 5, 6, and 7)
 G_Pseudodiploid <- Gmatrix(markersdata, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
 ```
 
@@ -288,6 +288,8 @@ plot_genealogy(data=ped.mrode,ind="Var4",Amatrix=Amat)
 
 ## Bibliography
 Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. *The Plant Genome* 9.
+
+Ashraf, B. H., S. Byrne, D. Fé, A. Czaban, T. Asp, M. G. Pedersen, I. Lenk, N. Roulund, T. Didion, C. S. Jensen, et al., 2016 Estimating genomic heritabilities at the level of family-pool samples of perennial ryegrass using genotyping-by-sequencing. *Theoretical and Applied Genetics* 129: 45-52.
 
 Covarrubias-Pazaran, G. 2016 Genome-assisted prediction of quantitative traits using the R package sommer. *PloS one* 11.6: e0156744.
 
