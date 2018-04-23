@@ -28,11 +28,11 @@
 #' @examples
 #' data(ped.mrode)
 #' #Build Amatrix diploid (no double reduction proportion)
-#' Amatrix(data=ped.mrode,ploidy=2,unk=0)
+#' Amatrix(data=ped.mrode,ploidy=2)
 #' #Build Amatrix autotetraploidy (double reduction proportion=0.1)
-#' Amatrix(data=ped.mrode,ploidy=4,w=0.1,unk=0)
+#' Amatrix(data=ped.mrode,ploidy=4,w=0.1)
 #' #' #Build Amatrix autooctaploid (no double reduction proportion)
-#' Amatrix(data=ped.mrode,ploidy=8,unk=0)
+#' Amatrix(data=ped.mrode,ploidy=8)
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #'
