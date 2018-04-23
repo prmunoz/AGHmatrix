@@ -4,17 +4,15 @@
 \alias{Amatrix}
 \title{Construction of Relationship Matrix A}
 \usage{
-Amatrix(data = NULL, ploidy = 2, w = 0, unk = 0, verify = TRUE,
+Amatrix(data = NULL, ploidy = 2, w = 0, verify = TRUE,
   dominance = FALSE)
 }
 \arguments{
-\item{data}{pedigree data name (3-column way format).}
+\item{data}{pedigree data name (3-column way format). Unknown value should be equal 0.}
 
 \item{ploidy}{an even number (default=2).}
 
 \item{w}{proportion of parental gametas IBD due to double reduction (default=0), only if ploidy=4.}
-
-\item{unk}{string or number indicating the unknown value related in the pedigree file (default=0).}
 
 \item{verify}{verifies pedigree file for conflictuos entries (default=TRUE).}
 
