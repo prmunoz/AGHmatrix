@@ -17,10 +17,9 @@
 #'
 #' Creates a additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (an even number) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only). Autopolyploid matrices based on Kerr (2012). Construction is based on the Henderson's recursive method described in Mrode (2005).
 #'
-#' @param data pedigree data name (3-column way format).
+#' @param data pedigree data name (3-column way format). Unknown value should be equal 0.
 #' @param ploidy an even number (default=2).
 #' @param w proportion of parental gametas IBD due to double reduction (default=0), only if ploidy=4. 
-#' @param unk string or number indicating the unknown value related in the pedigree file (default=0).
 #' @param verify verifies pedigree file for conflictuos entries (default=TRUE).
 #' @param dominance if true, returns the dominance relationship matrix
 #' 
@@ -46,7 +45,6 @@
 Amatrix <- function(data = NULL,
                     ploidy=2,
                     w=0,
-                    unk=0,
 		                verify=TRUE,
                     dominance=FALSE){
   if(ploidy%%2!=0)
@@ -57,13 +55,14 @@ Amatrix <- function(data = NULL,
 
   if( is.null(data))
     stop(deparse("Please define the variable data"))
-
+  
+  unk=0
   cat("Verifying conflicting data... \n")
   flag<-verifyped(data)
   if(flag) 
     stop(deparse("Please double-check your data and try again"))
     
-
+  
   cat("Organizing data... \n")
   data <- datatreat(data=data,unk=unk,n.max=50,save=FALSE)
 
