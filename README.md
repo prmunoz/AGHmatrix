@@ -3,8 +3,9 @@
 `AGHmatrix` is an [R](http://www.r-project.org) package to compute A (pedigree), G (genomic-base), and H (A corrected by G) matrices for diploid and autopolyploid species. It suports any even ploidy.
 
 The following matrices are implemented:
+### Pedigree-based relationship matrix (A matrix)
 
-<center> ##Pedigree-based relationship matrix (A matrix)
+<center> 
 
 |               |&nbsp; &nbsp; &nbsp; &nbsp; | Additive                  |&nbsp; &nbsp; &nbsp; &nbsp; |Non-Additive                |
 |---------------|--------------|:-------------------------:|--------------|:--------------------------:|
@@ -12,7 +13,9 @@ The following matrices are implemented:
 | **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Kerr (2012), Slater (2013)|&nbsp; &nbsp; &nbsp; &nbsp; ||                            |
 </center>
 
-<center> ##Molecular-based relationship matrix (G matrix) 
+### Molecular-based relationship matrix (G matrix) 
+
+<center> 
 
 |           |&nbsp; &nbsp; &nbsp; &nbsp; |  Additive                     |&nbsp; &nbsp; &nbsp; &nbsp; | Non-Additive               |
 |-----------|--------------|:----------------------------:|----|:---------------------------:|
