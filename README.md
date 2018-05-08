@@ -4,15 +4,15 @@
 
 The following matrices are implemented:
 
-<center> *Pedigree-based relationship matrix (A matrix)*
-
+## Pedigree-based relationship matrix (A matrix)
+<center>
 |               |&nbsp; &nbsp; &nbsp; &nbsp; | Additive                  |&nbsp; &nbsp; &nbsp; &nbsp; |Non-Additive                |
 |---------------|--------------|:-------------------------:|--------------|:--------------------------:|
 | **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Henderson (1976)          |&nbsp; &nbsp; &nbsp; &nbsp; |Cockerham (1954)            |
 | **Autopolyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Kerr (2012), Slater (2013)|&nbsp; &nbsp; &nbsp; &nbsp; ||                            |
 </center>
-
-<center> *Molecular-based relationship matrix (G matrix)* 
+## Molecular-based relationship matrix (G matrix)
+<center>  
 
 |           |&nbsp; &nbsp; &nbsp; &nbsp; |  Additive                     |&nbsp; &nbsp; &nbsp; &nbsp; | Non-Additive               |
 |-----------|--------------|:----------------------------:|----|:---------------------------:|
@@ -57,5 +57,6 @@ that will guide you through other chapters.
 [AGHmatrix Tutorial](http://htmlpreview.github.io/?https://github.com/rramadeu/aghmatrix/blob/master/inst/doc/Tutorial_AGHmatrix.html)
 
 # More about us
-www.blueberrybreeding.com.br
-www.statgen.esalq.usp.br
+[Bluberry Breeding & Genomics Lab/UF/USA](www.blueberrybreeding.com.br)
+
+[Statistical-Genetics Lab/USP/Brazil](www.statgen.esalq.usp.br)
