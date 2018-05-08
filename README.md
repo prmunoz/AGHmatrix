@@ -26,8 +26,6 @@ The following matrices are implemented:
 
 An original manuscript about `AGHmatrix` development and application in autotetraploids is described on [Amadeu, Rodrigo R., et al. "AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example." The Plant Genome (2016). doi:10.3835/plantgenome2016.01.0009.](https://dl.sciencesocieties.org/publications/tpg/articles/0/0/plantgenome2016.01.0009).
 
-This github page is under develpment and is based upon the `OneMap` (https://github.com/augusto-garcia/onemap) software git.
-
 ## How to install
 
 ### From github
