@@ -1,6 +1,6 @@
 # AGHmatrix
 
-`AGHmatrix` is an [R](http://www.r-project.org) package to compute A (pedigree), G (genomic-base), and H (A corrected by G) matrices for diploid and autotetraploid species to later be used in prediction models.
+`AGHmatrix` is an [R](http://www.r-project.org) package to compute A (pedigree), G (genomic-base), and H (A corrected by G) matrices for diploid and autopolyploid species. It suports any even ploidy.
 
 The following matrices are implemented:
 
@@ -20,7 +20,7 @@ The following matrices are implemented:
 | **Autopolyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016)              |
 </center>
 
-An original manuscript about `AGHmatrix` development and application is described on [Amadeu, Rodrigo R., et al. "AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example." The Plant Genome (2016). doi:10.3835/plantgenome2016.01.0009.](https://dl.sciencesocieties.org/publications/tpg/articles/0/0/plantgenome2016.01.0009).
+An original manuscript about `AGHmatrix` development and application in autotetraploids is described on [Amadeu, Rodrigo R., et al. "AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example." The Plant Genome (2016). doi:10.3835/plantgenome2016.01.0009.](https://dl.sciencesocieties.org/publications/tpg/articles/0/0/plantgenome2016.01.0009).
 
 This github page is under develpment and is based upon the `OneMap` (https://github.com/augusto-garcia/onemap) software git.
 
@@ -56,3 +56,6 @@ that will guide you through other chapters.
 
 [AGHmatrix Tutorial](http://htmlpreview.github.io/?https://github.com/rramadeu/aghmatrix/blob/master/inst/doc/Tutorial_AGHmatrix.html)
 
+# More about us
+www.blueberrybreeding.com.br
+www.statgen.esalq.usp.br
