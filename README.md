@@ -7,29 +7,30 @@ The following matrices are implemented:
 
 <center> 
 
-|               |&nbsp; &nbsp; &nbsp; &nbsp; | Additive                  |&nbsp; &nbsp; &nbsp; &nbsp; |Non-Additive                |
-|---------------|--------------|:-------------------------:|--------------|:--------------------------:|
-| **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Henderson (1976)          |&nbsp; &nbsp; &nbsp; &nbsp; |Cockerham (1954)            |
-| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Kerr (2012), Slater (2013)|&nbsp; &nbsp; &nbsp; &nbsp; ||                            |
+|               | Additive                  |Non-Additive                |
+|---------------|:-------------------------:|:--------------------------:|
+| **Diploid**   | Henderson (1976)          |Cockerham (1954)            |
+| **Polyploid** | Kerr (2012), Slater (2013)|                            |
 </center>
 
 ### Molecular-based relationship matrix (G matrix) 
 
 <center> 
-
-|           |&nbsp; &nbsp; &nbsp; &nbsp; |  Additive                     |&nbsp; &nbsp; &nbsp; &nbsp; | Non-Additive               |
-|-----------|--------------|:----------------------------:|----|:---------------------------:|
-| **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Yang (2010), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Su (2012), Vitezica (2013) |
-| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016)              |
+  
+|               | Additive                       | Non-Additive        |
+|---------------|:------------------------------:|:-------------------:|
+| **Diploid**   | Yang (2010), VanRaden (2012)   | Su (2012)           |
+| **Polyploid** | Slater (2016), VanRaden (2012) | Slater (2016)       |
 </center>
+
 
 An original manuscript about `AGHmatrix` development and application in autotetraploids is described on [Amadeu, Rodrigo R., et al. "AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example." The Plant Genome (2016). doi:10.3835/plantgenome2016.01.0009.](https://dl.sciencesocieties.org/publications/tpg/articles/0/0/plantgenome2016.01.0009).
 
 This github page is under develpment and is based upon the `OneMap` (https://github.com/augusto-garcia/onemap) software git.
 
-# How to install
+## How to install
 
-## From github
+### From github
 
 Within R, you need to install and load the package `devtools`:
 
@@ -51,7 +52,7 @@ Then, to install `AGHmatrix` from github:
 install_github("prmunoz/AGHmatrix")
 ```
 
-# Tutorials
+## Tutorials
 
 You can read the _AGHmatrix_ tutorial going to the vignettes of the
 installed package, or clicking below. Please, start with the overview,
@@ -59,7 +60,7 @@ that will guide you through other chapters.
 
 [AGHmatrix Tutorial](http://htmlpreview.github.io/?https://github.com/rramadeu/aghmatrix/blob/master/inst/doc/Tutorial_AGHmatrix.html)
 
-# More about us
-[Bluberry Breeding & Genomics Lab, University of Florida - USA](http://www.blueberrybreeding.com.br)
+## More about us
+[Bluberry Breeding & Genomics Lab, University of Florida - USA](http://www.blueberrybreeding.com)
 
 [Statistical-Genetics Lab, University of Sao Paulo - Brazil](http://www.statgen.esalq.usp.br)
