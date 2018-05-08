@@ -8,7 +8,7 @@
 # Written by Rodrigo Rampazo Amadeu
 # 									
 # First version: Feb-2014 
-# Last update: 12-Apr-2017 						
+# Last update: 8-May-2018 						
 # License: GPL-3
 # 								
 #########################################################################
@@ -22,6 +22,7 @@
 #' @param w proportion of parental gametas IBD due to double reduction (default=0), only if ploidy=4. 
 #' @param verify verifies pedigree file for conflictuos entries (default=TRUE).
 #' @param dominance if true, returns the dominance relationship matrix
+#' @param slater if true, returns the additive autotetraploid relationship matrix as Slater (2013)
 #' 
 #' @return Matrix with the Relationship between the individuals.
 #'
@@ -46,7 +47,8 @@ Amatrix <- function(data = NULL,
                     ploidy=2,
                     w=0,
 		                verify=TRUE,
-                    dominance=FALSE){
+                    dominance=FALSE,
+		                slater=FALSE){
   if(ploidy%%2!=0)
         stop(deparse("Ploidy should be an even number"))
 
@@ -142,10 +144,10 @@ Amatrix <- function(data = NULL,
   }
   
 #### For ploidy 4 ####
-  if(ploidy == 4){
+  if(slater==TRUE){
     listA <- list()
 
-      cat(paste("Constructing matrix A using ploidy = 4 and proportion of double reduction = ",w,"\n"))
+      cat(paste("Constructing matrix A using ploidy = 4 and proportion of double reduction = ",w,"as in Slater et al. (2014) \n"))
       start.time <- Sys.time()
 
       A[1,1] <- (1+w)/4
@@ -182,45 +184,84 @@ Amatrix <- function(data = NULL,
       
       A <- 4*A
   }
-      if(ploidy>4){ ## It does not use double-reduction proportion, need to double-check formula on kerr 2012 for higher ploidies...
-        listA <- list()
-        
-        cat(paste("Constructing matrix A using ploidy = ",ploidy," without double reduction \n"))
-        start.time <- Sys.time()
-        v = ploidy/2
-        A[1,1] <- (1)/(2*v)
-        for( i in 2:n){
-          ## Both are unknown
-          if( s[i] == 0 && d[i] == 0 ){
-            A[i,i] <- (1)/(2*v)
-            for( j in 1:(i-1))
-              A[j,i] <- A[i,j] <- 0
-          }
-          
-          ## Sire is unknown
-          if( s[i] == 0 && d[i] != 0 ){
-            A[i,i] <- (1 + ((v-1)*(v*A[d[i],d[i]] + 1/2 - 1))/(2*v-1))/(2*v)
-            for( j in 1:(i-1))
-              A[j,i] <- A[i,j] <- 0.5*(A[j,d[i]])
-          }
-          
-          ## Dire is unknown
-          if( d[i] == 0 && s[i] != 0 ){
-            A[i,i] <- (1 + ((v-1)*(v*A[s[i],s[i]] + 1/2 - 1))/(2*v-1))/(2*v)
-            for( j in 1:(i-1))
-              A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]])
-          }
-          
-          ## Both are known
-          if( d[i] != 0 && s[i] != 0 ){
-            A[i,i] <- (1  + ((v-1)*(v*A[d[i],d[i]] + v*A[s[i],s[i]] - 1))/(2*v-1))/(2*v) + A[d[i],s[i]]/2
-            for( j in 1:(i-1))
-              A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
-          }
-        }
-        
-      A <- 2*v*A
+  
+  # if(ploidy>2 && w==0){ ## It does not use double-reduction proportion, need to double-check formula on kerr 2012 for higher ploidies...
+  #   listA <- list()
+  #   cat(paste("Constructing matrix A using ploidy = 4",ploidy," and no proportion of double reduction \n"))
+  #   start.time <- Sys.time()
+  #   v = ploidy/2
+  #   A[1,1] <- (1)/(2*v)
+  #   for( i in 2:n){
+  #     ## Both are unknown
+  #     if( s[i] == 0 && d[i] == 0 ){
+  #       A[i,i] <- (1)/(2*v)
+  #       for( j in 1:(i-1))
+  #         A[j,i] <- A[i,j] <- 0
+  #     }
+  #     
+  #     ## Sire is unknown
+  #     if( s[i] == 0 && d[i] != 0 ){
+  #       A[i,i] <- (1 + ((v-1)*(v*A[d[i],d[i]] + 1/2 - 1))/(2*v-1))/(2*v)
+  #       for( j in 1:(i-1))
+  #         A[j,i] <- A[i,j] <- 0.5*(A[j,d[i]])
+  #     }
+  #     
+  #     ## Dire is unknown
+  #     if( d[i] == 0 && s[i] != 0 ){
+  #       A[i,i] <- (1 + ((v-1)*(v*A[s[i],s[i]] + 1/2 - 1))/(2*v-1))/(2*v)
+  #       for( j in 1:(i-1))
+  #         A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]])
+  #     }
+  #     
+  #     ## Both are known
+  #     if( d[i] != 0 && s[i] != 0 ){
+  #       A[i,i] <- (1  + ((v-1)*(v*A[d[i],d[i]] + v*A[s[i],s[i]] - 1))/(2*v-1))/(2*v) + A[d[i],s[i]]/2
+  #       for( j in 1:(i-1))
+  #         A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
+  #     }
+  #   }
+  #   
+  #   A <- 2*v*A
+  # }
+  
+  if(slater==FALSE && ploidy>2){ ## It does not use double-reduction proportion, need to double-check formula on kerr 2012 for higher ploidies...
+    listA <- list()
+    cat(paste("Constructing matrix A using ploidy = 4",ploidy," and proportion of double reduction = ",w," as in Kerr et al. (2012) \n"))
+    start.time <- Sys.time()
+    v = ploidy/2
+    A[1,1] <- (1)/(2*v)
+    for( i in 2:n){
+      ## Both are unknown
+      if( s[i] == 0 && d[i] == 0 ){
+        A[i,i] <- (1)/(2*v)
+        for( j in 1:(i-1))
+          A[j,i] <- A[i,j] <- 0
       }
+      
+      ## Sire is unknown
+      if( s[i] == 0 && d[i] != 0 ){
+        A[i,i] <- (1 + (v-1)*w + ((v-1)*(1-w)*(v*A[d[i],d[i]] + 1/2 - 1))/(2*v-1))/(2*v)
+        for( j in 1:(i-1))
+          A[j,i] <- A[i,j] <- 0.5*(A[j,d[i]])
+      }
+      
+      ## Dire is unknown
+      if( d[i] == 0 && s[i] != 0 ){
+        A[i,i] <- (1 + (v-1)*w + ((v-1)*(1-w)*(v*A[s[i],s[i]] + 1/2 - 1))/(2*v-1))/(2*v)
+        for( j in 1:(i-1))
+          A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]])
+      }
+      
+      ## Both are known
+      if( d[i] != 0 && s[i] != 0 ){
+        A[i,i] <- (1  + ((v-1)*w + ((v-1)*(1-w)*(v*A[d[i],d[i]] + v*A[s[i],s[i]] - 1)/(2*v-1))/(2*v))) + A[d[i],s[i]]/2
+        for( j in 1:(i-1))
+          A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
+      }
+    }
+    
+    A <- 2*v*A
+  }
   
   NA.errors <- which(is.na(A))
   if( length(NA.errors) > 0 )

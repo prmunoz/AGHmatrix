@@ -5,7 +5,7 @@
 \title{Construction of Relationship Matrix A}
 \usage{
 Amatrix(data = NULL, ploidy = 2, w = 0, verify = TRUE,
-  dominance = FALSE)
+  dominance = FALSE, slater = FALSE)
 }
 \arguments{
 \item{data}{pedigree data name (3-column way format). Unknown value should be equal 0.}
@@ -17,6 +17,8 @@ Amatrix(data = NULL, ploidy = 2, w = 0, verify = TRUE,
 \item{verify}{verifies pedigree file for conflictuos entries (default=TRUE).}
 
 \item{dominance}{if true, returns the dominance relationship matrix}
+
+\item{slater}{if true, returns the additive autotetraploid relationship matrix as Slater (2013)}
 }
 \value{
 Matrix with the Relationship between the individuals.
