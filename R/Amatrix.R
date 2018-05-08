@@ -46,9 +46,9 @@
 Amatrix <- function(data = NULL,
                     ploidy=2,
                     w=0,
-		                verify=TRUE,
+		    verify=TRUE,
                     dominance=FALSE,
-		                slater=FALSE){
+		    slater=FALSE){
   if(ploidy%%2!=0)
         stop(deparse("Ploidy should be an even number"))
 
@@ -226,7 +226,7 @@ Amatrix <- function(data = NULL,
   
   if(slater==FALSE && ploidy>2){ ## It does not use double-reduction proportion, need to double-check formula on kerr 2012 for higher ploidies...
     listA <- list()
-    cat(paste("Constructing matrix A using ploidy = 4",ploidy," and proportion of double reduction = ",w," as in Kerr et al. (2012) \n"))
+    cat(paste("Constructing matrix A using ploidy = ",ploidy," and proportion of double reduction = ",w,";as in Kerr et al. (2012) \n"))
     start.time <- Sys.time()
     v = ploidy/2
     A[1,1] <- (1)/(2*v)
@@ -254,7 +254,7 @@ Amatrix <- function(data = NULL,
       
       ## Both are known
       if( d[i] != 0 && s[i] != 0 ){
-        A[i,i] <- (1  + ((v-1)*w + ((v-1)*(1-w)*(v*A[d[i],d[i]] + v*A[s[i],s[i]] - 1)/(2*v-1))/(2*v))) + A[d[i],s[i]]/2
+        A[i,i] <- (1  + ((v-1)*w + ((v-1)*(1-w)*(v*A[d[i],d[i]] + v*A[s[i],s[i]] - 1)/(2*v-1))/(2*v)) + A[d[i],s[i]]/2
         for( j in 1:(i-1))
           A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
       }
