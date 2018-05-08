@@ -60,6 +60,6 @@ that will guide you through other chapters.
 [AGHmatrix Tutorial](http://htmlpreview.github.io/?https://github.com/rramadeu/aghmatrix/blob/master/inst/doc/Tutorial_AGHmatrix.html)
 
 # More about us
-[Bluberry Breeding & Genomics Lab/UF/USA](www.blueberrybreeding.com.br)
+[Bluberry Breeding & Genomics Lab, University of Florida - USA](http://www.blueberrybreeding.com.br)
 
-[Statistical-Genetics Lab/USP/Brazil](www.statgen.esalq.usp.br)
+[Statistical-Genetics Lab, University of Sao Paulo - Brazil](http://www.statgen.esalq.usp.br)
