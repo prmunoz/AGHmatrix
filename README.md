@@ -1,6 +1,24 @@
 # AGHmatrix
 
-`AGHmatrix` is an [R](http://www.r-project.org) package to compute A (pedigree), G (genomic-base), and H (A corrected by G) matrices for diploid and autotetraploid species to later be used in prediction models. At the moment, just the A matrix part is fully working and documented. We are working at the G and H part.
+`AGHmatrix` is an [R](http://www.r-project.org) package to compute A (pedigree), G (genomic-base), and H (A corrected by G) matrices for diploid and autotetraploid species to later be used in prediction models.
+
+The following matrices are implemented:
+
+<center> *Pedigree-based relationship matrix (A matrix)*
+
+|               |&nbsp; &nbsp; &nbsp; &nbsp; | Additive                  |&nbsp; &nbsp; &nbsp; &nbsp; |Non-Additive                |
+|---------------|--------------|:-------------------------:|--------------|:--------------------------:|
+| **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Henderson (1976)          |&nbsp; &nbsp; &nbsp; &nbsp; |Cockerham (1954)            |
+| **Autopolyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Kerr (2012), Slater (2013)|&nbsp; &nbsp; &nbsp; &nbsp; ||                            |
+</center>
+
+<center> *Molecular-based relationship matrix (G matrix)* 
+
+|           |&nbsp; &nbsp; &nbsp; &nbsp; |  Additive                     |&nbsp; &nbsp; &nbsp; &nbsp; | Non-Additive               |
+|-----------|--------------|:----------------------------:|----|:---------------------------:|
+| **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Yang (2010), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Su (2012), Vitezica (2013) |
+| **Autopolyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016)              |
+</center>
 
 An original manuscript about `AGHmatrix` development and application is described on [Amadeu, Rodrigo R., et al. "AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example." The Plant Genome (2016). doi:10.3835/plantgenome2016.01.0009.](https://dl.sciencesocieties.org/publications/tpg/articles/0/0/plantgenome2016.01.0009).
 
