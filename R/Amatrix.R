@@ -46,15 +46,15 @@
 Amatrix <- function(data = NULL,
                     ploidy=2,
                     w=0,
-		    verify=TRUE,
+                    verify=TRUE,
                     dominance=FALSE,
-		    slater=FALSE){
+                    slater=FALSE){
   if(ploidy%%2!=0)
-        stop(deparse("Ploidy should be an even number"))
-
+    stop(deparse("Ploidy should be an even number"))
+  
   if(ploidy!=2 & dominance)
-      stop(deparse("Dominance relationship matrix is implemented only for ploidy=2"))
-
+    stop(deparse("Dominance relationship matrix is implemented only for ploidy=2"))
+  
   if( is.null(data))
     stop(deparse("Please define the variable data"))
   
@@ -63,60 +63,60 @@ Amatrix <- function(data = NULL,
   flag<-verifyped(data)
   if(flag) 
     stop(deparse("Please double-check your data and try again"))
-    
+  
   
   cat("Organizing data... \n")
   data <- datatreat(data=data,unk=unk,n.max=50,save=FALSE)
-
+  
   s <- data$sire
   d <- data$dire
-
+  
   if( is.null(s) || is.null(d) )
     stop(deparse("Please define the variable s (sire) and/or d (dire)"))
-
+  
   if( length(s) != length(d) )
     stop(deparse("Please verify the variable s (sire) and/or d (dire), they don't have the same length"))
-
+  
   if( !is.numeric(s) || !is.numeric(d) )
     stop(deparse("Pleasy verify your data, it has to be 2 numeric vectors"))
-
+  
   if( length(data$sire) > 1000 )
-     cat("Processing a large pedigree data... It may take a couple of minutes... \n")
-
-
+    cat("Processing a large pedigree data... It may take a couple of minutes... \n")
+  
+  
   n <- length(s)
   A <- matrix(NA,ncol=n,nrow=n)
-
+  
   Time = proc.time()
-
-#### For ploidy 2 ####
+  
+  #### For ploidy 2 ####
   if(ploidy == 2){
-  w <- NA
-  cat("Constructing matrix A using ploidy = 2 \n")
+    w <- NA
+    cat("Constructing matrix A using ploidy = 2 \n")
     A[1,1] <- 1
     for( i in 2:n){
-
+      
       ## Both are unknown
       if( s[i] == 0 && d[i] == 0 ){
         A[i,i] <- 1
         for( j in 1:(i-1))
           A[j,i] <- A[i,j] <- 0
       }
-
+      
       ## Sire is unknown
       if( s[i] == 0 && d[i] != 0 ){
         A[i,i] <- 1
         for( j in 1:(i-1))
           A[j,i] <- A[i,j] <- 0.5*(A[j,d[i]])
       }
-
+      
       ## Dire is unknown
       if( d[i] == 0 && s[i] != 0 ){
         A[i,i] <- 1
         for( j in 1:(i-1))
           A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]])
       }
-
+      
       ## Both are known
       if( d[i] != 0 && s[i] != 0 ){
         A[i,i] <- 1+0.5*(A[d[i],s[i]])
@@ -125,64 +125,64 @@ Amatrix <- function(data = NULL,
       }
     }
   }
-
+  
   if(dominance){
-      cat("Constructing dominance relationship matrix \n")
-      D <- matrix(NA,ncol=n,nrow=n)
-      for(i in 1:n){
-          for(j in 1:n){
-              u1 <- ifelse(length(A[s[i],s[j]])>0,A[s[i],s[j]],0)
-              u2 <- ifelse(length(A[d[i],d[j]])>0,A[d[i],d[j]],0)
-              u3 <- ifelse(length(A[s[i],d[j]])>0,A[s[i],d[j]],0)
-              u4 <- ifelse(length(A[s[j],d[i]])>0,A[s[j],d[i]],0)
-              D[i,j] <- D[j,i] <- 0.25*(u1*u2+u3*u4)
-          }
-	}
-      diag(D)<-1
-      A<-D
-      D<-NULL
+    cat("Constructing dominance relationship matrix \n")
+    D <- matrix(NA,ncol=n,nrow=n)
+    for(i in 1:n){
+      for(j in 1:n){
+        u1 <- ifelse(length(A[s[i],s[j]])>0,A[s[i],s[j]],0)
+        u2 <- ifelse(length(A[d[i],d[j]])>0,A[d[i],d[j]],0)
+        u3 <- ifelse(length(A[s[i],d[j]])>0,A[s[i],d[j]],0)
+        u4 <- ifelse(length(A[s[j],d[i]])>0,A[s[j],d[i]],0)
+        D[i,j] <- D[j,i] <- 0.25*(u1*u2+u3*u4)
+      }
+    }
+    diag(D)<-1
+    A<-D
+    D<-NULL
   }
   
-#### For ploidy 4 ####
+  #### For ploidy 4 ####
   if(slater==TRUE){
     listA <- list()
-
-      cat(paste("Constructing matrix A using ploidy = 4 and proportion of double reduction = ",w,"as in Slater et al. (2014) \n"))
-      start.time <- Sys.time()
-
-      A[1,1] <- (1+w)/4
-      for( i in 2:n){
-
+    
+    cat(paste("Constructing matrix A using ploidy = 4 and proportion of double reduction =",w,";as in Slater et al. (2014) \n"))
+    start.time <- Sys.time()
+    
+    A[1,1] <- (1+w)/4
+    for( i in 2:n){
+      
       ## Both are unknown
-        if( s[i] == 0 && d[i] == 0 ){
-          A[i,i] <- (1+w)/4
-          for( j in 1:(i-1))
-            A[j,i] <- A[i,j] <- 0
-        }
+      if( s[i] == 0 && d[i] == 0 ){
+        A[i,i] <- (1+w)/4
+        for( j in 1:(i-1))
+          A[j,i] <- A[i,j] <- 0
+      }
 
-        ## Sire is unknown
-        if( s[i] == 0 && d[i] != 0 ){
-          A[i,i] <- (5 + 7*w + 4*A[d[i],d[i]]*(1-w) ) / 24
-          for( j in 1:(i-1))
-            A[j,i] <- A[i,j] <- 0.5*(A[j,d[i]])
-        }
-
-        ## Dire is unknown
-        if( d[i] == 0 && s[i] != 0 ){
-          A[i,i] <- (5 + 8*w + 4*A[s[i],s[i]]*(1-w) ) / 24 ##On Slater in 7w, deriving from hand based on Kerr is 8w
-          for( j in 1:(i-1))
-            A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]])
-        }
-        
-        ## Both are known
-        if( d[i] != 0 && s[i] != 0 ){
-          A[i,i] <- (1 + 2*w + (1-w)*(A[s[i],s[i]]) + (1-w)*(A[d[i],d[i]]) + 3*A[s[i],d[i]] ) / 6
-          for( j in 1:(i-1))
-            A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
-        }
+      ## Sire is unknown
+      if( s[i] == 0 && d[i] != 0 ){
+        A[i,i] <- (5 + 7*w + 4*A[d[i],d[i]]*(1-w) ) / 24
+        for( j in 1:(i-1))
+          A[j,i] <- A[i,j] <- 0.5*(A[j,d[i]])
       }
       
-      A <- 4*A
+      ## Dire is unknown
+      if( d[i] == 0 && s[i] != 0 ){
+        A[i,i] <- (5 + 8*w + 4*A[s[i],s[i]]*(1-w) ) / 24 ##On Slater in 7w, deriving from hand based on Kerr is 8w
+        for( j in 1:(i-1))
+          A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]])
+      }
+      
+      ## Both are known
+      if( d[i] != 0 && s[i] != 0 ){
+        A[i,i] <- (1 + 2*w + (1-w)*(A[s[i],s[i]]) + (1-w)*(A[d[i],d[i]]) + 3*A[s[i],d[i]] ) / 6
+        for( j in 1:(i-1))
+          A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
+      }
+    }
+    
+    A <- 4*A
   }
   
   # if(ploidy>2 && w==0){ ## It does not use double-reduction proportion, need to double-check formula on kerr 2012 for higher ploidies...
@@ -226,7 +226,7 @@ Amatrix <- function(data = NULL,
   
   if(slater==FALSE && ploidy>2){ ## It does not use double-reduction proportion, need to double-check formula on kerr 2012 for higher ploidies...
     listA <- list()
-    cat(paste("Constructing matrix A using ploidy = ",ploidy," and proportion of double reduction = ",w,";as in Kerr et al. (2012) \n"))
+    cat(paste("Constructing matrix A using ploidy =",ploidy,"and proportion of double reduction =",w,";as in Kerr et al. (2012) \n"))
     start.time <- Sys.time()
     v = ploidy/2
     A[1,1] <- (1)/(2*v)
@@ -254,7 +254,7 @@ Amatrix <- function(data = NULL,
       
       ## Both are known
       if( d[i] != 0 && s[i] != 0 ){
-        A[i,i] <- (1  + ((v-1)*w + ((v-1)*(1-w)*(v*A[d[i],d[i]] + v*A[s[i],s[i]] - 1)/(2*v-1))/(2*v)) + A[d[i],s[i]]/2
+        A[i,i] <- (1  + (v-1)*w + ((v-1)*(1-w)*(v*A[d[i],d[i]] + v*A[s[i],s[i]] - 1)/(2*v-1)))/(2*v) + A[d[i],s[i]]/2
         for( j in 1:(i-1))
           A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
       }
