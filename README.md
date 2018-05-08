@@ -4,20 +4,20 @@
 
 The following matrices are implemented:
 
-## Pedigree-based relationship matrix (A matrix)
-<center>
+<center> ##Pedigree-based relationship matrix (A matrix)
+
 |               |&nbsp; &nbsp; &nbsp; &nbsp; | Additive                  |&nbsp; &nbsp; &nbsp; &nbsp; |Non-Additive                |
 |---------------|--------------|:-------------------------:|--------------|:--------------------------:|
 | **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Henderson (1976)          |&nbsp; &nbsp; &nbsp; &nbsp; |Cockerham (1954)            |
-| **Autopolyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Kerr (2012), Slater (2013)|&nbsp; &nbsp; &nbsp; &nbsp; ||                            |
+| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Kerr (2012), Slater (2013)|&nbsp; &nbsp; &nbsp; &nbsp; ||                            |
 </center>
-## Molecular-based relationship matrix (G matrix)
-<center>  
+
+<center> ##Molecular-based relationship matrix (G matrix) 
 
 |           |&nbsp; &nbsp; &nbsp; &nbsp; |  Additive                     |&nbsp; &nbsp; &nbsp; &nbsp; | Non-Additive               |
 |-----------|--------------|:----------------------------:|----|:---------------------------:|
 | **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Yang (2010), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Su (2012), Vitezica (2013) |
-| **Autopolyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016)              |
+| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016)              |
 </center>
 
 An original manuscript about `AGHmatrix` development and application in autotetraploids is described on [Amadeu, Rodrigo R., et al. "AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example." The Plant Genome (2016). doi:10.3835/plantgenome2016.01.0009.](https://dl.sciencesocieties.org/publications/tpg/articles/0/0/plantgenome2016.01.0009).
