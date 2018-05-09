@@ -192,7 +192,7 @@ $(document).ready(function () {
 <td>       </td>
 <td align="center">Slater (2016), VanRaden (2012)</td>
 <td>       </td>
-<td align="center">Slater (2016)</td>
+<td align="center">Slater (2016), Endelman (2018)</td>
 </tr>
 </tbody>
 </table>
@@ -295,8 +295,11 @@ G_Vitezica &lt;- Gmatrix(SNPmatrix=snp.pine, missingValue=-9, maf=0.05, method=&
 markers &lt;- 100
 markersdata &lt;- matrix(sample(x=0:4, size=inds*markers, replace=TRUE), nrow=inds, ncol=markers)</code></pre>
 <p>Computing the matrices:</p>
-<pre class="r"><code>#Computing the additive relationship matrix based on VanRaden 2008 and adapter by Ashraf 2016
+<pre class="r"><code>#Computing the additive relationship matrix based on VanRaden 2008 and adapted by Ashraf 2016
 G_VanRaden &lt;- Gmatrix(markersdata, method=&quot;VanRaden&quot;, ploidy=4)
+
+#Computing the dominance (digenic) matrix based on Endelman 2018 (Eq. 19)
+G_Digenic &lt;- Gmatrix(markersdata, method=&quot;Endelman&quot;, ploidy=4)
 
 #Computing the full-autopolyploid matrix based on Slater 2016 (Eq. 8 and 9)
 G_FullAutopolyploid &lt;- Gmatrix(markersdata, method=&quot;Slater&quot;, ploidy=4)
@@ -426,6 +429,7 @@ plot_genealogy(data=ped.mrode,ind=&quot;Var4&quot;,Amatrix=Amat)</code></pre>
 <p>Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. <em>The Plant Genome</em> 9.</p>
 <p>Ashraf, B. H., S. Byrne, D. Fé, A. Czaban, T. Asp, M. G. Pedersen, I. Lenk, N. Roulund, T. Didion, C. S. Jensen, et al., 2016 Estimating genomic heritabilities at the level of family-pool samples of perennial ryegrass using genotyping-by-sequencing. <em>Theoretical and Applied Genetics</em> 129: 45-52.</p>
 <p>Covarrubias-Pazaran, G. 2016 Genome-assisted prediction of quantitative traits using the R package sommer. <em>PloS one</em> 11.6: e0156744.</p>
+<p>Endelman, J. B., et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. <em>Genetics</em>, 209(1) pp. 77-87.</p>
 <p>Hamilton, M. G., R. J. Kerr, 2017 Computation of the inverse additive relationship matrix for autopolyploid and multiple-ploidy populations. <em>Theoretical and Applied Genetics</em>. <a href="https://doi.org/10.1007/s00122-017-3041-y" class="uri">https://doi.org/10.1007/s00122-017-3041-y</a></p>
 <p>Henderson, C., 1976 A simple method for computing the inverse of a numerator relationship matrix used in prediction of breeding values. <em>Biometrics</em> pp. 69–83.</p>
 <p>Kerr, R. J., L. Li, B. Tier, G. W. Dutkowski, and T. A. McRae, 2012 Use of the numerator relation ship matrix in genetic analysis of autopolyploid species. <em>Theoretical and Applied Genetics</em> 124: 1271–1282.</p>
