@@ -133,26 +133,24 @@ More information about `Gmatrix` can be found with:
 ## Relationship matrices using the molecular data - G matrix for autopolyploids
 This section presents how to load the data and how to construct the genomic-based relationship matrix for autopolyploid species. In the package, the function Gmatrix is the one that handles the molecular-markers matrix and builds the relationship matrix. Molecular markers data should be organized in a matrix format (individual in rows and markers in columns) coded according to the dosage level: 0,1,2,...,ploidy level, and missing data value (numeric or NA). As an example, an autohexaploid should be coded as 0,1,2,3,4,5,6, and missing data value. Import your molecular marker data into R with the function read.table() and convert to a matrix format with the function as.matrix(). In autopolyploids, the function Gmatrix can be used then to construct: i) the additive relationship based on VanRaden (2008) and extended by Ashraf (2016) and also implemented in the `sommer` package (Covarrubias-Pazaran 2016); ii) the full-autopolyploid including additive and non-additive model as equations 8 and 9 in Slater et al. (2016); iii) the pseudo-diploid model as equations 5, 6, and 7 Slater et al. (2016). As an example, here we build the three matrices using simulated data.
 
-Simulating data with 10 individuals and 100 markers.
+Loading the built-in molecular data derived from an autotetraploid potato population from Endelman (2018):
 ```{r}
-inds <- 10
-markers <- 100
-markersdata <- matrix(sample(x=0:4, size=inds*markers, replace=TRUE), nrow=inds, ncol=markers)
+data(snp.potato)
 ```
 
 Computing the matrices:
 ```{r, eval=FALSE}
 #Computing the additive relationship matrix based on VanRaden 2008 and adapted by Ashraf 2016
-G_VanRaden <- Gmatrix(markersdata, method="VanRaden", ploidy=4)
+G_VanRaden <- Gmatrix(snp.potato, method="VanRaden", ploidy=4)
 
 #Computing the dominance (digenic) matrix based on Endelman 2018 (Eq. 19)
-G_Digenic <- Gmatrix(markersdata, method="Endelman", ploidy=4)
+G_Digenic <- Gmatrix(snp.potato, method="Endelman", ploidy=4)
 
 #Computing the full-autopolyploid matrix based on Slater 2016 (Eq. 8 and 9)
-G_FullAutopolyploid <- Gmatrix(markersdata, method="Slater", ploidy=4)
+G_FullAutopolyploid <- Gmatrix(snp.potato, method="Slater", ploidy=4)
 
 #Computing the pseudodiploid matrix based on Slater 2016 (Eq. 5, 6, and 7)
-G_Pseudodiploid <- Gmatrix(markersdata, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
+G_Pseudodiploid <- Gmatrix(snp.potato, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
 ```
 
 More information about `Gmatrix` can be found with:
@@ -175,6 +173,29 @@ rownames(Amat) <- colnames(Amat) <- rownames(Gmat)
 
 #Computing H matrix
 Hmat <- Hmatrix(A=Amat, G=Gmat, markers=snp.pine, missingValue=-9, maf=0.05)
+```
+
+## Combined relationship matrix - H matrix with real data
+Here we present how to compute the H matrix using the package. This matrix is computed based on the matrix A using matrix G as a correction and it is presented in Munoz et al. 2014. In this example we consider the A matrix as an identity (*e.g* we do not have pedigree information and assume the individuals in Hardy-Weinberg equilibrium). It is important to pass to `Hmatrix` the same arguments of `missingValue` and `maf` of `Gmatrix`. If the `Hmat` gives singularity problem, you can try to add a small constant to its calculus changing argument `c` to a small value (*e.g*, `0.001`).
+
+Here we are going to use the data from Endelman (2018) already built-in this present package.
+
+```{r, eval=FALSE}
+## Loading pedigree data
+data(ped.potato)
+str(ped.potato)
+
+## Loading genomic data
+data(snp.potato)
+
+## Computing the realized additive relationship matrix
+Gmat <- Gmatrix(SNPmatrix = snp.potato, ploidy = 4, maf = 0.05, method = "VanRaden")
+
+## Computing the expected relationship matrix
+Amat <- Amatrix(data = ped.potato, ploidy = 4)
+
+## Computing H matrix (it may take a few minutes)
+Hmat <- Hmatrix(A=Amat, G=Gmat, markers=snp.potato, ploidy=4, maf=0.05)
 ```
 
 ## Covariance matrices due to epistatic terms

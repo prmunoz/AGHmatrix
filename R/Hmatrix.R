@@ -48,11 +48,12 @@ Hmatrix <- function(A=NULL,
                     c=0,
                     explore=FALSE,
                     missingValue=-9,
-                    maf=0
+                    maf=0,
+                    ploidy=2
                     ){
     Aorig <- A
     Gorig <- G
-    markersmatrix <- Gmatrix(markers,method="MarkersMatrix",missingValue=missingValue,maf=maf)
+    markersmatrix <- Gmatrix(markers,method="MarkersMatrix",ploidy=ploidy,missingValue=missingValue,maf=maf)
 
     Time = proc.time()
     cat("Comparing the matrices... \n")
@@ -60,13 +61,13 @@ Hmatrix <- function(A=NULL,
     Gn <- rownames(Gorig)
     missingGmatrix <- which(is.na(match(An,Gn)))
     missingAmatrix <- which(is.na(match(Gn,An)))
-    if(length(missingGmatrix)>0){
+    if(length(missingAmatrix)>0){
       Gnhat <- Gn[-missingAmatrix]
     }else{
       Gnhat <- Gn
     }
     
-    if(length(missingAmatrix)>0){
+    if(length(missingGmatrix)>0){
       Anhat <- An[-missingGmatrix]    
     }else{
       Anhat <- An
@@ -75,8 +76,8 @@ Hmatrix <- function(A=NULL,
     A <- Aorig[Anhat,Anhat]
     G <- Gorig[Gnhat,Gnhat]
 
-    missingGmatrix <- Gn[missingGmatrix]
-    missingAmatrix <- An[missingAmatrix]
+    missingGmatrix <- An[missingGmatrix]
+    missingAmatrix <- Gn[missingAmatrix]
 
     Time = as.matrix(proc.time()-Time)
     cat("Completed! Time =", Time[3]/60," minutes \n")
@@ -93,14 +94,14 @@ Hmatrix <- function(A=NULL,
         varA[A==classes[i]] <- varAclasses[i] <- var(G[A==classes[i]])
         meanG[A==classes[i]]  <- mean(G[A==classes[i]])
     }
-    varA[is.na(varA)]<-mean(varAclasses,na.rm=TRUE)
+    varA[is.na(varA)]<-mean(varAclasses,na.rm=TRUE) 
 
     #Computaing beta and H
     beta <- 1 - (c+(1/(markersmatrix[Gnhat,Gnhat]))/varA)
     H <- beta*(G-A)+A ######
     Aorig[Anhat,Anhat] = H
-    cat("\n","Individuals in A but not in G:",missingAmatrix,"\n")
-    cat("\n","Individuals in G but not in A:",missingGmatrix,"\n")
+    cat("\n",length(missingAmatrix),"Individuals in A but not in G:",missingAmatrix,"\n")
+    cat("\n",length(missingGmatrix),"Individuals in G but not in A:",missingGmatrix,"\n")
     Time = as.matrix(proc.time()-Time)
     cat("\n","Completed! Time =", Time[3]/60," minutes \n")
     cat("\n","Returning H = A matrix corrected by G... \n")
