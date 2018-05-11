@@ -1,11 +1,11 @@
-<!--
-  %\VignetteEngine{knitr::docco_linear}
-%\VignetteIndexEntry{AGHmatrix Tutorial}
--->
-  
-# AGHmatrix Tutorial
+---
+title: "AGHmatrix Tutorial"
+author: "Rodrigo Amadeu - rramadeu at gmail dot com"
+date: \`r format(Sys.Date(), "%m, %d,%Y")`\
+output: html_document
+---
 **AGHmatrix: An R package to compute relationship matrices for diploid and autopolyploid species**
-  
+
 ```{r, globalsetup, echo=FALSE, results='hide', cache=FALSE}
 #opts_chunk$set(cache=TRUE, autodep=TRUE)
 ```
@@ -291,8 +291,6 @@ Amat <- Amatrix(data=ped.mrode,ploidy=2)
 plot_genealogy(data=ped.mrode,ind="Var4",Amatrix=Amat)
 ```
 
-
-
 ## Bibliography
 Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. *The Plant Genome* 9.
 
@@ -325,3 +323,7 @@ VanRaden, P., 2008 Efficient methods to compute genomic predictions. *Journal of
 Vitezica, Z. G., L. Varona, and A. Legarra, 2013 On the additive and dominant variance and covariance of individuals within the genomic selection scope. *Genetics* 195: 1223–1230.
 
 Yang, J., B. Benyamin, B. P. McEvoy, S. Gordon, A. K. Henders, D. R. Nyholt, P. A. Madden, A. C. Heath, N. G. Martin, G. W. Montgomery, et al., 2010 Common snps explain a large proportion of the heritability for human height. *Nature genetics* 42: 565–569.
+
+```{r}
+sessionInfo()
+```
