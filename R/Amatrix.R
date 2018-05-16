@@ -48,7 +48,8 @@ Amatrix <- function(data = NULL,
                     w=0,
                     verify=TRUE,
                     dominance=FALSE,
-                    slater=FALSE){
+                    slater=FALSE,
+                    ...){
   if(ploidy%%2!=0)
     stop(deparse("Ploidy should be an even number"))
   
@@ -66,7 +67,7 @@ Amatrix <- function(data = NULL,
   
   
   cat("Organizing data... \n")
-  data <- datatreat(data=data,unk=unk,n.max=50,save=FALSE)
+  data <- datatreat(data=data,unk=unk,...)
   
   s <- data$sire
   d <- data$dire
