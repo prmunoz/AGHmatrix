@@ -8,7 +8,7 @@
 # Written by Rodrigo Rampazo Amadeu 					
 # 									
 # First version: Feb-2014 					
-# Last update: 24-Apr-2015 						
+# Last update: 16-May-2018 						
 # License: GPL-3	
 # 									
 #########################################
