@@ -23,7 +23,7 @@
 #' @param missingValue missing value in data. Default=-9.
 #' @param thresh.missing threshold on missing data,  SNPs below of this frequency value will be maintained. Default = 
 #' @param maf max of missing data accepted to each marker. Default=0.05.
-#' @param verify.posdef verify if the resulting matrix is positive-definite. Default=TRUE.
+#' @param verify.posdef verify if the resulting matrix is positive-definite. Default=FALSE.
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
