@@ -5,7 +5,7 @@
 \title{Construction of Relationship Matrix G}
 \usage{
 Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
-  maf = 0, thresh.missing = 0.9, verify.posdef = TRUE, ploidy = 2,
+  maf = 0, thresh.missing = 0.9, verify.posdef = FALSE, ploidy = 2,
   pseudo.diploid = FALSE, ratio = FALSE, impute.method = FALSE)
 }
 \arguments{
@@ -19,7 +19,7 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 
 \item{thresh.missing}{threshold on missing data,  SNPs below of this frequency value will be maintained. Default =}
 
-\item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=TRUE.}
+\item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=FALSE.}
 
 \item{ploidy}{data ploidy (an even number between 2 and 20). Default=2.}
 
