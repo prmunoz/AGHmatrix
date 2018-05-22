@@ -17,10 +17,10 @@ The following matrices are implemented:
 
 <center> 
   
-|               | Additive                       | Non-Additive        |
-|---------------|:------------------------------:|:-------------------:|
-| **Diploid**   | Yang (2010), VanRaden (2012)   | Su (2012)           |
-| **Polyploid** | Slater (2016), VanRaden (2012) | Slater (2016)       |
+|               | Additive                       | Non-Additive                   |
+|---------------|:------------------------------:|:------------------------------:|
+| **Diploid**   | Yang (2010), VanRaden (2012)   | Su (2012)                      |
+| **Polyploid** | Slater (2016), VanRaden (2012) | Slater (2016), Endelman (2018) |
 </center>
 
 
