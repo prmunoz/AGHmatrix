@@ -5,13 +5,13 @@
 \title{Construction of Relationship Matrix G}
 \usage{
 Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
-  maf = 0, thresh.missing = 0.9, verify.posdef = TRUE, ploidy = 2,
+  maf = 0, thresh.missing = 0.9, verify.posdef = FALSE, ploidy = 2,
   pseudo.diploid = FALSE, ratio = FALSE, impute.method = FALSE)
 }
 \arguments{
 \item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue).}
 
-\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).}
+\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "Endelman" for autotetraploid dominant (digentic) relationship matrix. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).}
 
 \item{missingValue}{missing value in data. Default=-9.}
 
@@ -19,7 +19,7 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 
 \item{thresh.missing}{threshold on missing data,  SNPs below of this frequency value will be maintained. Default =}
 
-\item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=TRUE.}
+\item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=FALSE.}
 
 \item{ploidy}{data ploidy (an even number between 2 and 20). Default=2.}
 
@@ -54,6 +54,7 @@ markersdata <- matrix(sample(x=0:4, size=inds*markers, replace=TRUE), nrow=inds,
 
 #Build G matrices
 Gmatrix.VanRaden <- Gmatrix(markersdata, method="VanRaden", ploidy=4)
+Gmatrix.Endelman <- Gmatrix(markersdata, method="Endelman", ploidy=4) 
 Gmatrix.Slater <- Gmatrix(markersdata, method="Slater", ploidy=4)
 Gmatrix.Pseudodiploid <- Gmatrix(markersdata, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
 
@@ -61,15 +62,17 @@ Gmatrix.Pseudodiploid <- Gmatrix(markersdata, method="VanRaden", ploidy=4, pseud
 \references{
 \emph{Covarrubias-Pazaran G., 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
 
-\emph{Slater, A.T., Cogan, N.O., Forster, J.W., Hayes, B.J., Daetwyler, H.D, 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
+\emph{Slater, A.T., et al., 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
 
-\emph{Su, G., Christensen, O.F., Ostersen, T., Henryon, M. and Lund, M.S., 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
+\emph{Su, G., et al., 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
 
 \emph{VanRaden, P.M., 2008. Efficient methods to compute genomic predictions. Journal of dairy science, 91(11), pp.4414-4423.}
 
 \emph{Vitezica, Z.G., Varona, L. and Legarra, A., 2013. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genetics, 195(4), pp.1223-1230.}
 
-\emph{Yang, J., Benyamin, B., McEvoy, B.P., Gordon, S., Henders, A.K., Nyholt, D.R., Madden, P.A., Heath, A.C., Martin, N.G., Montgomery, G.W. and Goddard, M.E., 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
+\emph{Yang, J., et al., 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
+
+\emph{Endelman, J. B., et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
 }
 \author{
 Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, Letícia AC Lara, and Ivone Oliveira

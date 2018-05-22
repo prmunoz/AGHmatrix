@@ -5,7 +5,7 @@
 \title{Construction of Relationship Matrix H}
 \usage{
 Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0, explore = FALSE,
-  missingValue = -9, maf = 0)
+  missingValue = -9, maf = 0, ploidy = 2)
 }
 \arguments{
 \item{A}{A matrix from function Amatrix}

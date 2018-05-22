@@ -1,11 +1,11 @@
-<!--
-  %\VignetteEngine{knitr::docco_linear}
-%\VignetteIndexEntry{AGHmatrix Tutorial}
--->
-  
-# AGHmatrix Tutorial
+---
+title: "AGHmatrix Tutorial"
+author: "Rodrigo Amadeu - rramadeu at gmail dot com"
+date: \`r format(Sys.Date(), "%m, %d,%Y")`\
+output: html_document
+---
 **AGHmatrix: An R package to compute relationship matrices for diploid and autopolyploid species**
-  
+
 ```{r, globalsetup, echo=FALSE, results='hide', cache=FALSE}
 #opts_chunk$set(cache=TRUE, autodep=TRUE)
 ```
@@ -33,7 +33,7 @@ If you are not familiar with `R`, we recommend the reading of vignette [Introduc
 |           |&nbsp; &nbsp; &nbsp; &nbsp; |  Additive                     |&nbsp; &nbsp; &nbsp; &nbsp; | Non-Additive               |
 |-----------|--------------|:----------------------------:|----|:---------------------------:|
 | **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Yang (2010), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Su (2012), Vitezica (2013) |
-| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016)              |
+| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), Endelman (2018)              |
 </center>
 
 ## Citation
@@ -142,8 +142,11 @@ markersdata <- matrix(sample(x=0:4, size=inds*markers, replace=TRUE), nrow=inds,
 
 Computing the matrices:
 ```{r, eval=FALSE}
-#Computing the additive relationship matrix based on VanRaden 2008 and adapter by Ashraf 2016
+#Computing the additive relationship matrix based on VanRaden 2008 and adapted by Ashraf 2016
 G_VanRaden <- Gmatrix(markersdata, method="VanRaden", ploidy=4)
+
+#Computing the dominance (digenic) matrix based on Endelman 2018 (Eq. 19)
+G_Digenic <- Gmatrix(markersdata, method="Endelman", ploidy=4)
 
 #Computing the full-autopolyploid matrix based on Slater 2016 (Eq. 8 and 9)
 G_FullAutopolyploid <- Gmatrix(markersdata, method="Slater", ploidy=4)
@@ -288,14 +291,14 @@ Amat <- Amatrix(data=ped.mrode,ploidy=2)
 plot_genealogy(data=ped.mrode,ind="Var4",Amatrix=Amat)
 ```
 
-
-
 ## Bibliography
 Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. *The Plant Genome* 9.
 
 Ashraf, B. H., S. Byrne, D. Fé, A. Czaban, T. Asp, M. G. Pedersen, I. Lenk, N. Roulund, T. Didion, C. S. Jensen, et al., 2016 Estimating genomic heritabilities at the level of family-pool samples of perennial ryegrass using genotyping-by-sequencing. *Theoretical and Applied Genetics* 129: 45-52.
 
 Covarrubias-Pazaran, G. 2016 Genome-assisted prediction of quantitative traits using the R package sommer. *PloS one* 11.6: e0156744.
+
+Endelman, J. B., et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. *Genetics*, 209(1) pp. 77-87.
 
 Hamilton, M. G., R. J. Kerr, 2017 Computation of the inverse additive relationship matrix for autopolyploid and multiple-ploidy populations. *Theoretical and Applied Genetics*. https://doi.org/10.1007/s00122-017-3041-y
 
@@ -320,3 +323,7 @@ VanRaden, P., 2008 Efficient methods to compute genomic predictions. *Journal of
 Vitezica, Z. G., L. Varona, and A. Legarra, 2013 On the additive and dominant variance and covariance of individuals within the genomic selection scope. *Genetics* 195: 1223–1230.
 
 Yang, J., B. Benyamin, B. P. McEvoy, S. Gordon, A. K. Henders, D. R. Nyholt, P. A. Madden, A. C. Heath, N. G. Martin, G. W. Montgomery, et al., 2010 Common snps explain a large proportion of the heritability for human height. *Nature genetics* 42: 565–569.
+
+```{r}
+sessionInfo()
+```
