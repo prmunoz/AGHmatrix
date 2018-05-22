@@ -68,7 +68,7 @@
 
 Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden", 
                      missingValue = -9, maf = 0, thresh.missing = 0.9,
-                     verify.posdef = TRUE, ploidy=2,
+                     verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE,
                      ratio = FALSE, impute.method = FALSE){
   Time = proc.time()
