@@ -61,7 +61,7 @@ that will guide you through other chapters.
 ## More about us
 [Bluberry Breeding & Genomics Lab, University of Florida - USA](http://www.blueberrybreeding.com)
 
-[Statistical-Genetics Lab, University of Sao Paulo - Brazil](http://www.statgen.esalq.usp.br)
+[Statistical-Genetics Lab, University of Sao Paulo - Brazil](http://statgen.esalq.usp.br/)
 
 ## References
 Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. The Plant Genome 9.
