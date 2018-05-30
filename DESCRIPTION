@@ -15,8 +15,7 @@ Authors@R: c(person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rodrigo.
              person("Augusto", "Garcia", role = "ctb"))
 Author: Rodrigo Amadeu [aut]
 Imports:
-    Matrix (>= 1.2-7.1),
-    ggplot2 (>= 2.2.1)
+    Matrix (>= 1.2-7.1)
 Suggests:
     knitr,
     MASS
