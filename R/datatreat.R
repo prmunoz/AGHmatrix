@@ -259,4 +259,3 @@ verifyped <- function(pedigree,
   }
   return(flag)
 }
-

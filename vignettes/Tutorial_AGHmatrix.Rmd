@@ -53,7 +53,7 @@ If you are not familiar with `R`, we recommend the reading of vignette [Introduc
 ## Citation
 To cite this R package:
 
-Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. F. Garcia, M. F. R. Resende, and P. R. Muñoz. 2016. AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example. *The Plant Genome* 9. doi:10.3835/plantgenome2016.01.0009
+Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. F. Garcia, M. F. R. Resende, and P. R. Muñoz. 2016. AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example. *The Plant Genome* 9(30). [doi: 10.3835/plantgenome2016.01.0009](http://dx.doi.org/10.3835/plantgenome2016.01.0009)
 
 ## Installing the Package
 Within R:

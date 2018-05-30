@@ -24,13 +24,14 @@
 #' @param explore if TRUE performs exploratory analysis of the matrix
 #' @param missingValue missing value in data. Default=-9.
 #' @param maf max of missing data accepted to each marker. Default=0.05.
+#' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
 #'
 #' @return H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
 #'
 #' @examples 
 #' data(ped.mrode)
 #' #Build Amatrix diploid (no double reduction proportion)
-#' Amat <- Amatrix(data=ped.mrode,ploidy=2,unk=0)
+#' Amat <- Amatrix(data=ped.mrode,ploidy=2)
 #' markers <- matrix(c(0,0,0,0, 2,2,1,1, 1,1,0,1, 1,1,2,0, 2,1,1,0, 2,0,1,2),nrow=6, byrow=TRUE)
 #' rownames(markers) <- rownames(Amat)
 #' Gmat <- Gmatrix(markers)

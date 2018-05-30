@@ -23,6 +23,7 @@
 #' @param verify verifies pedigree file for conflictuos entries (default=TRUE).
 #' @param dominance if true, returns the dominance relationship matrix
 #' @param slater if true, returns the additive autotetraploid relationship matrix as Slater (2013)
+#' @param ... arguments to be passed to datatreat()
 #' 
 #' @return Matrix with the Relationship between the individuals.
 #'
