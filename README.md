@@ -1,3 +1,5 @@
+[Travisstatus.svg](https://travis-ci.org/rramadeu/AGHmatrix.svg?branch=master)
+
 # AGHmatrix
 
 `AGHmatrix` is an [R](http://www.r-project.org) package to compute A (pedigree), G (genomic-base), and H (A corrected by G) matrices for diploid and autopolyploid species. It suports any even ploidy.
