@@ -1,13 +1,27 @@
 ---
-title: "AGHmatrix Tutorial"
-author: "Rodrigo Amadeu - rramadeu at gmail dot com"
-date: \`r format(Sys.Date(), "%m, %d,%Y")`\
-output: html_document
+title: "AGHmatrix: An R package to compute relationship matrices for diploid and autopolyploid species"
+author: "Rodrigo Amadeu - rramadeu at ufl dot edu </br> Patricio Munoz </br> Horticultural Sciences Department - University of Florida"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{AGHmatrix Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-**AGHmatrix: An R package to compute relationship matrices for diploid and autopolyploid species**
 
-```{r, globalsetup, echo=FALSE, results='hide', cache=FALSE}
-#opts_chunk$set(cache=TRUE, autodep=TRUE)
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmarkdown)
+
+knitr::opts_chunk$set(collapse = TRUE,
+                      comment = "#>",
+                      fig.width = 6,
+                      fig.height = 6,
+                      fig.align = "center",
+                      dev = "png",
+                      dpi = 36,
+                      cache = TRUE)
+
 ```
 
 ```{r, echo=FALSE, results='hide'}
