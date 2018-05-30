@@ -278,19 +278,6 @@ for(i in 1:n){
 
 ```
 
-## Plotting the genealogy of a given individual
-The user can plot the genealogy of a given individual through the function `plot_genealogy`, there is also the option to plot the inbreeding coefficient for the individual computed with `Amatrix`. It follows an example:
-
-```{r}
-data(ped.mrode)
-
-#Build Amatrix diploid (no double reduction proportion)
-Amat <- Amatrix(data=ped.mrode,ploidy=2)
-
-#Build Amatrix autotetraploidy (double reduction proportion=0.1)
-plot_genealogy(data=ped.mrode,ind="Var4",Amatrix=Amat)
-```
-
 ## Bibliography
 Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. *The Plant Genome* 9.
 
