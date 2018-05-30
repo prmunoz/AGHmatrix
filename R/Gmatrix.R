@@ -32,6 +32,7 @@
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
 #' @examples
+#' \dontrun{
 #' ## Diploid Example
 #' data(snp.pine)
 #' #Verifying if data is coded as 0,1,2 and missing value.
@@ -53,6 +54,7 @@
 #' Gmatrix.Endelman <- Gmatrix(markersdata, method="Endelman", ploidy=4) 
 #' Gmatrix.Slater <- Gmatrix(markersdata, method="Slater", ploidy=4)
 #' Gmatrix.Pseudodiploid <- Gmatrix(markersdata, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
+#' }
 #' 
 #' @author Rodrigo R Amadeu \email{rramadeu@@gmail.com}, Marcio Resende Jr, Letícia AC Lara, and Ivone Oliveira
 #' 
