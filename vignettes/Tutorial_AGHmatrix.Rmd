@@ -1,13 +1,27 @@
 ---
-title: "AGHmatrix Tutorial"
-author: "Rodrigo Amadeu - rramadeu at gmail dot com"
-date: \`r format(Sys.Date(), "%m, %d,%Y")`\
-output: html_document
+title: "AGHmatrix: An R package to compute relationship matrices for diploid and autopolyploid species"
+author: "Rodrigo Amadeu - rramadeu at ufl dot edu </br> Patricio Munoz </br> Horticultural Sciences Department - University of Florida"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{AGHmatrix Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-**AGHmatrix: An R package to compute relationship matrices for diploid and autopolyploid species**
 
-```{r, globalsetup, echo=FALSE, results='hide', cache=FALSE}
-#opts_chunk$set(cache=TRUE, autodep=TRUE)
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmarkdown)
+
+knitr::opts_chunk$set(collapse = TRUE,
+                      comment = "#>",
+                      fig.width = 6,
+                      fig.height = 6,
+                      fig.align = "center",
+                      dev = "png",
+                      dpi = 36,
+                      cache = TRUE)
+
 ```
 
 ```{r, echo=FALSE, results='hide'}
@@ -39,7 +53,7 @@ If you are not familiar with `R`, we recommend the reading of vignette [Introduc
 ## Citation
 To cite this R package:
 
-Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. F. Garcia, M. F. R. Resende, and P. R. Muñoz. 2016. AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example. *The Plant Genome* 9. doi:10.3835/plantgenome2016.01.0009
+Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. F. Garcia, M. F. R. Resende, and P. R. Muñoz. 2016. AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example. *The Plant Genome* 9(30). [doi: 10.3835/plantgenome2016.01.0009](http://dx.doi.org/10.3835/plantgenome2016.01.0009)
 
 ## Installing the Package
 Within R:
@@ -276,19 +290,6 @@ for(i in 1:n){
                exclude.0=TRUE)
 }
 
-```
-
-## Plotting the genealogy of a given individual
-The user can plot the genealogy of a given individual through the function `plot_genealogy`, there is also the option to plot the inbreeding coefficient for the individual computed with `Amatrix`. It follows an example:
-
-```{r}
-data(ped.mrode)
-
-#Build Amatrix diploid (no double reduction proportion)
-Amat <- Amatrix(data=ped.mrode,ploidy=2)
-
-#Build Amatrix autotetraploidy (double reduction proportion=0.1)
-plot_genealogy(data=ped.mrode,ind="Var4",Amatrix=Amat)
 ```
 
 ## Bibliography
