@@ -21,13 +21,13 @@
 #' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue). 
 #' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "Endelman" for autotetraploid dominant (digentic) relationship matrix. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).
 #' @param missingValue missing value in data. Default=-9.
-#' @param thresh.missing threshold on missing data,  SNPs below of this frequency value will be maintained. Default = 
+#' @param thresh.missing threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 1.
 #' @param maf max of missing data accepted to each marker. Default=0.05.
 #' @param verify.posdef verify if the resulting matrix is positive-definite. Default=FALSE.
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
-#' @param impute.method if TRUE, missing data imputed by the mode
+#' @param impute.method "mean" to impute the missing data by the mean or "mode" to impute the missing data my the mode. Default = "mean".
 #' 
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
@@ -69,10 +69,10 @@
 #' @export
 
 Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden", 
-                     missingValue = -9, maf = 0, thresh.missing = 0.9,
+                     missingValue = -9, maf = 0, thresh.missing = 1,
                      verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE,
-                     ratio = FALSE, impute.method = FALSE){
+                     ratio = FALSE, impute.method = "mean"){
   Time = proc.time()
   
   if(ratio){ #This allows to enter in the scaled crossprod condition
@@ -284,7 +284,7 @@ snp.check = function(M = NULL,
                      ploidy=4,
                      thresh.maf = 0.05,
                      thresh.missing = 0.9,
-                     impute.method = TRUE){
+                     impute.method = "mean"){
   # SNP missing data
   ncol.init <- ncol(M)
   
@@ -332,7 +332,14 @@ snp.check = function(M = NULL,
   }
   
   # Imputing by mode
-  if(impute.method==TRUE){
+  if(impute.method=="mean"){
+    ix <- which(is.na(M))
+    if (length(ix) > 0) {
+      M[ix] <- mean(M,na.rm = TRUE)
+    }
+  }
+  
+  if(impute.method=="mode"){
     ix <- which(is.na(M))
     if (length(ix) > 0) {
       M[ix] <- as.integer(names(which.max(table(M))))
