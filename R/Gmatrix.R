@@ -324,7 +324,7 @@ snp.check = function(M = NULL,
   cat("Monomorphic check: \n")
   if(any(mono)){
     cat("\t",sum(mono), "monomorphic SNPs \n")
-    print("\tTotal:",ncol(M) - sum(mono), "SNPs \n")
+    cat("\tTotal:",ncol(M) - sum(mono), "SNPs \n")
     idx.rm <- which(mono)
     M <- M[, -idx.rm, drop=FALSE]
   } else{
