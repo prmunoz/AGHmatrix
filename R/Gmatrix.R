@@ -28,7 +28,8 @@
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
 #' @param impute.method "mean" to impute the missing data by the mean or "mode" to impute the missing data my the mode. Default = "mean".
-#' 
+#' @param integer if FALSE, not check for integer numbers. Default=TRUE. 
+#'
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
 #' @examples
