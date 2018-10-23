@@ -28,7 +28,8 @@
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
 #' @param impute.method "mean" to impute the missing data by the mean or "mode" to impute the missing data my the mode. Default = "mean".
-#' @param integer if FALSE, not check for integer numbers. Default=TRUE. 
+#' @param integer if FALSE, not check for integer numbers. Default=TRUE.
+#' @param check if TRUE, run snp.check if the SNPmatrix.
 #'
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
@@ -73,7 +74,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
                      missingValue = -9, maf = 0, thresh.missing = 1,
                      verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE, integer=TRUE,
-                     ratio = FALSE, impute.method = "mean"){
+                     ratio = FALSE, impute.method = "mean", check=TRUE){
   Time = proc.time()
   
   if(ratio){ #This allows to enter in the scaled crossprod condition
@@ -95,7 +96,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   cat("\tNumber of Individuals:", max(nindTotal), "\n")
   cat("\tNumber of Markers:", NumberMarkers, "\n")
   
-  if(ratio==FALSE){
+  if(check){
     SNPmatrix <- snp.check(SNPmatrix,
                            ploidy = ploidy, 
                            thresh.maf = maf, 
