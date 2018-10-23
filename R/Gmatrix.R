@@ -74,7 +74,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
                      missingValue = -9, maf = 0, thresh.missing = 1,
                      verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE, integer=TRUE,
-                     ratio = FALSE, impute.method = "mean", check=TRUE){
+                     ratio = FALSE, impute.method = "mean", ratio.check=FALSE){
   Time = proc.time()
   
   if(ratio){ #This allows to enter in the scaled crossprod condition
@@ -96,7 +96,16 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   cat("\tNumber of Individuals:", max(nindTotal), "\n")
   cat("\tNumber of Markers:", NumberMarkers, "\n")
   
-  if(check){
+  if(ratio==FALSE){
+    SNPmatrix <- snp.check(SNPmatrix,
+                           ploidy = ploidy, 
+                           thresh.maf = maf, 
+                           thresh.missing = thresh.missing,
+                           impute.method = impute.method)
+  }
+  
+  ## Testing ratio check function: not final!
+  if(ratio && ratio.check){
     SNPmatrix <- snp.check(SNPmatrix,
                            ploidy = ploidy, 
                            thresh.maf = maf, 
