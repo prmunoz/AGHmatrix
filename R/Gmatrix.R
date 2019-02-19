@@ -28,7 +28,9 @@
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
 #' @param impute.method "mean" to impute the missing data by the mean or "mode" to impute the missing data my the mode. Default = "mean".
-#' 
+#' @param integer if FALSE, not check for integer numbers. Default=TRUE.
+#' @param ratio.check if TRUE, run snp.check with ratio data.
+#'
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
 #' @examples
@@ -71,8 +73,8 @@
 Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden", 
                      missingValue = -9, maf = 0, thresh.missing = 1,
                      verify.posdef = FALSE, ploidy=2,
-                     pseudo.diploid = FALSE,
-                     ratio = FALSE, impute.method = "mean"){
+                     pseudo.diploid = FALSE, integer=TRUE,
+                     ratio = FALSE, impute.method = "mean", ratio.check=FALSE){
   Time = proc.time()
   
   if(ratio){ #This allows to enter in the scaled crossprod condition
@@ -85,7 +87,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
     SNPmatrix[m > 0] <- NA
   }
   
-  check_Gmatrix_data(SNPmatrix=SNPmatrix,method=method,ploidy=ploidy,ratio=ratio)
+  check_Gmatrix_data(SNPmatrix=SNPmatrix,method=method,ploidy=ploidy,ratio=ratio,integer=integer)
   
   NumberMarkers <- ncol(SNPmatrix)
   nindTotal <- colSums(!is.na(SNPmatrix))
@@ -95,6 +97,15 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   cat("\tNumber of Markers:", NumberMarkers, "\n")
   
   if(ratio==FALSE){
+    SNPmatrix <- snp.check(SNPmatrix,
+                           ploidy = ploidy, 
+                           thresh.maf = maf, 
+                           thresh.missing = thresh.missing,
+                           impute.method = impute.method)
+  }
+  
+  ## Testing ratio check function: not final!
+  if(ratio && ratio.check){
     SNPmatrix <- snp.check(SNPmatrix,
                            ploidy = ploidy, 
                            thresh.maf = maf, 
@@ -324,7 +335,7 @@ snp.check = function(M = NULL,
   cat("Monomorphic check: \n")
   if(any(mono)){
     cat("\t",sum(mono), "monomorphic SNPs \n")
-    print("\tTotal:",ncol(M) - sum(mono), "SNPs \n")
+    cat("\tTotal:",ncol(M) - sum(mono), "SNPs \n")
     idx.rm <- which(mono)
     M <- M[, -idx.rm, drop=FALSE]
   } else{
@@ -354,7 +365,7 @@ snp.check = function(M = NULL,
 }
 
 # Internal function to check input Gmatrix arguments
-check_Gmatrix_data <- function(SNPmatrix,ploidy,method, ratio=FALSE){
+check_Gmatrix_data <- function(SNPmatrix,ploidy,method, ratio=FALSE, integer=TRUE){
   if (is.null(SNPmatrix)) {
     stop(deparse("Please define the variable SNPdata"))
   }
@@ -388,9 +399,10 @@ check_Gmatrix_data <- function(SNPmatrix,ploidy,method, ratio=FALSE){
   if( t < 0 )
     stop(deparse("Check your data, it has values under 0"))
   
-  if(prod(SNPmatrix == round(SNPmatrix),na.rm = TRUE)==0)
-    stop(deparse("Check your data, it has not integer values"))
-  }
+  if(integer)
+    if(prod(SNPmatrix == round(SNPmatrix),na.rm = TRUE)==0)
+      stop(deparse("Check your data, it has not integer values"))
+    }
 
   if(ratio){
     t <- max(SNPmatrix,na.rm = TRUE)
