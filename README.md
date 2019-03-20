@@ -30,7 +30,15 @@ An original manuscript about `AGHmatrix` development and application in autotetr
 
 ## How to install
 
-### From github
+### From CRAN
+
+Within R:
+
+```R
+install.packages("AGHmatrix")
+```
+
+### From github (development version)
 
 Within R, you need to install and load the package `devtools`:
 

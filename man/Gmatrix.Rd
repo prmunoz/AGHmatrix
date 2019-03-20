@@ -25,6 +25,8 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 \item{ploidy}{data ploidy (an even number between 2 and 20). Default=2.}
 
 \item{pseudo.diploid}{if TRUE, uses pseudodiploid parametrization of Slater (2016).}
+              
+\item{integer}{if FALSE, not check for integer numbers. Default=TRUE.}
 
 \item{ratio}{if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).}
 
