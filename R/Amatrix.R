@@ -68,7 +68,19 @@ Amatrix <- function(data = NULL,
   
   
   cat("Organizing data... \n")
-  data <- datatreat(data=data,unk=unk,...)
+  orig.order <- data[,1]
+  data.after.treat <- try(datatreat(data=data,unk=unk,...),silent=TRUE)
+  if(class(data.after.treat)=="try-error"){
+      cat("To organize the data in a fast way wasn't possible... \n")
+      cat("Trying to organize in a slow (naive) way... \n")
+      data.sorted <- sortped(data)
+      data.after.treat <- try(datatreat(data=data.sorted,unk=unk,...))
+      if(class(data.after.treat)=="try-error"){
+          cat("It wasn't possible to organize your data chronologically... We recommend you to do it by hand or contact this package mainteiner  \n")
+          return()
+      }
+  }
+  data <- data.after.treat
   
   s <- data$sire
   d <- data$dire
@@ -187,45 +199,6 @@ Amatrix <- function(data = NULL,
     A <- 4*A
   }
   
-  # if(ploidy>2 && w==0){ ## It does not use double-reduction proportion, need to double-check formula on kerr 2012 for higher ploidies...
-  #   listA <- list()
-  #   cat(paste("Constructing matrix A using ploidy = 4",ploidy," and no proportion of double reduction \n"))
-  #   start.time <- Sys.time()
-  #   v = ploidy/2
-  #   A[1,1] <- (1)/(2*v)
-  #   for( i in 2:n){
-  #     ## Both are unknown
-  #     if( s[i] == 0 && d[i] == 0 ){
-  #       A[i,i] <- (1)/(2*v)
-  #       for( j in 1:(i-1))
-  #         A[j,i] <- A[i,j] <- 0
-  #     }
-  #     
-  #     ## Sire is unknown
-  #     if( s[i] == 0 && d[i] != 0 ){
-  #       A[i,i] <- (1 + ((v-1)*(v*A[d[i],d[i]] + 1/2 - 1))/(2*v-1))/(2*v)
-  #       for( j in 1:(i-1))
-  #         A[j,i] <- A[i,j] <- 0.5*(A[j,d[i]])
-  #     }
-  #     
-  #     ## Dire is unknown
-  #     if( d[i] == 0 && s[i] != 0 ){
-  #       A[i,i] <- (1 + ((v-1)*(v*A[s[i],s[i]] + 1/2 - 1))/(2*v-1))/(2*v)
-  #       for( j in 1:(i-1))
-  #         A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]])
-  #     }
-  #     
-  #     ## Both are known
-  #     if( d[i] != 0 && s[i] != 0 ){
-  #       A[i,i] <- (1  + ((v-1)*(v*A[d[i],d[i]] + v*A[s[i],s[i]] - 1))/(2*v-1))/(2*v) + A[d[i],s[i]]/2
-  #       for( j in 1:(i-1))
-  #         A[j,i] <- A[i,j] <- 0.5*(A[j,s[i]]+A[j,d[i]])
-  #     }
-  #   }
-  #   
-  #   A <- 2*v*A
-  # }
-  
   if(slater==FALSE && ploidy>2){ ## It does not use double-reduction proportion, need to double-check formula on kerr 2012 for higher ploidies...
     listA <- list()
     cat(paste("Constructing matrix A using ploidy =",ploidy,"and proportion of double reduction =",w,";as in Kerr et al. (2012) \n"))
@@ -274,5 +247,6 @@ Amatrix <- function(data = NULL,
 #      "Visualization options: (matrix, w) \n ")
   rownames(A) <- colnames(A) <- data$ind.data
 
+  A <- A[orig.order,orig.order]
   return(A)
 }
