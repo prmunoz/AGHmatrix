@@ -6,7 +6,8 @@
 \usage{
 Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
   maf = 0, thresh.missing = 1, verify.posdef = FALSE, ploidy = 2,
-  pseudo.diploid = FALSE, ratio = FALSE, impute.method = "mean")
+  pseudo.diploid = FALSE, ratio = FALSE, impute.method = "mean",
+  ratio.check = TRUE, integet = TRUE)
 }
 \arguments{
 \item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue).}
