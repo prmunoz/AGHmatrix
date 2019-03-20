@@ -6,8 +6,8 @@
 \usage{
 Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
   maf = 0, thresh.missing = 1, verify.posdef = FALSE, ploidy = 2,
-  pseudo.diploid = FALSE, ratio = FALSE, impute.method = "mean",
-  ratio.check = TRUE, integer = TRUE)
+  pseudo.diploid = FALSE, integer = TRUE, ratio = FALSE, impute.method = "mean",
+  ratio.check = TRUE)
 }
 \arguments{
 \item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue).}
@@ -30,11 +30,9 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 
 \item{ratio}{if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).}
 
+\item{impute.method}{"mean" to impute the missing data by the mean or "mode" to impute the missing data my the mode. Default = "mean".}            
+
 \item{ratio.check}{if TRUE, run "snp.check" with ratio data.}
-
-\item{impute.method}{"mean" to impute the missing data by the mean or "mode" to impute the missing data my the mode. Default = "mean".}
-
-item{integer}{ if FALSE, not check for integer numbers. Default=TRUE.}               
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
