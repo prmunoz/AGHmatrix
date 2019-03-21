@@ -68,7 +68,7 @@ Amatrix <- function(data = NULL,
   
   
   cat("Organizing data... \n")
-  orig.order <- data[,1]
+  orig.order <- as.character(data[,1])
   data.after.treat <- try(datatreat(data=data,unk=unk,...),silent=TRUE)
   if(class(data.after.treat)=="try-error"){
       cat("To organize the data in a fast way wasn't possible... \n")
