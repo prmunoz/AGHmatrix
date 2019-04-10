@@ -7,7 +7,7 @@
 Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
   maf = 0, thresh.missing = 1, verify.posdef = FALSE, ploidy = 2,
   pseudo.diploid = FALSE,  
-  integer = TRUE, ratio = FALSE, impute.method = "mean", 
+  integer = TRUE, ratio = FALSE, impute.method = FALSE, 
   ratio.check = TRUE)
 }
 \arguments{
