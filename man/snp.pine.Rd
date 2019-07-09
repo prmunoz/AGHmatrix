@@ -3,19 +3,20 @@
 \docType{data}
 \name{snp.pine}
 \alias{snp.pine}
-\title{Molecular Data}
+\title{Molecular data for diploid examples}
 \format{matrix}
 \usage{
 data(snp.pine)
 }
 \description{
-SNP marker matrix from Pinus coded as 0,1, and 2, and missing value as -9. Supplementary data from Resende (2012).
+Dataset extract from  supplementary material from Resende et al. (2012). 
+SNP marker matrix from Pine tree coded as 0,1, and 2, and missing value as -9.
 }
 \examples{
 data(snp.pine)
 
 }
 \references{
-Resende, Márcio FR, Patricio Muñoz, Marcos DV Resende, Dorian J. Garrick, Rohan L. Fernando, John M. Davis, Eric J. Jokela, Timothy A. Martin, Gary F. Peter, and Matias Kirst. "Accuracy of genomic selection methods in a standard data set of loblolly pine (Pinus taeda L.)." Genetics 190, no. 4 (2012): 1503-1510.
+Resende, MF, et al., 2012 Accuracy of genomic selection methods in a standard data set of loblolly pine (Pinus taeda l.). Genetics 190: 1503–1510.
 }
 \keyword{datasets}

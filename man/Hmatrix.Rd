@@ -2,46 +2,62 @@
 % Please edit documentation in R/Hmatrix.R
 \name{Hmatrix}
 \alias{Hmatrix}
-\title{Construction of Relationship Matrix H}
+\title{Construction of Combined Relationship Matrix H}
 \usage{
-Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0, explore = FALSE,
-  missingValue = -9, maf = 0, ploidy = 2)
+Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0,
+  explore = FALSE, method = "Martini", tau = 0, omega = 1,
+  missingValue = -9, maf = 0, ploidy = 2, roundVar = 3)
 }
 \arguments{
 \item{A}{A matrix from function Amatrix}
 
 \item{G}{G matrix from function Gmatrix}
 
-\item{markers}{matrix marker which generated Gmatrix}
+\item{markers}{matrix marker which generated the Gmatrix}
 
 \item{c}{constant value of H computation, default: c=0}
 
-\item{explore}{if TRUE performs exploratory analysis of the matrix}
+\item{method}{"Martini" or "Munoz", default="Martini"}
 
-\item{missingValue}{missing value in data. Default=-9.}
+\item{tau}{to be used for Martini's method, default=0.}
 
-\item{maf}{max of missing data accepted to each marker. Default=0.05.}
+\item{omega}{to be used of Martini's method, default=1.}
 
-\item{ploidy}{data ploidy (an even number between 2 and 20). Default=2.}
+\item{missingValue}{missing value in data, default=-9.}
+
+\item{maf}{max of missing data accepted to each markerm default=0.05.}
+
+\item{ploidy}{data ploidy (an even number between 2 and 20), default=2.}
+
+\item{roundVar}{Munoz's method, how many digits to consider the relationship be of same class, default=2.}
 }
 \value{
 H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
 }
 \description{
-Given a matrix A and a matrix G returns a H matrix - A matrix corrected by G.
+Given a matrix A and a matrix G returns a H matrix.
 }
 \examples{
-data(ped.mrode)
-#Build Amatrix diploid (no double reduction proportion)
-Amat <- Amatrix(data=ped.mrode,ploidy=2)
-markers <- matrix(c(0,0,0,0, 2,2,1,1, 1,1,0,1, 1,1,2,0, 2,1,1,0, 2,0,1,2),nrow=6, byrow=TRUE)
-rownames(markers) <- rownames(Amat)
-Gmat <- Gmatrix(markers)
-Hmatrix(Amat,Gmat,markers)
+data(ped.sol)
+data(snp.sol)
+#Computing the numerator relationship matrix 10\% of double-reduction
+Amat <- Amatrix(ped.sol, ploidy=4, w = 0.1)
+#Computing the additive relationship matrix based on VanRaden (modified)
+Gmat <- Gmatrix(snp.sol, ploidy=4, missingValue=-9,
+                maf=0.05, method="VanRaden")
+#Computing H matrix (Martini)
+Hmat_Martini <- Hmatrix(A=Amat, G=Gmat, method="Martini", 
+                     ploidy=4, missingValue=-9, maf=0.05)
+#Computing H matrix (Munoz)
+Hmat_Munoz <- Hmatrix(A=Amat, G=Gmat, markers = snp.sol, 
+                      ploidy=4, method="Munoz", 
+                      missingValue=-9, maf=0.05)
 
 }
 \references{
 \emph{Munoz, P. R., Resende, M. F. R., Gezan, S. A., Resende, M. D. V., de los Campos, G., Kirst, M., Huber, D., Peter, G. F. (2014). Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics, 198.4: 1759-1768.}
+
+\emph{Martini, J. W., Schrauf, M. F., Garcia-Baccino, C. A., Pimentel, E. C., Munilla, S., Rogberg-Muñoz, A., ... & Simianer, H. (2018). The effect of the H− 1 scaling factors τ and ω on the structure of H in the single-step procedure. Genetics Selection Evolution, 50(1), 16.}
 }
 \author{
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}
