@@ -1,7 +1,7 @@
 import(Matrix)
 importFrom(stats, var)
 importFrom(utils, read.csv, write.table)
-
+importFrom(zoo, na.approx)
 export(Amatrix)
 export(Gmatrix)
 export(Hmatrix)
