@@ -15,6 +15,7 @@ Authors@R: c(person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rramadeu
              person("Augusto", "Garcia", role = "ctb"))
 Author: Rodrigo Amadeu [aut, cre], Catherine Cellon [ctb], Leticia Lara [ctb], Marcio Resende [ctb], 
        Ivone Oliveira [ctb], Luis Ferrao [ctb], Patricio Munoz [ctb], Augusto Garcia [ctb]
+Depends: R (>= 3.6.0)
 Imports:
     Matrix (>= 1.2-7.1),
     zoo (>= 1.8.6)
