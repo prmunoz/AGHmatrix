@@ -1,8 +1,11 @@
 ---
 title: "AGHmatrix: An R package to compute relationship matrices for diploid and autopolyploid species"
-author: "Rodrigo Amadeu - rramadeu at ufl dot edu </br> Patricio Munoz </br> Horticultural Sciences Department - University of Florida"
+author: "Rodrigo Amadeu"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+   pdf_document:
+     latex_engine: xelatex
+     toc: TRUE
 vignette: >
   %\VignetteIndexEntry{AGHmatrix Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
@@ -27,6 +30,13 @@ knitr::opts_chunk$set(collapse = TRUE,
 ```{r, echo=FALSE, results='hide'}
 library(AGHmatrix)
 ```
+
+## Contact
+Rodrigo R Amadeu  
+rramadeu at ufl dot edu  
+Horticultural Sciences Department  
+University of Florida  
+https://rramadeu.github.io
 
 ## Overview
 AGHmatrix software is an R-package to build relationship matrices using pedigree (A matrix) and/or molecular markers (G matrix) with the possibility to build a combined matrix of Pedigree corrected by Molecular (H matrix). The package works with diploid and autopolyploid Data. If you are not familiar with `R`, we recommend the reading of vignette [Introduction to R](http://htmlpreview.github.io/?https://github.com/augusto-garcia/onemap/blob/master/inst/doc/Introduction_R.html).
@@ -298,6 +308,12 @@ VanRaden, P, 2008 Efficient methods to compute genomic predictions. *Journal of 
 Vitezica, ZG, et al., 2013 On the additive and dominant variance and covariance of individuals within the genomic selection scope. *Genetics* 195: 1223–1230. https://doi.org/10.1534/genetics.113.155176
 
 Yang, J, et al., 2010 Common snps explain a large proportion of the heritability for human height. *Nature genetics* 42: 565–569. https://doi.org/10.1038/ng.608
+
+```{r,eval=FALSE,echo=FALSE}
+#To knit an this vignette into an .R file
+knitr::purl("vignettes/Tutorial_AGHmatrix.Rmd")
+```
+
 
 ```{r}
 sessionInfo()
