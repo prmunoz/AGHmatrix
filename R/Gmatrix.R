@@ -47,15 +47,12 @@
 #' 
 #' ## Autetraploid example
 #' #Generating fake data
-#' inds <- 10
-#' markers <- 100
-#' markersdata <- matrix(sample(x=0:4, size=inds*markers, replace=TRUE), nrow=inds, ncol=markers)
-#' 
+#' data(snp.sol)
 #' #Build G matrices
-#' Gmatrix.VanRaden <- Gmatrix(markersdata, method="VanRaden", ploidy=4)
-#' Gmatrix.Endelman <- Gmatrix(markersdata, method="Endelman", ploidy=4) 
-#' Gmatrix.Slater <- Gmatrix(markersdata, method="Slater", ploidy=4)
-#' Gmatrix.Pseudodiploid <- Gmatrix(markersdata, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
+#' Gmatrix.VanRaden <- Gmatrix(snp.sol, method="VanRaden", ploidy=4)
+#' Gmatrix.Endelman <- Gmatrix(snp.sol, method="Endelman", ploidy=4) 
+#' Gmatrix.Slater <- Gmatrix(snp.sol, method="Slater", ploidy=4)
+#' Gmatrix.Pseudodiploid <- Gmatrix(snp.sol, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
 #' }
 #' 
 #' @author Rodrigo R Amadeu \email{rramadeu@@gmail.com}, Marcio Resende Jr, Letícia AC Lara, and Ivone Oliveira
