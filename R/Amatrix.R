@@ -39,7 +39,8 @@
 #' Amatrix(ped.mrode, ploidy=8)
 #' #Computing additive relationship matrix considering autotetraploidy and double-reduction of 10%:
 #' Amatrix(ped.mrode, ploidy=4, w=0.1)
-#' #Computing additive relationship matrix considering autotetraploidy and double-reduction of 10% as Slater et al. (2014):
+#' #Computing additive relationship matrix considering 
+#' #autotetraploidy and double-reduction of 10% as Slater et al. (2014):
 #' Amatrix(ped.mrode, ploidy=4, w=0.1, slater = TRUE)
 #' #Computing additive relationship matrix considering autohexaploidy and double-reduction of 10%:
 #' Amatrix(ped.mrode, ploidy=6, w=0.1)
