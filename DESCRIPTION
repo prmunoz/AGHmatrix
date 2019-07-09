@@ -1,7 +1,7 @@
 Package: AGHmatrix
 Title: Relationship Matrices for Diploid and Autopolyploid Species
-Version: 0.0.5002
-Date: 2019-04-10
+Version: 1.0.0000
+Date: 2019-07-09
 Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
     by G) relationship matrices for diploid and autopolyploid species. Several methods
     are implemented considering additive and non-additive models.
@@ -16,7 +16,8 @@ Authors@R: c(person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rramadeu
 Author: Rodrigo Amadeu [aut, cre], Catherine Cellon [ctb], Leticia Lara [ctb], Marcio Resende [ctb], 
        Ivone Oliveira [ctb], Luis Ferrao [ctb], Patricio Munoz [ctb], Augusto Garcia [ctb]
 Imports:
-    Matrix (>= 1.2-7.1)
+    Matrix (>= 1.2-7.1),
+    zoo (>= 1.8.6)
 Suggests:
     knitr,
     MASS,
@@ -26,5 +27,5 @@ Encoding: UTF-8
 License: GPL-3
 URL: http://github.com/prmunoz/AGHmatrix
 Maintainer: Rodrigo Amadeu <rramadeu@ufl.edu>
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 NeedsCompilation: yes
