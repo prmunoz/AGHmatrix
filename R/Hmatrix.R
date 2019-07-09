@@ -50,7 +50,7 @@
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #' 
 #' @references \emph{Munoz, P. R., Resende, M. F. R., Gezan, S. A., Resende, M. D. V., de los Campos, G., Kirst, M., Huber, D., Peter, G. F. (2014). Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics, 198.4: 1759-1768.}
-#' @references \emph{Martini, J. W., Schrauf, M. F., Garcia-Baccino, C. A., Pimentel, E. C., Munilla, S., Rogberg-Muñoz, A., ... & Simianer, H. (2018). The effect of the H− 1 scaling factors τ and ω on the structure of H in the single-step procedure. Genetics Selection Evolution, 50(1), 16.}
+#' @references \emph{Martini, J. W., Schrauf, M. F., Garcia-Baccino, C. A., Pimentel, E. C., Munilla, S., Rogberg-Munoz, A., ... & Simianer, H. (2018). The effect of the H− 1 scaling factors τ and ω on the structure of H in the single-step procedure. Genetics Selection Evolution, 50(1), 16.}
 #' 
 #' @export
 
@@ -58,7 +58,6 @@ Hmatrix <- function(A=NULL,
                      G=NULL,
                      markers=NULL,
                      c=0,
-                     explore=FALSE,
                      method="Martini",
                      tau=0,
                      omega=1,

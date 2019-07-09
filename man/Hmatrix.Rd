@@ -5,8 +5,8 @@
 \title{Construction of Combined Relationship Matrix H}
 \usage{
 Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0,
-  explore = FALSE, method = "Martini", tau = 0, omega = 1,
-  missingValue = -9, maf = 0, ploidy = 2, roundVar = 3)
+  method = "Martini", tau = 0, omega = 1, missingValue = -9,
+  maf = 0, ploidy = 2, roundVar = 3)
 }
 \arguments{
 \item{A}{A matrix from function Amatrix}
@@ -57,7 +57,7 @@ Hmat_Munoz <- Hmatrix(A=Amat, G=Gmat, markers = snp.sol,
 \references{
 \emph{Munoz, P. R., Resende, M. F. R., Gezan, S. A., Resende, M. D. V., de los Campos, G., Kirst, M., Huber, D., Peter, G. F. (2014). Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics, 198.4: 1759-1768.}
 
-\emph{Martini, J. W., Schrauf, M. F., Garcia-Baccino, C. A., Pimentel, E. C., Munilla, S., Rogberg-Muñoz, A., ... & Simianer, H. (2018). The effect of the H− 1 scaling factors τ and ω on the structure of H in the single-step procedure. Genetics Selection Evolution, 50(1), 16.}
+\emph{Martini, J. W., Schrauf, M. F., Garcia-Baccino, C. A., Pimentel, E. C., Munilla, S., Rogberg-Munoz, A., ... & Simianer, H. (2018). The effect of the H− 1 scaling factors τ and ω on the structure of H in the single-step procedure. Genetics Selection Evolution, 50(1), 16.}
 }
 \author{
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}

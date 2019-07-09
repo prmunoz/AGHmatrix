@@ -60,7 +60,7 @@ Currently can compute the following 14 different relationship matrices:
 ## Citation
 To cite this R package:
 
-Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. F. Garcia, M. F. R. Resende, and P. R. Muñoz. 2016. AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example. *The Plant Genome* 9(3). [doi: 10.3835/plantgenome2016.01.0009](http://dx.doi.org/10.3835/plantgenome2016.01.0009)
+Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. F. Garcia, M. F. R. Resende, and P. R. Munoz. 2016. AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example. *The Plant Genome* 9(3). [doi: 10.3835/plantgenome2016.01.0009](http://dx.doi.org/10.3835/plantgenome2016.01.0009)
 
 ## Installing and loading
 Within R:
@@ -213,7 +213,7 @@ Hmat_Munoz <- Hmatrix(A=Amat, G=Gmat, markers = snp.sol,
 
 ## Covariance matrices due to epistatic terms
 Here we present how to compute the epistasis relationship matrices using Hadamard
-products (i.e. cell-by-cell product), denoted by `*`. For more information please see Muñoz
+products (i.e. cell-by-cell product), denoted by `*`. For more information please see Munoz
 et al. (2014). In this example we are using the molecular-based relationship matrices. First, build the additive and dominance matrices:
 
 ```{r, eval=FALSE}
@@ -281,7 +281,7 @@ Martini, JW, et al., 2018, The effect of the H− 1 scaling factors τ and ω on
 
 Mrode, R. A., 2014 *Linear models for the prediction of animal breeding values*. Cabi. 3rd ed.
 
-Muñoz, PR, et al., 2014 Unraveling additive from nonadditive effects using genomic relationship matrices. *Genetics* 198: 1759–1768. https://doi.org/10.1534/genetics.114.171322
+Munoz, PR, et al., 2014 Unraveling additive from nonadditive effects using genomic relationship matrices. *Genetics* 198: 1759–1768. https://doi.org/10.1534/genetics.114.171322
 
 R Core Team, 2016 *R*: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria.
 
