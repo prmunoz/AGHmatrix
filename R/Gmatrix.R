@@ -27,7 +27,7 @@
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
-#' @param impute.method "mean" to impute the missing data by the mean or "mode" to impute the missing data my the mode. Default = "mean".
+#' @param impute.method FALSE to not impute missing data, "mean" to impute the missing data by the mean, "mode" to impute the missing data my the mode. Default = FALSE.
 #' @param integer if FALSE, not check for integer numbers. Default=TRUE.
 #' @param ratio.check if TRUE, run snp.check with ratio data.
 #'
@@ -47,15 +47,12 @@
 #' 
 #' ## Autetraploid example
 #' #Generating fake data
-#' inds <- 10
-#' markers <- 100
-#' markersdata <- matrix(sample(x=0:4, size=inds*markers, replace=TRUE), nrow=inds, ncol=markers)
-#' 
+#' data(snp.sol)
 #' #Build G matrices
-#' Gmatrix.VanRaden <- Gmatrix(markersdata, method="VanRaden", ploidy=4)
-#' Gmatrix.Endelman <- Gmatrix(markersdata, method="Endelman", ploidy=4) 
-#' Gmatrix.Slater <- Gmatrix(markersdata, method="Slater", ploidy=4)
-#' Gmatrix.Pseudodiploid <- Gmatrix(markersdata, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
+#' Gmatrix.VanRaden <- Gmatrix(snp.sol, method="VanRaden", ploidy=4)
+#' Gmatrix.Endelman <- Gmatrix(snp.sol, method="Endelman", ploidy=4) 
+#' Gmatrix.Slater <- Gmatrix(snp.sol, method="Slater", ploidy=4)
+#' Gmatrix.Pseudodiploid <- Gmatrix(snp.sol, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
 #' }
 #' 
 #' @author Rodrigo R Amadeu \email{rramadeu@@gmail.com}, Marcio Resende Jr, Letícia AC Lara, and Ivone Oliveira
@@ -74,7 +71,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
                      missingValue = -9, maf = 0, thresh.missing = 1,
                      verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE, integer=TRUE,
-                     ratio = FALSE, impute.method = "mean", ratio.check=TRUE){
+                     ratio = FALSE, impute.method = FALSE, ratio.check=TRUE){
   Time = proc.time()
   
   if(ratio){ #This allows to enter in the scaled crossprod condition

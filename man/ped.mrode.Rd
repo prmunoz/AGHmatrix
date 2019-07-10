@@ -12,7 +12,7 @@ data(ped.mrode)
 Data from pedigree example proposed by Mrode 2005
 }
 \examples{
-data(pedigree.mrode)
+data(ped.mrode)
 
 }
 \references{

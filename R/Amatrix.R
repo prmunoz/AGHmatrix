@@ -29,12 +29,21 @@
 #'
 #' @examples
 #' data(ped.mrode)
-#' #Build Amatrix diploid (no double reduction proportion)
-#' Amatrix(data=ped.mrode,ploidy=2)
-#' #Build Amatrix autotetraploidy (double reduction proportion=0.1)
-#' Amatrix(data=ped.mrode,ploidy=4,w=0.1)
-#' #' #Build Amatrix autooctaploid (no double reduction proportion)
-#' Amatrix(data=ped.mrode,ploidy=8)
+#' #Computing additive relationship matrix considering diploidy
+#' Amatrix(ped.mrode, ploidy=2)
+#' #Computing non-additive relationship matrix considering diploidy:
+#' Amatrix(ped.mrode, ploidy=2, dominance=TRUE)
+#' #Computing additive relationship matrix considering autotetraploidy:
+#' Amatrix(ped.mrode, ploidy=4)
+#' #Computing additive relationship matrix considering autooctaploidy:
+#' Amatrix(ped.mrode, ploidy=8)
+#' #Computing additive relationship matrix considering autotetraploidy and double-reduction of 10%:
+#' Amatrix(ped.mrode, ploidy=4, w=0.1)
+#' #Computing additive relationship matrix considering 
+#' #autotetraploidy and double-reduction of 10% as Slater et al. (2014):
+#' Amatrix(ped.mrode, ploidy=4, w=0.1, slater = TRUE)
+#' #Computing additive relationship matrix considering autohexaploidy and double-reduction of 10%:
+#' Amatrix(ped.mrode, ploidy=6, w=0.1)
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #'

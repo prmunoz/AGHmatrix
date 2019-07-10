@@ -46,24 +46,26 @@ Currently can compute the following 14 different relationship matrices:
 
 ### Pedigree-based relationship matrix (A matrix)
 
-|               | Additive                  |Non-Additive     |
-|---------------|---------------------------|-----------------|
-| **Diploid**   | Henderson (1976)          |Cockerham (1954) |
-| **Polyploid** |Kerr (2012), Slater (2013) |                 |
+|               |&nbsp; &nbsp; &nbsp; &nbsp; | Additive                  |&nbsp; &nbsp; &nbsp; &nbsp; |Non-Additive                |
+|---------------|--------------|:-------------------------:|--------------|:--------------------------:|
+| **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Henderson (1976)          |&nbsp; &nbsp; &nbsp; &nbsp; |Cockerham (1954)            |
+| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Kerr (2012), Slater (2013)|&nbsp; &nbsp; &nbsp; &nbsp; ||                            |
 
  
 ### Molecular-based relationship matrix (G matrix)
-|               | Additive                  |Non-Additive     |
-|---------------|---------------------------|-----------------|
-| **Diploid**   | Yang (2010), VanRaden (2012)  | Su (2012), Vitezica (2013) |
-| **Polyploid** | Slater (2016), VanRaden (2012) | Slater (2016), Endelman (2018) |
+
+|           |&nbsp; &nbsp; &nbsp; &nbsp; |  Additive                     |&nbsp; &nbsp; &nbsp; &nbsp; | Non-Additive               |
+|-----------|--------------|:----------------------------:|----|:---------------------------:|
+| **Diploid**   |&nbsp; &nbsp; &nbsp; &nbsp; | Yang (2010), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Su (2012), Vitezica (2013) |
+| **Polyploid** |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), VanRaden (2012) |&nbsp; &nbsp; &nbsp; &nbsp; | Slater (2016), Endelman (2018)              |
 
 
 ### Combined pedigree and molecular-based relationship matrix (H matrix)
 
 | **Any ploidy/effect**   |
-|---------------------------|
+|:---------------------------:|
 | Munoz (2014), Martini (2018) |
+</center>
 
 ## Citation
 To cite this R package:
@@ -285,7 +287,7 @@ Henderson, C, 1976 A simple method for computing the inverse of a numerator rela
 
 Kerr, RJ, et al., 2012 Use of the numerator relation ship matrix in genetic analysis of autopolyploid species. *Theoretical and Applied Genetics* 124: 1271–1282. https://doi.org/10.1007/s00122-012-1785-y
 
-Martini, JW, et al., 2018, The effect of the H$^{1}$ scaling factors $\tau$ and $\omega$ on the structure of H in the single-step procedure. Genetics Selection Evolution, 50(1), 16. https://doi.org/10.1186/s12711-018-0386-x
+Martini, JW, et al., 2018, The effect of the H− 1 scaling factors τ and ω on the structure of H in the single-step procedure. Genetics Selection Evolution, 50(1), 16. https://doi.org/10.1186/s12711-018-0386-x
 
 Mrode, R. A., 2014 *Linear models for the prediction of animal breeding values*. Cabi. 3rd ed.
 
