@@ -75,7 +75,7 @@ You can read the _AGHmatrix_ tutorial going to the vignettes of the
 installed package, or clicking below. Please, start with the overview,
 that will guide you through other chapters.
 
-[AGHmatrix Tutorial](http://htmlpreview.github.io/?https://github.com/rramadeu/aghmatrix/blob/master/inst/doc/Tutorial_AGHmatrix.html)
+[AGHmatrix Tutorial](https://github.com/rramadeu/AGHmatrix/raw/master/inst/docs/Tutorial_AGHmatrix.pdf)
 
 ## More about us
 [Bluberry Breeding & Genomics Lab, University of Florida - USA](http://www.blueberrybreeding.com)
