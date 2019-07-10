@@ -27,9 +27,9 @@ The following matrices are implemented:
 
 <center> 
   
-|               | Any Effect/Ploidy  |
+|               | Any Effect  |
 |---------------|:------------------------------:|
-| **Diploid**   | Munoz (2014), Martini (2018)   |
+| **Any Ploidy**   | Munoz (2014), Martini (2018)   |
 </center>
 
 
