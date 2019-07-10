@@ -25,6 +25,8 @@ The following matrices are implemented:
 | **Polyploid** | Slater (2016), VanRaden (2012) | Slater (2016), Endelman (2018) |
 </center>
 
+### Combined pedigree and molecular-based relationship matrix (H matrix)
+
 <center> 
   
 |               | Any Effect  |
