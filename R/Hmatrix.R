@@ -119,7 +119,11 @@ Hmatrix <- function(A=NULL,
     #if(is.singular.matrix(G22))
     #  stop(deparse("Matrix G22 is singular (not invertible)"))
     A22inv = solve(A22) #A is always invertible
-    G22inv = solve(G22)
+    G22inv = try(solve(G22),silent=TRUE)
+    if(class(G22inv)=="try-error"){
+      cat(G22inv)
+      stop("G22 not inverting with solve(), try a different/modified G matrix")
+    }
     H22 = solve((tau*G22inv+(1-omega)*A22inv))
     H11 = A12 %*% A22inv %*% (H22-A22) %*% A22inv %*% A21  
     H12 = A12 %*% A22inv %*% (H22-A22)
