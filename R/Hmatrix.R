@@ -32,6 +32,7 @@
 #' @return H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
 #'
 #' @examples 
+#' \dontrun{
 #' data(ped.sol)
 #' data(snp.sol)
 #' #Computing the numerator relationship matrix 10% of double-reduction
@@ -47,6 +48,7 @@
 #'                       ploidy=4, method="Munoz",
 #'                       roundVar=2,
 #'                       missingValue=-9, maf=0.05)
+#' }
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #' 

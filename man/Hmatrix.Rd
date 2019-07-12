@@ -38,6 +38,7 @@ H Matrix with the relationship between the individuals based on pedigree and cor
 Given a matrix A and a matrix G returns a H matrix.
 }
 \examples{
+\dontrun{
 data(ped.sol)
 data(snp.sol)
 #Computing the numerator relationship matrix 10\% of double-reduction
@@ -53,6 +54,7 @@ Hmat_Munoz <- Hmatrix(A=Amat, G=Gmat, markers = snp.sol,
                       ploidy=4, method="Munoz",
                       roundVar=2,
                       missingValue=-9, maf=0.05)
+}
 
 }
 \references{
