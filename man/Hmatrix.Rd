@@ -5,7 +5,7 @@
 \title{Construction of Combined Relationship Matrix H}
 \usage{
 Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0,
-  method = "Martini", tau = 0, omega = 1, missingValue = -9,
+  method = "Martini", tau = 1, omega = 1, missingValue = -9,
   maf = 0, ploidy = 2, roundVar = 3)
 }
 \arguments{
@@ -19,7 +19,7 @@ Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0,
 
 \item{method}{"Martini" or "Munoz", default="Martini"}
 
-\item{tau}{to be used for Martini's method, default=0.}
+\item{tau}{to be used for Martini's method, default=1.}
 
 \item{omega}{to be used of Martini's method, default=1.}
 
