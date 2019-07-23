@@ -116,8 +116,6 @@ Hmatrix <- function(A=NULL,
     A21 <- A[!index,index]
     A22 <- A[!index,!index]
     G22 <- G[idH[!index],idH[!index]]
-    tau=1
-    omega=0
     #if(is.singular.matrix(G22))
     #  stop(deparse("Matrix G22 is singular (not invertible)"))
     A22inv = solve(A22) #A is always invertible
