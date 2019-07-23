@@ -25,7 +25,7 @@
 #' @param missingValue missing value in data, default=-9.
 #' @param maf max of missing data accepted to each markerm default=0.05.
 #' @param ploidy data ploidy (an even number between 2 and 20), default=2.
-#' @param tau to be used for Martini's method, default=0. 
+#' @param tau to be used for Martini's method, default=1. 
 #' @param omega to be used of Martini's method, default=1.
 #' @param roundVar Munoz's method, how many digits to consider the relationship be of same class, default=2.
 #' 
@@ -62,7 +62,7 @@ Hmatrix <- function(A=NULL,
                      markers=NULL,
                      c=0,
                      method="Martini",
-                     tau=0,
+                     tau=1,
                      omega=1,
                      missingValue=-9,
                      maf=0,
