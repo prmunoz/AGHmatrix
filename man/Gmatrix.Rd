@@ -16,7 +16,7 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 
 \item{missingValue}{missing value in data. Default=-9.}
 
-\item{maf}{max of missing data accepted to each marker. Default=0.05.}
+\item{maf}{max of missing data accepted to each marker. Default=0.}
 
 \item{thresh.missing}{threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 1.}
 
