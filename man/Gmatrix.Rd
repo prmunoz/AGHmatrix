@@ -4,10 +4,21 @@
 \alias{Gmatrix}
 \title{Construction of Relationship Matrix G}
 \usage{
-Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
-  maf = 0, thresh.missing = 1, verify.posdef = FALSE, ploidy = 2,
-  pseudo.diploid = FALSE, integer = TRUE, ratio = FALSE,
-  impute.method = FALSE, ratio.check = TRUE)
+Gmatrix(
+  SNPmatrix = NULL,
+  method = "VanRaden",
+  missingValue = -9,
+  maf = 0,
+  thresh.missing = 1,
+  verify.posdef = FALSE,
+  ploidy = 2,
+  pseudo.diploid = FALSE,
+  integer = TRUE,
+  ratio = FALSE,
+  impute.method = FALSE,
+  ratio.check = TRUE,
+  weights = NULL
+)
 }
 \arguments{
 \item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue).}
@@ -16,7 +27,7 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 
 \item{missingValue}{missing value in data. Default=-9.}
 
-\item{maf}{max of missing data accepted to each marker. Default=0.}
+\item{maf}{minimum allele frequency accepted to each marker. Default=0.}
 
 \item{thresh.missing}{threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 1.}
 
@@ -33,12 +44,14 @@ Gmatrix(SNPmatrix = NULL, method = "VanRaden", missingValue = -9,
 \item{impute.method}{FALSE to not impute missing data, "mean" to impute the missing data by the mean, "mode" to impute the missing data my the mode. Default = FALSE.}
 
 \item{ratio.check}{if TRUE, run snp.check with ratio data.}
+
+\item{weights}{vector with weights for each marker. Only works if method="VamRaden". Default is a vector of 1's (equal weight).}
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
 }
 \description{
-Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or non-additive relationship matrix. For diploids, the methods "Yang" and "VanRaden" for additive relationship matrices, and "Su" and "Vitezica" for non-additive relationship matrices are implemented. For autopolyploids, the method "VanRaden" for additive relationship, method "Slater" for full-autopolyploid model including non-additive effects, and pseudo-diploid parametrization are implemented.
+Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or non-additive relationship matrix. For diploids, the methods "Yang" and "VanRaden" for additive relationship matrices, and "Su" and "Vitezica" for non-additive relationship matrices are implemented. For autopolyploids, the method "VanRaden" for additive relationship, method "Slater" for full-autopolyploid model including non-additive effects, and pseudo-diploid parametrization are implemented. Weights are implemented for "VanRaden" method as described in Liu (2020).
 }
 \examples{
 \dontrun{
@@ -53,13 +66,15 @@ Gmatrix.Su <- Gmatrix(snp.pine, method="Su", missingValue=-9, maf=0.05)
 Gmatrix.Vitezica <- Gmatrix(snp.pine, method="Vitezica", missingValue=-9, maf=0.05)
 
 ## Autetraploid example
-#Generating fake data
 data(snp.sol)
 #Build G matrices
 Gmatrix.VanRaden <- Gmatrix(snp.sol, method="VanRaden", ploidy=4)
 Gmatrix.Endelman <- Gmatrix(snp.sol, method="Endelman", ploidy=4) 
 Gmatrix.Slater <- Gmatrix(snp.sol, method="Slater", ploidy=4)
 Gmatrix.Pseudodiploid <- Gmatrix(snp.sol, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
+
+#Build G matrix with weights
+Gmatrix.weighted <- Gmatrix(snp.sol, method="VanRaden", weights= weights = runif(3895,0.001,0.1), ploidy=4)
 }
 
 }
@@ -77,7 +92,9 @@ Gmatrix.Pseudodiploid <- Gmatrix(snp.sol, method="VanRaden", ploidy=4, pseudo.di
 \emph{Yang, J., et al., 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
 
 \emph{Endelman, J. B., et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
+
+\emph{Liu, A., et al., 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
 }
 \author{
-Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, Letícia AC Lara, and Ivone Oliveira
+Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, Letícia AC Lara, Ivone Oliveira, and Felipe V Ferrao
 }
