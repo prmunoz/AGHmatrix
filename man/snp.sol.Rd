@@ -4,7 +4,9 @@
 \name{snp.sol}
 \alias{snp.sol}
 \title{Molecular data for autopolyploid examples}
-\format{data.frame}
+\format{
+data.frame
+}
 \usage{
 data(snp.sol)
 }

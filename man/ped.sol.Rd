@@ -4,7 +4,9 @@
 \name{ped.sol}
 \alias{ped.sol}
 \title{Pedigree data for autopolyploid examples}
-\format{data.frame}
+\format{
+data.frame
+}
 \usage{
 data(ped.sol)
 }
