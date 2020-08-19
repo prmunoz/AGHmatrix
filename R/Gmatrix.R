@@ -78,11 +78,14 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
                      ratio = FALSE, impute.method = FALSE, ratio.check=TRUE, weights=NULL){
   Time = proc.time()
   markers = colnames(SNPmatrix)
+<<<<<<< HEAD
   
   if(!is.null(weights))
     if(length(weights)!=ncol(SNPmatrix))
       stop(deparse("weight should be a numeric vector of the same number of markers in the SNPmatrix"))
       
+=======
+>>>>>>> 7fd253f9d3adaebbb509088a67fefdadc9000f22
   
   if(ratio){ #This allows to enter in the scaled crossprod condition
     method="VanRaden"

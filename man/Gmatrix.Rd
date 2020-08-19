@@ -74,7 +74,11 @@ Gmatrix.Slater <- Gmatrix(snp.sol, method="Slater", ploidy=4)
 Gmatrix.Pseudodiploid <- Gmatrix(snp.sol, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
 
 #Build G matrix with weights
+<<<<<<< HEAD
 Gmatrix.weighted <- Gmatrix(snp.sol, method="VanRaden", weights = runif(3895,0.001,0.1), ploidy=4)
+=======
+Gmatrix.weighted <- Gmatrix(snp.sol, method="VanRaden", weights= weights = runif(3895,0.001,0.1), ploidy=4)
+>>>>>>> 7fd253f9d3adaebbb509088a67fefdadc9000f22
 }
 
 }
