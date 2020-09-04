@@ -27,5 +27,5 @@ Encoding: UTF-8
 License: GPL-3
 URL: https://github.com/prmunoz/AGHmatrix
 Maintainer: Rodrigo Amadeu <rramadeu@ufl.edu>
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 NeedsCompilation: no

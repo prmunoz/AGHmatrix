@@ -120,7 +120,7 @@ Hmatrix <- function(A=NULL,
     #  stop(deparse("Matrix G22 is singular (not invertible)"))
     A22inv = solve(A22) #A is always invertible
     G22inv = try(solve(G22),silent=TRUE)
-    if(class(G22inv)=="try-error"){
+    if(inherits(G22inv,"try-error")){
       cat(G22inv)
       stop("G22 not inverting with solve(), try a different/modified G matrix")
     }

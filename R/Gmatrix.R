@@ -405,7 +405,7 @@ check_Gmatrix_data <- function(SNPmatrix,ploidy,method, ratio=FALSE, integer=TRU
   if( method=="Vitezica" && ploidy>2)
     stop("Change method to 'Slater' for ploidies higher than 2 for marker-based non-additive relationship matrix")
   
-  if(class(SNPmatrix)!="matrix"){
+  if(!is.matrix(SNPmatrix)){
     cat("SNPmatrix class is:",class(SNPmatrix),"\n")
     stop("SNPmatrix class must be matrix. Please verify it.")
   }
