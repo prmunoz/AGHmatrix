@@ -4,9 +4,19 @@
 \alias{Hmatrix}
 \title{Construction of Combined Relationship Matrix H}
 \usage{
-Hmatrix(A = NULL, G = NULL, markers = NULL, c = 0,
-  method = "Martini", tau = 1, omega = 1, missingValue = -9,
-  maf = 0, ploidy = 2, roundVar = 3)
+Hmatrix(
+  A = NULL,
+  G = NULL,
+  markers = NULL,
+  c = 0,
+  method = "Martini",
+  tau = 1,
+  omega = 1,
+  missingValue = -9,
+  maf = 0,
+  ploidy = 2,
+  roundVar = 3
+)
 }
 \arguments{
 \item{A}{A matrix from function Amatrix}

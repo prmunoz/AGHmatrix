@@ -4,7 +4,9 @@
 \name{snp.pine}
 \alias{snp.pine}
 \title{Molecular data for diploid examples}
-\format{matrix}
+\format{
+matrix
+}
 \usage{
 data(snp.pine)
 }

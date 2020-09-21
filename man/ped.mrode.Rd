@@ -4,7 +4,9 @@
 \name{ped.mrode}
 \alias{ped.mrode}
 \title{Pedigree Data}
-\format{table}
+\format{
+table
+}
 \usage{
 data(ped.mrode)
 }

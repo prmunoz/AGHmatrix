@@ -2,7 +2,7 @@
 
 # AGHmatrix
 
-`AGHmatrix` is an [R](http://www.r-project.org) package to compute A (pedigree), G (genomic-base), and H (A corrected by G) matrices for diploid and autopolyploid species. It suports any even ploidy.
+`AGHmatrix` is an [R](http://www.r-project.org) package to compute A (pedigree), G (genomic-base), and H (A corrected by G) matrices for diploid and autopolyploid species. It suports any even ploidy and marker weights.
 
 The following matrices are implemented:
 ### Pedigree-based relationship matrix (A matrix)
@@ -94,6 +94,8 @@ Hamilton, MG, et al., 2017 Computation of the inverse additive relationship matr
 Henderson, C, 1976 A simple method for computing the inverse of a numerator relationship matrix used in prediction of breeding values. *Biometrics* pp. 69–83. https://doi.org/10.2307/2529339
 
 Kerr, RJ, et al., 2012 Use of the numerator relation ship matrix in genetic analysis of autopolyploid species. *Theoretical and Applied Genetics* 124: 1271–1282. https://doi.org/10.1007/s00122-012-1785-y
+
+Liu, A., et al., 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48. https://doi.org/10.1186/s12711-020-00568-0
 
 Martini, JW, et al., 2018, The effect of the H$^{1}$ scaling factors $\tau$ and $\omega$ on the structure of H in the single-step procedure. Genetics Selection Evolution, 50(1), 16. https://doi.org/10.1186/s12711-018-0386-x
 

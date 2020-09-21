@@ -4,8 +4,14 @@
 \alias{formatmatrix}
 \title{Transform a matrix in 3 columns}
 \usage{
-formatmatrix(data = NULL, save = TRUE, return = FALSE,
-  name = deparse(substitute(data)), round.by = 12, exclude.0 = TRUE)
+formatmatrix(
+  data = NULL,
+  save = TRUE,
+  return = FALSE,
+  name = deparse(substitute(data)),
+  round.by = 12,
+  exclude.0 = TRUE
+)
 }
 \arguments{
 \item{data}{matrix (nxn).}

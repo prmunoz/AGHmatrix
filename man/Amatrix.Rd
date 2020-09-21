@@ -4,8 +4,15 @@
 \alias{Amatrix}
 \title{Construction of Relationship Matrix A}
 \usage{
-Amatrix(data = NULL, ploidy = 2, w = 0, verify = TRUE,
-  dominance = FALSE, slater = FALSE, ...)
+Amatrix(
+  data = NULL,
+  ploidy = 2,
+  w = 0,
+  verify = TRUE,
+  dominance = FALSE,
+  slater = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{pedigree data name (3-column way format). Unknown value should be equal 0.}
