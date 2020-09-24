@@ -35,7 +35,7 @@ The following matrices are implemented:
 </center>
 
 
-An original manuscript about `AGHmatrix` development and application in autotetraploids is described on [Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. The Plant Genome 9. doi:10.3835/plantgenome2016.01.0009.](https://dl.sciencesocieties.org/publications/tpg/articles/0/0/plantgenome2016.01.0009).
+An original manuscript about `AGHmatrix` development and application in autotetraploids is described on [Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. Garcia, M. F. Resende, and P. R. Muñoz, 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. The Plant Genome 9. doi:10.3835/plantgenome2016.01.0009.](https://doi.org/10.3835/plantgenome2016.01.0009).
 
 ## How to install
 
