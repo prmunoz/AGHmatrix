@@ -1,0 +1,1 @@
+- Add explanation on tau and omega for Hmatrix. If tau=omega=1, this is the original Hmatrix from Legarra. Add Legarra reference in the Hmatrix().
