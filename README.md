@@ -77,6 +77,9 @@ that will guide you through other chapters.
 
 [AGHmatrix Tutorial](https://github.com/rramadeu/AGHmatrix/raw/master/inst/docs/Tutorial_AGHmatrix.pdf)
 
+If you are facing problems inverting your genomic relationship matrix, please take a look at this blog post:
+[Common cases that the GRM doesn’t invert](https://rramadeu.github.io/posts/2020/12/Gmatrix-0Det)
+
 ## More about us
 [Bluberry Breeding & Genomics Lab, University of Florida - USA](http://www.blueberrybreeding.com)
 
