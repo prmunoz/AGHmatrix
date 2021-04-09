@@ -9,7 +9,7 @@
 # Contributors: Marcio Resende Jr, Leticia AC Lara, Ivone Oliveira, Luis Felipe V Ferrao
 # 									
 # First version: Feb-2014 					
-# Last update: 19-Aug-2020 						
+# Last update: 01-Jun-2021 						
 # License: GPL-3	
 # 									
 #####################################################################
@@ -27,7 +27,7 @@
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
-#' @param impute.method FALSE to not impute missing data, "mean" to impute the missing data by the mean, "mode" to impute the missing data my the mode. Default = FALSE.
+#' @param impute.method FALSE to not impute missing data, "mean" to impute the missing data by the mean per marker, "mode" to impute the missing data my the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "mode" to impute the missing data my the mode across all marker. Default = FALSE.
 #' @param integer if FALSE, not check for integer numbers. Default=TRUE.
 #' @param ratio.check if TRUE, run snp.check with ratio data.
 #' @param weights vector with weights for each marker. Only works if method="VamRaden". Default is a vector of 1's (equal weight).
@@ -365,20 +365,31 @@ snp.check = function(M = NULL,
     cat("\tNo monomorphic SNPs \n")
   }
   
-  # Imputing by mode
-  if(impute.method=="mean"){
+  if(impute.method=="global.mean"){
     ix <- which(is.na(M))
     if (length(ix) > 0) {
       M[ix] <- mean(M,na.rm = TRUE)
     }
   }
   
-  if(impute.method=="mode"){
+  if(impute.method=="global.mode"){
     ix <- which(is.na(M))
     if (length(ix) > 0) {
       M[ix] <- as.integer(names(which.max(table(M))))
     }
   }
+  
+  if(impute.method=="mean"){
+    imputvalue = apply(M,2,mean,na.rm=TRUE)
+    ix = which(is.na(M),arr.ind=TRUE)
+    M[ix] = imputvalue[ix[,2]]
+  }
+  
+  if(impute.method=="mode"){
+    imputvalue = apply(M, 2, function(x) as.integer(names(which.max(table(x)))))
+    ix = which(is.na(M),arr.ind=TRUE)
+    M[ix] = imputvalue[ix[,2]]
+  }    
   
   # Total of SNPs
   cat("Summary check: \n")

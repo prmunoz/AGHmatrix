@@ -42,7 +42,7 @@ filterpedigree <- function(inds, data){
     }
     ped_out<- data[which(data[,1] == inds[i]),]
     if(nrow(ped_out)==0){
-      stop(deparse(paste(ind,"doesn't exist in this pedigree.")))
+      stop(deparse(paste(inds[i],"doesn't exist in this pedigree.")))
     }
     trigger <- 1
     while(trigger>0){

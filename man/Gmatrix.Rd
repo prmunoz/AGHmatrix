@@ -41,7 +41,7 @@ Gmatrix(
 
 \item{ratio}{if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).}
 
-\item{impute.method}{FALSE to not impute missing data, "mean" to impute the missing data by the mean, "mode" to impute the missing data my the mode. Default = FALSE.}
+\item{impute.method}{FALSE to not impute missing data, "mean" to impute the missing data by the mean per marker, "mode" to impute the missing data my the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "mode" to impute the missing data my the mode across all marker. Default = FALSE.}
 
 \item{ratio.check}{if TRUE, run snp.check with ratio data.}
 
