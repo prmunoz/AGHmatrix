@@ -30,7 +30,8 @@
 #' @param impute.method FALSE to not impute missing data, "mean" to impute the missing data by the mean per marker, "mode" to impute the missing data my the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "mode" to impute the missing data my the mode across all marker. Default = FALSE.
 #' @param integer if FALSE, not check for integer numbers. Default=TRUE.
 #' @param ratio.check if TRUE, run snp.check with ratio data.
-#' @param weights vector with weights for each marker. Only works if method="VamRaden". Default is a vector of 1's (equal weight).
+#' @param weights vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).
+#' @param correction integer (1 or 2), Default = 2. Used only when ploidy > 2 for "VanRaden" and ratio models. It sets the denominator (correction) of the crossprod. If 1, it uses the sum of "Ploidy" times "P" times "(1-P)" of each markers as method 1 in VanRaden 2008 and Endelman (2018).If 2, it uses the sum of the sampling variance of each marker. 
 #'
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
@@ -75,7 +76,8 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
                      missingValue = -9, maf = 0, thresh.missing = 1,
                      verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE, integer=TRUE,
-                     ratio = FALSE, impute.method = FALSE, ratio.check=TRUE, weights=NULL){
+                     ratio = FALSE, impute.method = FALSE, 
+                     ratio.check=TRUE, weights=NULL, correction=2){
   Time = proc.time()
   markers = colnames(SNPmatrix)
   
@@ -85,7 +87,6 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
 
   if(ratio){ #This allows to enter in the scaled crossprod condition
     method="VanRaden"
-    ploidy=8
   }
   
   if (!is.na(missingValue)) {
@@ -169,35 +170,39 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   ## VanRaden ##
   if (method == "VanRaden") {
     if(is.null(weights)){
-      if(ploidy==2){
+      if(ploidy==2 & ratio==FALSE){
         TwoPQ <- 2 * t(Frequency[, 1]) %*% Frequency[, 2]
         SNPmatrix <- SNPmatrix- 2 * FreqP
         SNPmatrix[is.na(SNPmatrix)] <- 0
         Gmatrix <- (tcrossprod(SNPmatrix, SNPmatrix))/as.numeric(TwoPQ)
       }else{
-        if(ploidy>2){
-          SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE) 
-          K<-sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
+          SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE)
+          if(ploidy.correction){
+            K <- ploidy * t(Frequency[, 1]) %*% Frequency[, 2]
+          }else{
+            K <- sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
+          }
           SNPmatrix[which(is.na(SNPmatrix))] <- 0
           Gmatrix<-tcrossprod(SNPmatrix)/K
         }
-      }
     }else{
       weights = weights[match(colnames(SNPmatrix),markers)]
-      if(ploidy==2){
+      if(ploidy==2 & ratio==FALSE){
         TwoPQ <- 2 * t(Frequency[, 1]) %*% Frequency[, 2]
         SNPmatrix <- SNPmatrix- 2 * FreqP
         SNPmatrix[is.na(SNPmatrix)] <- 0
         Gmatrix <- tcrossprod(tcrossprod(SNPmatrix, diag(weights)), SNPmatrix)/as.numeric(TwoPQ)
       }else{
-        if(ploidy>2){
-          SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE) 
-          K<-sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
+          SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE)
+          if(ploidy.correction){
+            K <- ploidy * t(Frequency[, 1]) %*% Frequency[, 2]
+          }else{
+            K <- sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
+          }
           SNPmatrix[which(is.na(SNPmatrix))] <- 0
           Gmatrix<-tcrossprod(tcrossprod(SNPmatrix, diag(weights)), SNPmatrix)/K
         }
       }
-    }
   }
   
   if (method == "Yang") {

@@ -17,7 +17,8 @@ Gmatrix(
   ratio = FALSE,
   impute.method = FALSE,
   ratio.check = TRUE,
-  weights = NULL
+  weights = NULL,
+  ploidy.correction = FALSE
 )
 }
 \arguments{
@@ -45,7 +46,9 @@ Gmatrix(
 
 \item{ratio.check}{if TRUE, run snp.check with ratio data.}
 
-\item{weights}{vector with weights for each marker. Only works if method="VamRaden". Default is a vector of 1's (equal weight).}
+\item{weights}{vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).}
+
+\item{ploidy.correction}{It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "1/Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE.}
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
