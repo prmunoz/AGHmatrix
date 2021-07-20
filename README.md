@@ -82,6 +82,10 @@ that will guide you through other chapters.
 
 [Statistical-Genetics Lab, University of Sao Paulo - Brazil](http://statgen.esalq.usp.br/)
 
+## A matrix benchmark
+
+![](https://github.com/rramadeu/Tutorials_File/raw/master/Amatrix_benchmark.png])
+
 ## References
 Amadeu, RR, et al., 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. *The Plant Genome* 9(4). https://doi.org/10.3835/plantgenome2016.01.0009
 
