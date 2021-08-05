@@ -14,10 +14,10 @@
 # 								
 #########################################################################
 
-#' Construction of Relationship Matrix A when parent guessing exists
+#' Construction of pedigree-based relationship matrix with parental guessing possibility
 #'
-#' Creates a additive relationship matrix A from a non-deterministic pedigree with 4+ columns where each column represents a possible parent. This function was built with the following designs in mind. 
-#' 1) A mating design where you have equally possible parents. For example, a generation of insects derived from the mating of three insects in a cage. All the insects in this generation will have the same expected relatedness with all the parents (1/3). Here the only pedigree track is the possible parents. If there is only two parents in the cage, the function assumes no-inbreeding and the pedigree is deterministic (the genotype is offspring of the cross between the two parents). Another example, a population of 10 open-pollinated plants where you harvest the seeds without tracking the mother. 
+#' Creates an additive relationship matrix A based on a non-deterministic pedigree with 4+ columns where each column represents a possible parent. This function was built with the following designs in mind. 
+#' 1) A mating design where you have equally possible parents. For example, a generation of insects derived from the mating of three insects in a cage. All the insects in this generation will have the same expected relatedness with all the possible parents (1/3). If there are only two parents in the cage, the function assumes no-inbreeding and the pedigree is deterministic (the individual is offspring of the cross between the two parents). Another example, a population of 10 open-pollinated plants where you harvest the seeds without tracking the mother. 
 #' 2) A mating design where you know one parent and might know the other possible parents. For example, a polycross design where you have seeds harvested from a mother plant and possible polen donors.
 #'
 #' @param data pedigree data name. Unknown value should be equal 0. See example for construction.
