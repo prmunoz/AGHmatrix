@@ -33,7 +33,7 @@ Amatrix(
 Matrix with the Relationship between the individuals.
 }
 \description{
-Creates a additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (an even number) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only). Autopolyploid matrices based on Kerr (2012). Construction is based on the Henderson's recursive method described in Mrode (2005).
+Creates an additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (an even number) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only). Autopolyploid matrices based on Kerr (2012). Construction is based on the Henderson's recursive method described in Mrode (2005).
 }
 \examples{
 data(ped.mrode)

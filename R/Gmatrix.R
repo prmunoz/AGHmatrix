@@ -9,7 +9,7 @@
 # Contributors: Marcio Resende Jr, Leticia AC Lara, Ivone Oliveira, Luis Felipe V Ferrao
 # 									
 # First version: Feb-2014 					
-# Last update: 01-Jun-2021 						
+# Last update: 05-Aug-2021 						
 # License: GPL-3	
 # 									
 #####################################################################
@@ -31,7 +31,7 @@
 #' @param integer if FALSE, not check for integer numbers. Default=TRUE.
 #' @param ratio.check if TRUE, run snp.check with ratio data.
 #' @param weights vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).
-#' @param ploidy.correction It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE. 
+#' @param ploidy.correction It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE. 
 #'
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
