@@ -18,12 +18,12 @@
 #'
 #' Creates an additive relationship matrix A based on a non-deterministic pedigree with 4+ columns where each column represents a possible parent. This function was built with the following designs in mind. 
 #' 1) A mating design where you have equally possible parents. For example, a generation of insects derived from the mating of three insects in a cage. All the insects in this generation will have the same expected relatedness with all the possible parents (1/3). If there are only two parents in the cage, the function assumes no-inbreeding and the pedigree is deterministic (the individual is offspring of the cross between the two parents). Another example, a population of 10 open-pollinated plants where you harvest the seeds without tracking the mother. 
-#' 2) A mating design where you know one parent and might know the other possible parents. For example, a polycross design where you have seeds harvested from a mother plant and possible polen donors.
+#' 2) When fixedParent is TRUE: a mating design where you know one parent and might know the other possible parents. For example, a polycross design where you have seeds harvested from a mother plant and possible polen donors.
 #'
 #' @param data pedigree data name. Unknown value should be equal 0. See example for construction.
-#' @param polyCross if false, assumes that all the parents are equally possible parents. If true, assumes that the first parental is known and the others are equally possible parents. Default = FALSE.
+#' @param fixedParent if false, assumes that all the parents are equally possible parents. If true, assumes that the first parental is known and the others are equally possible parents. Default = FALSE.
 #' 
-#' @return Matrix with the Relationship between the individuals.
+#' @return Matrix with the relationship between the individuals.
 #'
 #' @examples
 #' #the following pedigree has the id of the individual followed by possible parents
@@ -53,13 +53,13 @@
 #' #id 7 has two parents (deterministic case here, the parents are 3 and 4); as before
 #' #id 8 is offspring of parent 5 in a deterministic way and has three other possible parents (6,7,1)
 #' 
-#' AmatrixPolyCross(pedigree,polyCross=TRUE)
+#' AmatrixPolyCross(pedigree,fixedParent=TRUE)
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #'
 #' @export
 #' 
-AmatrixPolyCross = function(data = NULL, polyCross=FALSE){
+AmatrixPolyCross = function(data = NULL, fixedParent=FALSE){
   unk = 0
   orig.order <- as.character(data[, 1])
   
@@ -81,7 +81,7 @@ AmatrixPolyCross = function(data = NULL, polyCross=FALSE){
   if (length(data$sire) > 1000) 
     cat("Processing a large pedigree data... It may take a couple of minutes... \n")
   
-  if(polyCross==FALSE){
+  if(fixedParent==FALSE){
     n <- ncol(Parents)
     Time = proc.time()
     
@@ -135,7 +135,7 @@ AmatrixPolyCross = function(data = NULL, polyCross=FALSE){
     A = Afinal
   }
   
-  if(polyCross==TRUE){
+  if(fixedParent==TRUE){
     n <- ncol(Parents)
     Time = proc.time()
     Afinal = matrix(NA,n,n)
