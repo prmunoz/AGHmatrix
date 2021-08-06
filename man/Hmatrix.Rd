@@ -54,16 +54,20 @@ data(snp.sol)
 #Computing the numerator relationship matrix 10\% of double-reduction
 Amat <- Amatrix(ped.sol, ploidy=4, w = 0.1)
 #Computing the additive relationship matrix based on VanRaden (modified)
-Gmat <- Gmatrix(snp.sol, ploidy=4, missingValue=-9,
+Gmat <- Gmatrix(snp.sol, ploidy=4, 
                 maf=0.05, method="VanRaden")
+Gmat <- round(Gmat,3) #to be easy to invert
+
 #Computing H matrix (Martini)
 Hmat_Martini <- Hmatrix(A=Amat, G=Gmat, method="Martini", 
-                     ploidy=4, missingValue=-9, maf=0.05)
+                     ploidy=4, 
+                     maf=0.05)
+                     
 #Computing H matrix (Munoz)
 Hmat_Munoz <- Hmatrix(A=Amat, G=Gmat, markers = snp.sol, 
                       ploidy=4, method="Munoz",
                       roundVar=2,
-                      missingValue=-9, maf=0.05)
+                      maf=0.05)
 }
 
 }

@@ -15,7 +15,7 @@ Gmatrix(
   pseudo.diploid = FALSE,
   integer = TRUE,
   ratio = FALSE,
-  impute.method = FALSE,
+  impute.method = "mean",
   ratio.check = TRUE,
   weights = NULL,
   ploidy.correction = FALSE
@@ -42,7 +42,7 @@ Gmatrix(
 
 \item{ratio}{if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).}
 
-\item{impute.method}{FALSE to not impute missing data, "mean" to impute the missing data by the mean per marker, "mode" to impute the missing data my the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "mode" to impute the missing data my the mode across all marker. Default = FALSE.}
+\item{impute.method}{"mean" to impute the missing data by the mean per marker, "mode" to impute the missing data by the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "global.mode" to impute the missing data my the mode across all marker. Default = "mean".}
 
 \item{ratio.check}{if TRUE, run snp.check with ratio data.}
 
@@ -55,6 +55,9 @@ Matrix with the marker-bases relationships between the individuals
 }
 \description{
 Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or non-additive relationship matrix. For diploids, the methods "Yang" and "VanRaden" for additive relationship matrices, and "Su" and "Vitezica" for non-additive relationship matrices are implemented. For autopolyploids, the method "VanRaden" for additive relationship, method "Slater" for full-autopolyploid model including non-additive effects, and pseudo-diploid parametrization are implemented. Weights are implemented for "VanRaden" method as described in Liu (2020).
+}
+\details{
+If you have problems with the inversion of such matrix, please check https://rramadeu.github.io/posts/2020/12/Gmatrix-0Det.
 }
 \examples{
 \dontrun{
