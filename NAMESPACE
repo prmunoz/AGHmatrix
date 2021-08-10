@@ -1,6 +1,6 @@
 import(Matrix)
 importFrom(stats, var)
-importFrom(utils, read.csv, write.table)
+importFrom(utils, read.csv, write.table, combn)
 importFrom(zoo, na.approx)
 export(Amatrix)
 export(AmatrixPolyCross)
