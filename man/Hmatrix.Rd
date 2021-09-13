@@ -39,13 +39,15 @@ Hmatrix(
 
 \item{ploidy}{data ploidy (an even number between 2 and 20), default=2.}
 
-\item{roundVar}{Munoz's method, how many digits to consider the relationship be of same class, default=2.}
+\item{roundVar}{only used for Munoz's method, how many digits to consider the relationship be of same class, default=2.}
 }
 \value{
 H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
 }
 \description{
-Given a matrix A and a matrix G returns a H matrix.
+Given a matrix A and a matrix G returns a H matrix. H matrix is the relationship matrix using combined information from the pedigree and genomic relationship matrices. First, you need to compute the matrices separated and then use them as input to build the combined H matrix. 
+Two methods are implemented: `Munoz` shrinks the G matrix towards the A matrix scaling the molecular relatadness by each relationship classes; 
+`Martini` is a modified version from Legarra et al. (2009) where combines A and G matrix using scaling factors. When method is equal `Martini` and `tau=1` and `omega=1` you have the same H matrix as in Legarra et al. (2009).
 }
 \examples{
 \dontrun{
@@ -54,23 +56,29 @@ data(snp.sol)
 #Computing the numerator relationship matrix 10\% of double-reduction
 Amat <- Amatrix(ped.sol, ploidy=4, w = 0.1)
 #Computing the additive relationship matrix based on VanRaden (modified)
-Gmat <- Gmatrix(snp.sol, ploidy=4, missingValue=-9,
+Gmat <- Gmatrix(snp.sol, ploidy=4, 
                 maf=0.05, method="VanRaden")
+Gmat <- round(Gmat,3) #to be easy to invert
+
 #Computing H matrix (Martini)
 Hmat_Martini <- Hmatrix(A=Amat, G=Gmat, method="Martini", 
-                     ploidy=4, missingValue=-9, maf=0.05)
+                     ploidy=4, 
+                     maf=0.05)
+                     
 #Computing H matrix (Munoz)
 Hmat_Munoz <- Hmatrix(A=Amat, G=Gmat, markers = snp.sol, 
                       ploidy=4, method="Munoz",
                       roundVar=2,
-                      missingValue=-9, maf=0.05)
+                      maf=0.05)
 }
 
 }
 \references{
-\emph{Munoz, P. R., Resende, M. F. R., Gezan, S. A., Resende, M. D. V., de los Campos, G., Kirst, M., Huber, D., Peter, G. F. (2014). Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics, 198.4: 1759-1768.}
+\emph{Munoz, PR. 2014 Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics 198, 1759-1768}
 
-\emph{Martini, J. W., Schrauf, M. F., Garcia-Baccino, C. A., Pimentel, E. C., Munilla, S., Rogberg-Munoz, A., ... & Simianer, H. (2018). The effect of the H-1 scaling factors tau and omega on the structure of H in the single-step procedure. Genetics Selection Evolution, 50(1), 16.}
+\emph{Martini, JW, et al. 2018 The effect of the H-1 scaling factors tau and omega on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16}
+
+\emph{Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomic information. Journal of Dairy Science 92, 4656–4663}
 }
 \author{
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}

@@ -9,15 +9,15 @@
 # Contributors: Marcio Resende Jr, Leticia AC Lara, Ivone Oliveira, Luis Felipe V Ferrao
 # 									
 # First version: Feb-2014 					
-# Last update: 19-Aug-2020 						
+# Last update: 05-Aug-2021 						
 # License: GPL-3	
 # 									
 #####################################################################
 
 #' Construction of Relationship Matrix G
 #'
-#' Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or non-additive relationship matrix. For diploids, the methods "Yang" and "VanRaden" for additive relationship matrices, and "Su" and "Vitezica" for non-additive relationship matrices are implemented. For autopolyploids, the method "VanRaden" for additive relationship, method "Slater" for full-autopolyploid model including non-additive effects, and pseudo-diploid parametrization are implemented. Weights are implemented for "VanRaden" method as described in Liu (2020).
-#'
+#' Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or non-additive relationship matrix. For diploids, the methods "Yang" and "VanRaden" for additive relationship matrices, and "Su" and "Vitezica" for non-additive relationship matrices are implemented. For autopolyploids, the method "VanRaden" for additive relationship, method "Slater" for full-autopolyploid model including non-additive effects, and pseudo-diploid parametrization are implemented. Weights are implemented for "VanRaden" method as described in Liu (2020). 
+#' 
 #' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue). 
 #' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "Endelman" for autotetraploid dominant (digentic) relationship matrix. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).
 #' @param missingValue missing value in data. Default=-9.
@@ -27,10 +27,11 @@
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
-#' @param impute.method FALSE to not impute missing data, "mean" to impute the missing data by the mean, "mode" to impute the missing data my the mode. Default = FALSE.
+#' @param impute.method "mean" to impute the missing data by the mean per marker, "mode" to impute the missing data by the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "global.mode" to impute the missing data my the mode across all marker. Default = "mean".
 #' @param integer if FALSE, not check for integer numbers. Default=TRUE.
 #' @param ratio.check if TRUE, run snp.check with ratio data.
-#' @param weights vector with weights for each marker. Only works if method="VamRaden". Default is a vector of 1's (equal weight).
+#' @param weights vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).
+#' @param ploidy.correction It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE. 
 #'
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
@@ -60,14 +61,14 @@
 #' 
 #' @author Rodrigo R Amadeu \email{rramadeu@@gmail.com}, Marcio Resende Jr, Letícia AC Lara, Ivone Oliveira, and Felipe V Ferrao
 #' 
-#' @references \emph{Covarrubias-Pazaran G., 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
-#' @references \emph{Slater, A.T., et al., 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
-#' @references \emph{Su, G., et al., 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
-#' @references \emph{VanRaden, P.M., 2008. Efficient methods to compute genomic predictions. Journal of dairy science, 91(11), pp.4414-4423.}
-#' @references \emph{Vitezica, Z.G., Varona, L. and Legarra, A., 2013. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genetics, 195(4), pp.1223-1230.}
-#' @references \emph{Yang, J., et al., 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
-#' @references \emph{Endelman, J. B., et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
-#' @references \emph{Liu, A., et al., 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
+#' @references \emph{Covarrubias-Pazaran, G. 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
+#' @references \emph{Slater, AT, et al. 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
+#' @references \emph{Su, G, et al. 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
+#' @references \emph{VanRaden, PM, 2008. Efficient methods to compute genomic predictions. Journal of dairy science, 91(11), pp.4414-4423.}
+#' @references \emph{Vitezica, ZG, et al. 2013. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genetics, 195(4), pp.1223-1230.}
+#' @references \emph{Yang, J, et al. 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
+#' @references \emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
+#' @references \emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
 #' 
 #' @export
 
@@ -75,7 +76,8 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
                      missingValue = -9, maf = 0, thresh.missing = 1,
                      verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE, integer=TRUE,
-                     ratio = FALSE, impute.method = FALSE, ratio.check=TRUE, weights=NULL){
+                     ratio = FALSE, impute.method = "mean", 
+                     ratio.check = TRUE, weights = NULL, ploidy.correction = FALSE){
   Time = proc.time()
   markers = colnames(SNPmatrix)
   
@@ -85,7 +87,6 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
 
   if(ratio){ #This allows to enter in the scaled crossprod condition
     method="VanRaden"
-    ploidy=8
   }
   
   if (!is.na(missingValue)) {
@@ -169,33 +170,52 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   ## VanRaden ##
   if (method == "VanRaden") {
     if(is.null(weights)){
-      if(ploidy==2){
+      if(ploidy==2 & ratio==FALSE){
         TwoPQ <- 2 * t(Frequency[, 1]) %*% Frequency[, 2]
         SNPmatrix <- SNPmatrix- 2 * FreqP
         SNPmatrix[is.na(SNPmatrix)] <- 0
         Gmatrix <- (tcrossprod(SNPmatrix, SNPmatrix))/as.numeric(TwoPQ)
       }else{
-        if(ploidy>2){
-          SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE) 
-          K<-sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
-          SNPmatrix[which(is.na(SNPmatrix))] <- 0
-          Gmatrix<-tcrossprod(SNPmatrix)/K
+        if(ploidy.correction){
+          if(ratio==FALSE){
+            Frequency <- apply(X=SNPmatrix,FUN=mean,MARGIN=2,na.rm=TRUE)/ploidy
+            K <- sum(ploidy * Frequency * (1-Frequency))
+          }else{
+            Frequency <- apply(X=SNPmatrix,FUN=mean,MARGIN=2,na.rm=TRUE)
+            K <- sum(1/ploidy * Frequency * (1-Frequency))
+          }
         }
+        
+        SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE)
+        if(!ploidy.correction){
+          K <- sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
+        }
+        SNPmatrix[which(is.na(SNPmatrix))] <- 0
+        Gmatrix<-tcrossprod(SNPmatrix)/K
       }
     }else{
       weights = weights[match(colnames(SNPmatrix),markers)]
-      if(ploidy==2){
+      if(ploidy==2 & ratio==FALSE){
         TwoPQ <- 2 * t(Frequency[, 1]) %*% Frequency[, 2]
         SNPmatrix <- SNPmatrix- 2 * FreqP
         SNPmatrix[is.na(SNPmatrix)] <- 0
         Gmatrix <- tcrossprod(tcrossprod(SNPmatrix, diag(weights)), SNPmatrix)/as.numeric(TwoPQ)
       }else{
-        if(ploidy>2){
-          SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE) 
-          K<-sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
-          SNPmatrix[which(is.na(SNPmatrix))] <- 0
-          Gmatrix<-tcrossprod(tcrossprod(SNPmatrix, diag(weights)), SNPmatrix)/K
+        if(ploidy.correction){
+          if(ratio==FALSE){
+            Frequency <- apply(X=SNPmatrix,FUN=mean,MARGIN=2,na.rm=TRUE)/ploidy
+            K <- sum(ploidy * Frequency * (1-Frequency))
+          }else{
+            Frequency <- apply(X=SNPmatrix,FUN=mean,MARGIN=2,na.rm=TRUE)
+            K <- sum(Frequency * (1-Frequency))
+          }
         }
+        SNPmatrix<-scale(SNPmatrix,center=TRUE,scale=FALSE)
+        if(!ploidy.correction){
+          K <- sum(apply(X=SNPmatrix,FUN=var,MARGIN=2,na.rm=TRUE))
+        }
+        SNPmatrix[which(is.na(SNPmatrix))] <- 0
+        Gmatrix<-tcrossprod(tcrossprod(SNPmatrix, diag(weights)), SNPmatrix)/K
       }
     }
   }
@@ -365,20 +385,31 @@ snp.check = function(M = NULL,
     cat("\tNo monomorphic SNPs \n")
   }
   
-  # Imputing by mode
-  if(impute.method=="mean"){
+  if(impute.method=="global.mean"){
     ix <- which(is.na(M))
     if (length(ix) > 0) {
       M[ix] <- mean(M,na.rm = TRUE)
     }
   }
   
-  if(impute.method=="mode"){
+  if(impute.method=="global.mode"){
     ix <- which(is.na(M))
     if (length(ix) > 0) {
       M[ix] <- as.integer(names(which.max(table(M))))
     }
   }
+  
+  if(impute.method=="mean"){
+    imputvalue = apply(M,2,mean,na.rm=TRUE)
+    ix = which(is.na(M),arr.ind=TRUE)
+    M[ix] = imputvalue[ix[,2]]
+  }
+  
+  if(impute.method=="mode"){
+    imputvalue = apply(M, 2, function(x) as.integer(names(which.max(table(x)))))
+    ix = which(is.na(M),arr.ind=TRUE)
+    M[ix] = imputvalue[ix[,2]]
+  }    
   
   # Total of SNPs
   cat("Summary check: \n")

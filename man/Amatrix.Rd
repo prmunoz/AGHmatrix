@@ -33,33 +33,40 @@ Amatrix(
 Matrix with the Relationship between the individuals.
 }
 \description{
-Creates a additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (an even number) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only). Autopolyploid matrices based on Kerr (2012). Construction is based on the Henderson's recursive method described in Mrode (2005).
+Creates an additive relationship matrix A from a pedigree data in a 3-column way format based on ploidy level (an even number) and, if ploidy equals 4, based on proportion of parental gametes that are IBD (Identical by Descent) due to double reduction. Returns a dominance relationship matrix if dominance true (ploidy 2 only). Autopolyploid matrices based on Kerr (2012), used when `ploidy` argument is higher than `2` and `dominance=FALSE`.
+Diploid additive numerator relationship matrix built as in Henderson (1976), used when `ploidy=2` and `dominance=FALSE`. Diploid dominance numerator relationship matrix built as in Cockerham (1954), used when `ploidy=2` and `dominance=FALSE`. For details of recursive method see Mrode (2005).
 }
 \examples{
 data(ped.mrode)
-#Computing additive relationship matrix considering diploidy
+#Computing additive relationship matrix considering diploidy (Henderson 1976):
 Amatrix(ped.mrode, ploidy=2)
-#Computing non-additive relationship matrix considering diploidy:
+#Computing non-additive relationship matrix considering diploidy (Cockerham 1954):
 Amatrix(ped.mrode, ploidy=2, dominance=TRUE)
-#Computing additive relationship matrix considering autotetraploidy:
+#Computing additive relationship matrix considering autotetraploidy (Kerr 2012):
 Amatrix(ped.mrode, ploidy=4)
-#Computing additive relationship matrix considering autooctaploidy:
+#Computing additive relationship matrix considering autooctaploidy (Kerr 2012):
 Amatrix(ped.mrode, ploidy=8)
-#Computing additive relationship matrix considering autotetraploidy and double-reduction of 10\%:
+#Computing additive relationship matrix considering autotetraploidy and double-
+#reduction of 0.1 (Kerr 2012):
 Amatrix(ped.mrode, ploidy=4, w=0.1)
 #Computing additive relationship matrix considering 
-#autotetraploidy and double-reduction of 10\% as Slater et al. (2014):
+#autotetraploidy and double-reduction of 0.1 (Slater 2014):
 Amatrix(ped.mrode, ploidy=4, w=0.1, slater = TRUE)
-#Computing additive relationship matrix considering autohexaploidy and double-reduction of 10\%:
+#Computing additive relationship matrix considering autohexaploidy and double-
+#reduction of 0.1 (Kerr 2012):
 Amatrix(ped.mrode, ploidy=6, w=0.1)
 
 }
 \references{
-\emph{Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, R. A., and Thompson, R. Linear models for the prediction of animal breeding values. Cabi, 2005.}
+\emph{Cockerham, CC. 1954. An extension of the concept of partitioning hereditary variance for analysis of covariances among relatives when epistasis is present. Genetics 39, 859–882}
 
-\emph{Slater, A. T., Wilson, G. M., Cogan, N. O., Forster, J. W., & Hayes, B. J. (2013). Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and Applied Genetics, 1-12.}
+\emph{Henderson, CR. 1976. A simple method for computing the inverse of a numerator relationship matrix used in prediction of breeding values. Biometrics 32, 69-83}
 
-\emph{Kerr, Richard J., et al. "Use of the numerator relationship matrix in genetic analysis of autopolyploid species." Theoretical and Applied Genetics 124.7 (2012): 1271-1282.}
+\emph{Kerr, RJ, et al. 2012. Use of the numerator relationship matrix in genetic analysis of autopolyploid species. Theoretical and Applied Genetics 124 1271-1282}
+
+\emph{Mrode, RA. 2014. Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, RA. 2014. Linear models for the prediction of animal breeding values. Cabi, 3rd edition.}
+
+\emph{Slater, AT, et al. 2013. Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and Applied Genetics 127, 809-820}
 }
 \author{
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}

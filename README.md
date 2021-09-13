@@ -86,6 +86,12 @@ If you are facing problems inverting your genomic relationship matrix, please ta
 
 [Statistical-Genetics Lab, University of Sao Paulo - Brazil](http://statgen.esalq.usp.br/)
 
+## A matrix benchmark
+
+It follows a small memory and computational time profiling for the `Amatrix()` function. The required RAM was computed based on the peak of the process for different pedigree sizes (based on `/usr/bin/time -v` output). The time profiling was done using AMD Milan 2.95GHz, so it can be underestimated when compared with lower speed processors. Pedigrees with less than 20,000 rows can be used with low-specs user-end machines (<8GB RAM).
+
+<img src="https://github.com/rramadeu/Tutorials_File/raw/master/Amatrix_benchmark.png" width="500">
+
 ## References
 Amadeu, RR, et al., 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. *The Plant Genome* 9(4). https://doi.org/10.3835/plantgenome2016.01.0009
 
