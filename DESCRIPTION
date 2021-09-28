@@ -4,7 +4,7 @@ Version: 2.0.4
 Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
     by G) relationship matrices for diploid and autopolyploid species. Several methods
     are implemented considering additive and non-additive models.
-Authors@R: c(person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rramadeu@gmail.edu"),
+Authors@R: c(person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rramadeu@ufl.edu"),
              person("Catherine", "Cellon", role = "ctb"),
              person("Leticia", "Lara", role = "ctb"),
              person("Marcio", "Resende", role = "ctb"),
