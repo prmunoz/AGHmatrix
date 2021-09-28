@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/rramadeu/AGHmatrix.svg?branch=master)](https://travis-ci.org/rramadeu/AGHmatrix)
-
 # AGHmatrix
 
 ## Overview
