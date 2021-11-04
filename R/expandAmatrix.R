@@ -49,6 +49,10 @@ expandAmatrix <- function(newPedigree = NULL,
   if( is.null(A))
     stop(deparse("A argument is missing"))
   
+    
+  if(any(is.na(match(newPedigree[,2],rownames(A))))+any(is.na(match(newPedigree[,3],rownames(A)))))
+    stop(deparse("There are individuals in the new pedigree with missing parents in A"))
+  
   ## Creating a line of 0s
   A = rbind(A,rep(0,nrow(A)))
   A = cbind(A,c(rep(0,ncol(A)),1))
