@@ -300,32 +300,6 @@ If `fixedParent=TRUE`, the above pedigree will be interpreted with the possible 
 AmatrixPolyCross(pedigree,fixedParent=TRUE)
 ```
 
-## Amatrix() benchmark
-
-It follows a small memory and computational time profiling for the `Amatrix()` function. The required RAM was computed based on the peak of the process for different pedigree sizes (based on /usr/bin/time -v output). The time profiling was done using AMD Milan 2.95GHz, so it might be an underestimated value when compared with lower speed processors. Numerator relationship matrices for pedigrees with less than 20,000 rows can built with low-specs user-end machines (<8GB RAM) using our package.
-
-```{r, eval=TRUE,echo=FALSE}
-x = c(1000,5000,10000,20000,30000,40000,50000,60000,70000,80000,90000,100000)/1000 #Pedigree Size
-y = c(252156,622500,1795260,6481064,14313448,25227680,49081224,70622336,96017144,125320048,158444856,194731908)/1e+6 #RAM GB 
-ytime = c(0.0025, 0.080, 0.2, 0.89, 1.62,3.01,4.52,7.12,9.15,13.13,15.13,20) #minutes
-df = data.frame(size=x,ram=y,time=ytime)
-
-plot(x=df$size,y=df$ram, 
-     ylab = "RAM (GB) at the peak of Amatrix() function",
-     xlab = "Pedigree size (in 1,000 rows)",
-     type="b",
-     axes=FALSE)
-axis(side = 2, at = c(0,4,8,16,32,48,64,96,144,192),cex.axis=.75)
-axis(side = 1, at = c(1,5,10,20,30,40,50,60,70,80,90,100),cex.axis=.75)
-
-plot(x=df$size,y=df$time, type="b",
-     ylab = "Time to run (minutes) the Amatrix() function",
-     xlab = "Pedigree size (in 1,000 rows)",
-     axes=FALSE)
-axis(side = 2, at = seq(0,20,2),cex.axis=.75)
-axis(side = 1, at = c(1,5,10,20,30,40,50,60,70,80,90,100),cex.axis=.75)
-```
-
 ## A matrix benchmark
 
 It follows a small memory and computational time profiling for the `Amatrix()` function. The required RAM was computed based on the peak of the process for different pedigree sizes (based on /usr/bin/time -v output). The time profiling was done using AMD Milan 2.95GHz, so it might be an underestimated value when compared with lower speed processors. Numerator relationship matrices for pedigrees with less than 20,000 rows can built with low-specs user-end machines (<8GB RAM) using our package.
