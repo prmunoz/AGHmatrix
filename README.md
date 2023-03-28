@@ -36,8 +36,6 @@ Amadeu, RR, C Cellon, JW Olmstead, AAF Garcia, MFR Resende, and PR Munoz. 2016. 
 ## Contact
 Rodrigo R Amadeu  
 rramadeu at gmail dot com  
-Horticultural Sciences Department  
-University of Florida  
 https://rramadeu.github.io
 
 ## Installing and loading
