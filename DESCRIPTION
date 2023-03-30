@@ -1,19 +1,19 @@
 Package: AGHmatrix
 Title: Relationship Matrices for Diploid and Autopolyploid Species
-Version: 2.0.5
+Version: 2.1.0
 Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
     by G) relationship matrices for diploid and autopolyploid species. Several methods
     are implemented considering additive and non-additive models.
-Authors@R: c(person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rramadeu@ufl.edu"),
+Authors@R: c(person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rramadeu@gmail.edu"),
+             person("Luis", "Ferrao", role = c("aut","ctb")),
              person("Catherine", "Cellon", role = "ctb"),
              person("Leticia", "Lara", role = "ctb"),
              person("Marcio", "Resende", role = "ctb"),
              person("Ivone", "Oliveira", role = "ctb"),
-             person("Luis", "Ferrao", role = "ctb"),
              person("Patricio", "Munoz", role = "ctb"),
              person("Augusto", "Garcia", role = "ctb"))
-Author: Rodrigo Amadeu [aut, cre], Catherine Cellon [ctb], Leticia Lara [ctb], Marcio Resende [ctb], 
-       Ivone Oliveira [ctb], Luis Ferrao [ctb], Patricio Munoz [ctb], Augusto Garcia [ctb]
+Author: Rodrigo Amadeu [aut, cre], Luis Ferrao [aut, ctb], Catherine Cellon [ctb], Leticia Lara [ctb], Marcio Resende [ctb], 
+       Ivone Oliveira [ctb], Patricio Munoz [ctb], Augusto Garcia [ctb]
 Depends: R (>= 3.6.0)
 Imports:
     Matrix (>= 1.2-7.1),
@@ -25,7 +25,7 @@ Suggests:
 VignetteBuilder: knitr
 Encoding: UTF-8
 License: GPL-3
-URL: https://github.com/prmunoz/AGHmatrix
-Maintainer: Rodrigo Amadeu <rramadeu@ufl.edu>
-RoxygenNote: 7.1.1
+URL: https://github.com/rramadeu/AGHmatrix
+Maintainer: Rodrigo Amadeu <rramadeu@gmail.edu>
+RoxygenNote: 7.2.3
 NeedsCompilation: no
