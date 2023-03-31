@@ -21,7 +21,7 @@ Currently the package computes the following 17 different relationship matrices:
 |                   | Additive                                  | Non-Additive                   |
 |-------------------|-------------------------------------------|--------------------------------|
 | **Diploid**       | Yang (2010), VanRaden (2012), Liu (2020)  | Su (2012), Vitezica (2013)     |
-| **Polyploid**     | Slater (2016), VanRaden (2021)            | Slater (2016), Endelman (2018) |
+| **Polyploid**     | Slater (2016), de Bem Oliveira (2019)     | Slater (2016), Endelman (2018) |
 
 
 ### Combined pedigree and molecular-based relationship matrix (H matrix)
@@ -312,11 +312,13 @@ It follows a small memory and computational time profiling for the `Amatrix()` f
 ## Bibliography
 Amadeu, RR, et al. 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. The Plant Genome 9, 4. https://doi.org/10.3835/plantgenome2016.01.0009
 
-Ashraf, BH, et al.. 2016 Estimating genomic heritabilities at the level of family-pool samples of perennial ryegrass using genotyping-by-sequencing. Theoretical and Applied Genetics 129, 45-52. https://doi.org/0.1007/s00122-015-2607-9
+Ashraf, BH, et al. 2016. Estimating genomic heritabilities at the level of family-pool samples of perennial ryegrass using genotyping-by-sequencing. Theoretical and Applied Genetics 129, 45-52. https://doi.org/0.1007/s00122-015-2607-9
 
-Cockerham, CC. 1954. An extension of the concept of partitioning hereditary variance for analysis of covariances among relatives when epistasis is present. Genetics 39, 859–882
+Cockerham, CC. 1954 An extension of the concept of partitioning hereditary variance for analysis of covariances among relatives when epistasis is present. Genetics 39, 859–882
 
-Endelman, JB, et al. 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics 209, 77-87. https://doi.org/10.1534/genetics.118.300685
+de Bem Oliveira, I, et al. 2019 Genomic prediction of autotetraploids; influence of relationship matrices, allele dosage, and continuous genotyping calls in phenotype prediction. G3: Genes, Genomes, Genetics, 9(4), pp.1189-1198.
+
+Endelman, JB, et al. 2018 Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics 209, 77-87. https://doi.org/10.1534/genetics.118.300685
 
 Hamilton, MG, et al. 2017 Computation of the inverse additive relationship matrix for autopolyploid and multiple-ploidy populations. Theoretical and Applied Genetics 131, 851-890.  https://doi.org/10.1007/s00122-017-3041-y
 
@@ -328,7 +330,7 @@ Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomi
 
 Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.
 
-Martini, JW, et al., 2018, The effect of the H$^{1}$ scaling factors $\tau$ and $\omega$ on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16. https://doi.org/10.1186/s12711-018-0386-x
+Martini, JW, et al. 2018, The effect of the H$^{1}$ scaling factors $\tau$ and $\omega$ on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16. https://doi.org/10.1186/s12711-018-0386-x
 
 Mrode, RA. 2014 *Linear models for the prediction of animal breeding values*. Cabi. 3rd ed.
 
@@ -336,7 +338,7 @@ Munoz, PR, et al., 2014 Unraveling additive from nonadditive effects using genom
 
 R Core Team, 2016 *R*: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria.
 
-Resende, MF, et al., 2012 Accuracy of genomic selection methods in a standard data set of loblolly pine (*Pinus taeda* l.). Genetics 190, 1503–1510. https://doi.org/10.1534/genetics.111.137026
+Resende, MF, et al. 2012 Accuracy of genomic selection methods in a standard data set of loblolly pine (*Pinus taeda* l.). Genetics 190, 1503–1510. https://doi.org/10.1534/genetics.111.137026
 
 Slater, AT, et al. 2014 Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and applied genetics 127, 809–820. https://doi.org/10.1007/s00122-013-2258-7
 
