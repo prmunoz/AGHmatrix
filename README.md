@@ -1,4 +1,4 @@
-# ![inst/misc/logo.jpg](logo) AGHmatrix
+# ![](https://raw.githubusercontent.com/rramadeu/AGHmatrix/master/inst/misc/logo.jpg)) AGHmatrix
 
 ## Overview
 AGHmatrix software is an R-package to build relationship matrices using pedigree (A matrix) and/or molecular markers (G matrix) with the possibility to build a combined matrix of Pedigree corrected by Molecular (H matrix). The package works with diploid and autopolyploid data.
