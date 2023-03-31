@@ -1,4 +1,5 @@
 <img src="https://raw.githubusercontent.com/rramadeu/AGHmatrix/master/inst/misc/logo.jpg" width="20%" height="20%" /> 
+
 **Relationship Matrices for Diploid and Autopolyploid Species**
 
 ## Overview
