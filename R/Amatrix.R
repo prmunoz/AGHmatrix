@@ -83,12 +83,12 @@ Amatrix <- function(data = NULL,
   cat("Organizing data... \n")
   orig.order <- as.character(data[,1])
   data.after.treat <- try(datatreat(data=data,unk=unk,...),silent=TRUE)
-  if(class(data.after.treat)=="try-error"){
+  if(inherits(data.after.treat,"try-error")){
       cat("To organize the data in a fast way wasn't possible... \n")
       cat("Trying to organize in a slow (naive) way... \n")
       data.sorted <- sortped(data)
       data.after.treat <- try(datatreat(data=data.sorted,unk=unk,...))
-      if(class(data.after.treat)=="try-error"){
+      if(inherits(data.after.treat,"try-error")){
           cat("It wasn't possible to organize your data chronologically... We recommend you to do it by hand or contact this package mainteiner  \n")
           return()
       }

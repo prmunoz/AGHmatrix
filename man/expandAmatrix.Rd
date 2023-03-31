@@ -9,7 +9,9 @@ expandAmatrix(newPedigree = NULL, A = NULL, returnAll = TRUE)
 \arguments{
 \item{newPedigree}{pedigree data name (3-column way format). Unknown value should be equal 0.}
 
-\item{A}{numerator relationship matrix output from Amatrix function}
+\item{A}{numerator relationship matrix output from Amatrix function.}
+
+\item{returnAll}{if TRUE returns old A with new A, if FALSE returns only new A}
 }
 \value{
 Matrix with the Relationship between the individuals.

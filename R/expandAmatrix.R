@@ -18,7 +18,8 @@
 #' Expand a current A matrix with a new pedigree. The parents in the new pedigree should also be in the A matrix.
 #'
 #' @param newPedigree pedigree data name (3-column way format). Unknown value should be equal 0.
-#' @param A numerator relationship matrix output from Amatrix function
+#' @param A numerator relationship matrix output from Amatrix function.
+#' @param returnAll if TRUE returns old A with new A, if FALSE returns only new A
 #' 
 #' @return Matrix with the Relationship between the individuals.
 #'
