@@ -3,7 +3,7 @@
 # Package: AGHmatrix 							
 # 									
 # File: Gmatrix.R
-# Contains: Gmatrix slater_par check_Gmatrix_data	snp.check				
+# Contains: Gmatrix slater_par check_Gmatrix_data			
 # 									
 # Written by Rodrigo Rampazo Amadeu 			
 # Contributors: Marcio Resende Jr, Leticia AC Lara, Ivone Oliveira, Luis Felipe V Ferrao
@@ -21,18 +21,20 @@
 #' @param SNPmatrix matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue). 
 #' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "Endelman" for autotetraploid dominant (digentic) relationship matrix. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).
 #' @param missingValue missing value in data. Default=-9.
-#' @param thresh.missing threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 1.
-#' @param maf minimum allele frequency accepted to each marker. Default=0.
+#' @param thresh.missing threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 0.50.
+#' @param maf minimum allele frequency accepted to each marker. Default=0.05.
 #' @param verify.posdef verify if the resulting matrix is positive-definite. Default=FALSE.
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
 #' @param ratio if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).
 #' @param impute.method "mean" to impute the missing data by the mean per marker, "mode" to impute the missing data by the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "global.mode" to impute the missing data my the mode across all marker. Default = "mean".
 #' @param integer if FALSE, not check for integer numbers. Default=TRUE.
-#' @param ratio.check if TRUE, run snp.check with ratio data.
+#' @param ratio.check if TRUE, run Mcheck with ratio data.
 #' @param weights vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).
 #' @param ploidy.correction It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE. 
-#'
+#' @param rmv.mono if monomorphic markers should be removed. Default=TRUE.
+#' @param thresh.htzy threshold heterozigosity, remove SNPs below this threshold. Default=0.
+
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
 #' @examples
@@ -73,10 +75,10 @@
 #' @export
 
 Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden", 
-                     missingValue = -9, maf = 0, thresh.missing = 1,
+                     missingValue = -9, maf = 0.05, thresh.missing = .50,
                      verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE, integer=TRUE,
-                     ratio = FALSE, impute.method = "mean", 
+                     ratio = FALSE, impute.method = "mean", rmv.mono=TRUE, thresh.htzy=0,
                      ratio.check = TRUE, weights = NULL, ploidy.correction = FALSE){
   Time = proc.time()
   markers = colnames(SNPmatrix)
@@ -104,20 +106,23 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
   cat("\tNumber of Markers:", NumberMarkers, "\n")
   
   if(ratio==FALSE){
-    SNPmatrix <- snp.check(SNPmatrix,
-                           ploidy = ploidy, 
-                           thresh.maf = maf, 
-                           thresh.missing = thresh.missing,
-                           impute.method = impute.method)
+    SNPmatrix <- Mcheck(SNPmatrix,
+                        ploidy = ploidy, 
+                        thresh.maf = maf, 
+                        rmv.mono = rmv.mono,
+                        thresh.htzy = thresh.htzy,
+                        thresh.missing = thresh.missing,
+                        impute.method = impute.method)
   }
   
   ## Testing ratio check function: not final!
   if(ratio && ratio.check){
-    SNPmatrix <- snp.check(SNPmatrix,
-                           ploidy = ploidy, 
-                           thresh.maf = maf, 
-                           thresh.missing = thresh.missing,
-                           impute.method = impute.method)
+    SNPmatrix <- Mcheck(SNPmatrix,
+                        ploidy = ploidy, 
+                        thresh.maf = maf, 
+                        rmv.mono = rmv.mono,
+                        thresh.missing = thresh.missing,
+                        impute.method = impute.method)
   }
   
   if(method=="Slater"){
@@ -330,92 +335,6 @@ slater_par <- function(X,ploidy){
   }
   gc()
   return(X_out)
-}
-
-# Function by Luis F. V. Ferrao
-# Internal function to maf cutoff and impute data
-snp.check = function(M = NULL,
-                     ploidy=4,
-                     thresh.maf = 0.05,
-                     thresh.missing = 0.9,
-                     impute.method = "mean"){
-  # SNP missing data
-  ncol.init <- ncol(M)
-  
-  missing <- apply(M, 2, function(x) sum(is.na(x))/nrow(M))
-  missing.low = missing <= thresh.missing
-  cat("\nMissing data check: \n")
-  if(any(missing.low)){
-    cat("\tTotal SNPs:", ncol(M),"\n")
-    cat("\t",ncol(M) - sum(missing.low), "SNPs dropped due to missing data threshold of", thresh.missing,"\n")
-    cat("\tTotal of:",sum(missing.low), " SNPs \n")
-    idx.rm <- which(missing.low)
-    M <- M[, idx.rm, drop=FALSE]
-  } else{
-    cat("\tNo SNPs with missing data, missing threshold of = ", thresh.missing,"\n")
-  }
-  
-  # Minor alele frequency
-  MAF <- apply(M, 2, function(x) {
-    AF <- mean(x, na.rm = T)/ploidy
-    MAF <- ifelse(AF > 0.5, 1 - AF, AF) # Minor allele freq can be ref allele or not
-  })
-  snps.low <- MAF < thresh.maf
-  cat("MAF check: \n")
-  if(any(snps.low)){
-    cat("\t",sum(snps.low), "SNPs dropped with MAF below", thresh.maf,"\n")
-    cat("\tTotal:",ncol(M) - sum(snps.low), " SNPs \n")
-    idx.rm <- which(snps.low)
-    M <- M[, -idx.rm, drop=FALSE]
-  } else{
-    cat("\tNo SNPs with MAF below", thresh.maf,"\n")
-  }
-  
-  # SNPs monomorficos
-  mono <- apply(M, 2, function(x) {
-    equal <- isTRUE(all.equal(x, rep(x[1], length(x))))
-  })
-  cat("Monomorphic check: \n")
-  if(any(mono)){
-    cat("\t",sum(mono), "monomorphic SNPs \n")
-    cat("\tTotal:",ncol(M) - sum(mono), "SNPs \n")
-    idx.rm <- which(mono)
-    M <- M[, -idx.rm, drop=FALSE]
-  } else{
-    cat("\tNo monomorphic SNPs \n")
-  }
-  
-  if(impute.method=="global.mean"){
-    ix <- which(is.na(M))
-    if (length(ix) > 0) {
-      M[ix] <- mean(M,na.rm = TRUE)
-    }
-  }
-  
-  if(impute.method=="global.mode"){
-    ix <- which(is.na(M))
-    if (length(ix) > 0) {
-      M[ix] <- as.integer(names(which.max(table(M))))
-    }
-  }
-  
-  if(impute.method=="mean"){
-    imputvalue = apply(M,2,mean,na.rm=TRUE)
-    ix = which(is.na(M),arr.ind=TRUE)
-    M[ix] = imputvalue[ix[,2]]
-  }
-  
-  if(impute.method=="mode"){
-    imputvalue = apply(M, 2, function(x) as.integer(names(which.max(table(x)))))
-    ix = which(is.na(M),arr.ind=TRUE)
-    M[ix] = imputvalue[ix[,2]]
-  }    
-  
-  # Total of SNPs
-  cat("Summary check: \n")
-  cat("\tInitial: ", ncol.init, "SNPs \n")
-  cat("\tFinal: ", ncol(M), " SNPs (", ncol.init - ncol(M), " SNPs removed) \n \n")
-  return(M)
 }
 
 # Internal function to check input Gmatrix arguments

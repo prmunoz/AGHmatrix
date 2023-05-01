@@ -1,4 +1,8 @@
-# AGHmatrix
+[![](https://cranlogs.r-pkg.org/badges/grand-total/AGHmatrix)](https://cran.r-project.org/package=AGHmatrix)
+
+<img src="https://raw.githubusercontent.com/rramadeu/AGHmatrix/master/inst/misc/logo.jpg" width="20%" height="20%" /> 
+
+**Relationship Matrices for Diploid and Autopolyploid Species**
 
 ## Overview
 AGHmatrix software is an R-package to build relationship matrices using pedigree (A matrix) and/or molecular markers (G matrix) with the possibility to build a combined matrix of Pedigree corrected by Molecular (H matrix). The package works with diploid and autopolyploid data.
@@ -17,7 +21,7 @@ Currently the package computes the following 17 different relationship matrices:
 |                   | Additive                                  | Non-Additive                   |
 |-------------------|-------------------------------------------|--------------------------------|
 | **Diploid**       | Yang (2010), VanRaden (2012), Liu (2020)  | Su (2012), Vitezica (2013)     |
-| **Polyploid**     | Slater (2016), VanRaden (2021)            | Slater (2016), Endelman (2018) |
+| **Polyploid**     | Slater (2016), de Bem Oliveira (2019)     | Slater (2016), Endelman (2018) |
 
 
 ### Combined pedigree and molecular-based relationship matrix (H matrix)
@@ -36,8 +40,6 @@ Amadeu, RR, C Cellon, JW Olmstead, AAF Garcia, MFR Resende, and PR Munoz. 2016. 
 ## Contact
 Rodrigo R Amadeu  
 rramadeu at gmail dot com  
-Horticultural Sciences Department  
-University of Florida  
 https://rramadeu.github.io
 
 ## Installing and loading
@@ -300,32 +302,6 @@ If `fixedParent=TRUE`, the above pedigree will be interpreted with the possible 
 AmatrixPolyCross(pedigree,fixedParent=TRUE)
 ```
 
-## Amatrix() benchmark
-
-It follows a small memory and computational time profiling for the `Amatrix()` function. The required RAM was computed based on the peak of the process for different pedigree sizes (based on /usr/bin/time -v output). The time profiling was done using AMD Milan 2.95GHz, so it might be an underestimated value when compared with lower speed processors. Numerator relationship matrices for pedigrees with less than 20,000 rows can built with low-specs user-end machines (<8GB RAM) using our package.
-
-```{r, eval=TRUE,echo=FALSE}
-x = c(1000,5000,10000,20000,30000,40000,50000,60000,70000,80000,90000,100000)/1000 #Pedigree Size
-y = c(252156,622500,1795260,6481064,14313448,25227680,49081224,70622336,96017144,125320048,158444856,194731908)/1e+6 #RAM GB 
-ytime = c(0.0025, 0.080, 0.2, 0.89, 1.62,3.01,4.52,7.12,9.15,13.13,15.13,20) #minutes
-df = data.frame(size=x,ram=y,time=ytime)
-
-plot(x=df$size,y=df$ram, 
-     ylab = "RAM (GB) at the peak of Amatrix() function",
-     xlab = "Pedigree size (in 1,000 rows)",
-     type="b",
-     axes=FALSE)
-axis(side = 2, at = c(0,4,8,16,32,48,64,96,144,192),cex.axis=.75)
-axis(side = 1, at = c(1,5,10,20,30,40,50,60,70,80,90,100),cex.axis=.75)
-
-plot(x=df$size,y=df$time, type="b",
-     ylab = "Time to run (minutes) the Amatrix() function",
-     xlab = "Pedigree size (in 1,000 rows)",
-     axes=FALSE)
-axis(side = 2, at = seq(0,20,2),cex.axis=.75)
-axis(side = 1, at = c(1,5,10,20,30,40,50,60,70,80,90,100),cex.axis=.75)
-```
-
 ## A matrix benchmark
 
 It follows a small memory and computational time profiling for the `Amatrix()` function. The required RAM was computed based on the peak of the process for different pedigree sizes (based on /usr/bin/time -v output). The time profiling was done using AMD Milan 2.95GHz, so it might be an underestimated value when compared with lower speed processors. Numerator relationship matrices for pedigrees with less than 20,000 rows can built with low-specs user-end machines (<8GB RAM) using our package.
@@ -336,11 +312,13 @@ It follows a small memory and computational time profiling for the `Amatrix()` f
 ## Bibliography
 Amadeu, RR, et al. 2016 AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. The Plant Genome 9, 4. https://doi.org/10.3835/plantgenome2016.01.0009
 
-Ashraf, BH, et al.. 2016 Estimating genomic heritabilities at the level of family-pool samples of perennial ryegrass using genotyping-by-sequencing. Theoretical and Applied Genetics 129, 45-52. https://doi.org/0.1007/s00122-015-2607-9
+Ashraf, BH, et al. 2016. Estimating genomic heritabilities at the level of family-pool samples of perennial ryegrass using genotyping-by-sequencing. Theoretical and Applied Genetics 129, 45-52. https://doi.org/0.1007/s00122-015-2607-9
 
-Cockerham, CC. 1954. An extension of the concept of partitioning hereditary variance for analysis of covariances among relatives when epistasis is present. Genetics 39, 859–882
+Cockerham, CC. 1954 An extension of the concept of partitioning hereditary variance for analysis of covariances among relatives when epistasis is present. Genetics 39, 859–882
 
-Endelman, JB, et al. 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics 209, 77-87. https://doi.org/10.1534/genetics.118.300685
+de Bem Oliveira, I, et al. 2019 Genomic prediction of autotetraploids; influence of relationship matrices, allele dosage, and continuous genotyping calls in phenotype prediction. G3: Genes, Genomes, Genetics, 9(4), pp.1189-1198.
+
+Endelman, JB, et al. 2018 Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics 209, 77-87. https://doi.org/10.1534/genetics.118.300685
 
 Hamilton, MG, et al. 2017 Computation of the inverse additive relationship matrix for autopolyploid and multiple-ploidy populations. Theoretical and Applied Genetics 131, 851-890.  https://doi.org/10.1007/s00122-017-3041-y
 
@@ -352,7 +330,7 @@ Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomi
 
 Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.
 
-Martini, JW, et al., 2018, The effect of the H$^{1}$ scaling factors $\tau$ and $\omega$ on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16. https://doi.org/10.1186/s12711-018-0386-x
+Martini, JW, et al. 2018, The effect of the H$^{1}$ scaling factors $\tau$ and $\omega$ on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16. https://doi.org/10.1186/s12711-018-0386-x
 
 Mrode, RA. 2014 *Linear models for the prediction of animal breeding values*. Cabi. 3rd ed.
 
@@ -360,7 +338,7 @@ Munoz, PR, et al., 2014 Unraveling additive from nonadditive effects using genom
 
 R Core Team, 2016 *R*: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria.
 
-Resende, MF, et al., 2012 Accuracy of genomic selection methods in a standard data set of loblolly pine (*Pinus taeda* l.). Genetics 190, 1503–1510. https://doi.org/10.1534/genetics.111.137026
+Resende, MF, et al. 2012 Accuracy of genomic selection methods in a standard data set of loblolly pine (*Pinus taeda* l.). Genetics 190, 1503–1510. https://doi.org/10.1534/genetics.111.137026
 
 Slater, AT, et al. 2014 Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and applied genetics 127, 809–820. https://doi.org/10.1007/s00122-013-2258-7
 

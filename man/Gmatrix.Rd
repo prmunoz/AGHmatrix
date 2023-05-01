@@ -8,14 +8,16 @@ Gmatrix(
   SNPmatrix = NULL,
   method = "VanRaden",
   missingValue = -9,
-  maf = 0,
-  thresh.missing = 1,
+  maf = 0.05,
+  thresh.missing = 0.5,
   verify.posdef = FALSE,
   ploidy = 2,
   pseudo.diploid = FALSE,
   integer = TRUE,
   ratio = FALSE,
   impute.method = "mean",
+  rmv.mono = TRUE,
+  thresh.htzy = 0,
   ratio.check = TRUE,
   weights = NULL,
   ploidy.correction = FALSE
@@ -28,9 +30,9 @@ Gmatrix(
 
 \item{missingValue}{missing value in data. Default=-9.}
 
-\item{maf}{minimum allele frequency accepted to each marker. Default=0.}
+\item{maf}{minimum allele frequency accepted to each marker. Default=0.05.}
 
-\item{thresh.missing}{threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 1.}
+\item{thresh.missing}{threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 0.50.}
 
 \item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=FALSE.}
 
@@ -44,7 +46,11 @@ Gmatrix(
 
 \item{impute.method}{"mean" to impute the missing data by the mean per marker, "mode" to impute the missing data by the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "global.mode" to impute the missing data my the mode across all marker. Default = "mean".}
 
-\item{ratio.check}{if TRUE, run snp.check with ratio data.}
+\item{rmv.mono}{if monomorphic markers should be removed. Default=TRUE.}
+
+\item{thresh.htzy}{threshold heterozigosity, remove SNPs below this threshold. Default=0.}
+
+\item{ratio.check}{if TRUE, run Mcheck with ratio data.}
 
 \item{weights}{vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).}
 
