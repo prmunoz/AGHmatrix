@@ -84,7 +84,7 @@ Mcheck = function(SNPmatrix = NULL,
   
   # monomorphic SNPs
   if(rmv.mono){
-    mono = (apply(M, 2, var, na.rm=TRUE)==0)
+    mono = (apply(SNPmatrix, 2, var, na.rm=TRUE)==0)
     mono[is.na(mono)] = TRUE
     cat("\nMonomorphic check: \n")
     if(any(mono)){
