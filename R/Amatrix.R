@@ -51,11 +51,11 @@
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #' @references \emph{Cockerham, CC. 1954. An extension of the concept of partitioning hereditary variance for analysis of covariances among relatives when epistasis is present. Genetics 39, 859–882}
+#' @references \emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
 #' @references \emph{Henderson, CR. 1976. A simple method for computing the inverse of a numerator relationship matrix used in prediction of breeding values. Biometrics 32, 69-83}
 #' @references \emph{Kerr, RJ, et al. 2012. Use of the numerator relationship matrix in genetic analysis of autopolyploid species. Theoretical and Applied Genetics 124 1271-1282}
 #' @references \emph{Mrode, RA. 2014. Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, RA. 2014. Linear models for the prediction of animal breeding values. Cabi, 3rd edition.}
 #' @references \emph{Slater, AT, et al. 2013. Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and Applied Genetics 127, 809-820}
-#' @references \emph(Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
 #'
 #' @export
 

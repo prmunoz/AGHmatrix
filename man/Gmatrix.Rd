@@ -93,6 +93,12 @@ Gmatrix.weighted <- Gmatrix(snp.sol, method="VanRaden", weights = runif(3895,0.0
 \references{
 \emph{Covarrubias-Pazaran, G. 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
 
+\emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
+
+\emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
+
+\emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
+
 \emph{Slater, AT, et al. 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
 
 \emph{Su, G, et al. 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
@@ -102,12 +108,6 @@ Gmatrix.weighted <- Gmatrix(snp.sol, method="VanRaden", weights = runif(3895,0.0
 \emph{Vitezica, ZG, et al. 2013. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genetics, 195(4), pp.1223-1230.}
 
 \emph{Yang, J, et al. 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
-
-\emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
-
-\emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
-
-
 }
 \author{
 Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, Letícia AC Lara, Ivone Oliveira, and Felipe V Ferrao
