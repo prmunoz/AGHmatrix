@@ -8,7 +8,7 @@ Gmatrix(
   SNPmatrix = NULL,
   method = "VanRaden",
   missingValue = -9,
-  maf = 0.05,
+  maf = 0,
   thresh.missing = 0.5,
   verify.posdef = FALSE,
   ploidy = 2,
@@ -16,7 +16,7 @@ Gmatrix(
   integer = TRUE,
   ratio = FALSE,
   impute.method = "mean",
-  rmv.mono = TRUE,
+  rmv.mono = FALSE,
   thresh.htzy = 0,
   ratio.check = TRUE,
   weights = NULL,
@@ -31,7 +31,7 @@ Gmatrix(
 
 \item{missingValue}{missing value in data. Default=-9.}
 
-\item{maf}{minimum allele frequency accepted to each marker. Default=0.05.}
+\item{maf}{minimum allele frequency accepted to each marker. Default=0.}
 
 \item{thresh.missing}{threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 0.50.}
 
