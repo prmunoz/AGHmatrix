@@ -20,7 +20,8 @@ Gmatrix(
   thresh.htzy = 0,
   ratio.check = TRUE,
   weights = NULL,
-  ploidy.correction = FALSE
+  ploidy.correction = FALSE,
+  ASV = FALSE
 )
 }
 \arguments{
@@ -55,6 +56,8 @@ Gmatrix(
 \item{weights}{vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).}
 
 \item{ploidy.correction}{It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE.}
+
+\item{ASV}{if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.}
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
@@ -103,6 +106,8 @@ Gmatrix.weighted <- Gmatrix(snp.sol, method="VanRaden", weights = runif(3895,0.0
 \emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
 
 \emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
+
+
 }
 \author{
 Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, Letícia AC Lara, Ivone Oliveira, and Felipe V Ferrao

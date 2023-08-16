@@ -11,6 +11,7 @@ Amatrix(
   verify = TRUE,
   dominance = FALSE,
   slater = FALSE,
+  ASV = FALSE,
   ...
 )
 }
@@ -26,6 +27,8 @@ Amatrix(
 \item{dominance}{if true, returns the dominance relationship matrix}
 
 \item{slater}{if true, returns the additive autotetraploid relationship matrix as Slater (2013)}
+
+\item{ASV}{if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.}
 
 \item{...}{arguments to be passed to datatreat()}
 }
@@ -67,6 +70,8 @@ Amatrix(ped.mrode, ploidy=6, w=0.1)
 \emph{Mrode, RA. 2014. Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, RA. 2014. Linear models for the prediction of animal breeding values. Cabi, 3rd edition.}
 
 \emph{Slater, AT, et al. 2013. Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and Applied Genetics 127, 809-820}
+
+
 }
 \author{
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}

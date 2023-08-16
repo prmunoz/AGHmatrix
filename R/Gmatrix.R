@@ -34,7 +34,7 @@
 #' @param ploidy.correction It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE. 
 #' @param rmv.mono if monomorphic markers should be removed. Default=TRUE.
 #' @param thresh.htzy threshold heterozigosity, remove SNPs below this threshold. Default=0.
-
+#' @param ASV if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
 #' @examples
@@ -71,6 +71,7 @@
 #' @references \emph{Yang, J, et al. 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
 #' @references \emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
 #' @references \emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
+#' @references \emph(Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
 #' 
 #' @export
 
@@ -79,7 +80,7 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
                      verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE, integer=TRUE,
                      ratio = FALSE, impute.method = "mean", rmv.mono=TRUE, thresh.htzy=0,
-                     ratio.check = TRUE, weights = NULL, ploidy.correction = FALSE){
+                     ratio.check = TRUE, weights = NULL, ploidy.correction = FALSE, ASV=FALSE){
   Time = proc.time()
   markers = colnames(SNPmatrix)
   
@@ -296,6 +297,10 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
           " eigenvalues <= 0 \n \n")
   }
   
+  if (ASV) {
+    Gmatrix = get_ASV(Gmatrix)
+  }
+  
   Time = as.matrix(proc.time() - Time)
   cat("Completed! Time =", Time[3], " seconds \n")
   gc()
@@ -303,6 +308,9 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
 }
 
 ## Internal Functions ##
+get_ASV = function(x){
+  return( x / ( sum(diag(x)) / (nrow(x) - 1)) )
+}
 
 # Coding SNPmatrix as Slater (2016) Full autotetraploid model including non-additive effects (Presence/Absence per Genotype per Marker)
 slater_par <- function(X,ploidy){

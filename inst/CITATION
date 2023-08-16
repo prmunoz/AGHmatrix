@@ -2,21 +2,20 @@
 citHeader("To cite AGHmatrix in publications use:")
 
 citEntry(entry="Article",
-         title = "AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example",
+         title = "AGHmatrix: genetic relationship matrices in R ",
          author = personList(person(first="Rodrigo", last="Rampazo Amadeu"), 
-                  person(first="Catherine", last="Cellon"),
-                  person(first="James",middle="W", last="Olmestead"),
-                  person(first="Antonio Augusto", last="Franco Garcia"),
-                  person(first="Marcio", middle="FR", last="Resende Jr")),
-         journal = "The Plant Genome",
-         volume = "9",
-         number = "3",
-         pages = "1-10",
-         year    = 2016,
+                  person(first="Antonio Augusto", middle="F", last="Garcia"),
+                  person(first="Patricio", middle="R", last="Munoz"),
+                  person(first="Luis Felipe", middle="V", last="Ferrao")),
+         journal = "Bioinformatics",
+         volume = "39",
+         number = "7",
+         pages = "1-4",
+         year    = 2023,
          
          textVersion = 
-         paste("Amadeu, R. R., C. Cellon, J. W. Olmstead, A. A. F. Garcia, M. F. R. Resende, and P. R. Muñoz. 2016. ",
-               "AGHmatrix: R Package to Construct Relationship Matrices for Autotetraploid and Diploid Species: A Blueberry Example. ",
-               "The Plant Genome 9. doi:10.3835/plantgenome2016.01.0009",
+         paste("Amadeu, R. R., Garcia, A. A. F., Munoz, P. R., and Ferrão, L. F. V. (2023)",
+               "AGHmatrix: genetic relationship matrices in R.",
+               "Bioinformatics, 39(7), btad445. doi:10.1093/bioinformatics/btad445",
                sep="")
          )
