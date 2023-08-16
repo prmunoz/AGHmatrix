@@ -1,21 +1,16 @@
 
-citHeader("To cite AGHmatrix in publications use:")
-
-citEntry(entry="Article",
-         title = "AGHmatrix: genetic relationship matrices in R ",
-         author = personList(person(first="Rodrigo", last="Rampazo Amadeu"), 
-                  person(first="Antonio Augusto", middle="F", last="Garcia"),
-                  person(first="Patricio", middle="R", last="Munoz"),
-                  person(first="Luis Felipe", middle="V", last="Ferrao")),
-         journal = "Bioinformatics",
-         volume = "39",
-         number = "7",
-         pages = "1-4",
-         year    = 2023,
-         
-         textVersion = 
-         paste("Amadeu, R. R., Garcia, A. A. F., Munoz, P. R., and Ferrão, L. F. V. (2023)",
-               "AGHmatrix: genetic relationship matrices in R.",
-               "Bioinformatics, 39(7), btad445. doi:10.1093/bioinformatics/btad445",
-               sep="")
-         )
+bibentry(
+  bibtype="Article",
+  textVersion = "Amadeu, R. R., Garcia, A. A. F., Munoz, P. R., and Ferrão, L. F. V. (2023) AGHmatrix: genetic relationship matrices in R. Bioinformatics, 39(7), btad445. doi:10.1093/bioinformatics/btad445",
+  header = "To cite AGHmatrix in publications use:",
+  title = "AGHmatrix: genetic relationship matrices in R ",
+  author = c(
+            person(given="Rodrigo", family="R Amadeu"), 
+            person(given="Antonio Augusto", family="Franco Garcia"),
+            person(given="Patricio", family="Munoz"),
+            person(given="Luis Felipe", family="V Ferrao")),
+  journal = "Bioinformatics",
+  volume = "39",
+  number = "7",
+  year    = "2023"
+)
