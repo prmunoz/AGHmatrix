@@ -32,7 +32,7 @@
 #' @param ratio.check if TRUE, run Mcheck with ratio data.
 #' @param weights vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).
 #' @param ploidy.correction It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE. 
-#' @param rmv.mono if monomorphic markers should be removed. Default=TRUE.
+#' @param rmv.mono if monomorphic markers should be removed. Default=FALSE.
 #' @param thresh.htzy threshold heterozigosity, remove SNPs below this threshold. Default=0.
 #' @param ASV if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.
 #' @return Matrix with the marker-bases relationships between the individuals

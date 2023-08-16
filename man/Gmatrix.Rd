@@ -47,7 +47,7 @@ Gmatrix(
 
 \item{impute.method}{"mean" to impute the missing data by the mean per marker, "mode" to impute the missing data by the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "global.mode" to impute the missing data my the mode across all marker. Default = "mean".}
 
-\item{rmv.mono}{if monomorphic markers should be removed. Default=TRUE.}
+\item{rmv.mono}{if monomorphic markers should be removed. Default=FALSE.}
 
 \item{thresh.htzy}{threshold heterozigosity, remove SNPs below this threshold. Default=0.}
 
