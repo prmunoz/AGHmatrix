@@ -24,7 +24,7 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Encoding: UTF-8
-License: GPL-3 + file LICENSE
+License: GPL-3
 URL: https://github.com/rramadeu/AGHmatrix
 Maintainer: Rodrigo Amadeu <rramadeu@gmail.com>
 RoxygenNote: 7.2.3
