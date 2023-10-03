@@ -84,9 +84,8 @@ Mcheck = function(SNPmatrix = NULL,
   
   # monomorphic SNPs
   if(rmv.mono){
-    mono <- apply(SNPmatrix, 2, function(x) {
-      equal <- isTRUE(all.equal(x, rep(x[1], length(x))))
-    })
+    mono = (apply(SNPmatrix, 2, var, na.rm=TRUE)==0)
+    mono[is.na(mono)] = TRUE
     cat("\nMonomorphic check: \n")
     if(any(mono)){
       cat("\t",sum(mono), "monomorphic SNPs \n")

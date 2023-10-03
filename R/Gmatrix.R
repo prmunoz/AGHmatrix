@@ -22,7 +22,7 @@
 #' @param method "Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "Endelman" for autotetraploid dominant (digentic) relationship matrix. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).
 #' @param missingValue missing value in data. Default=-9.
 #' @param thresh.missing threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 0.50.
-#' @param maf minimum allele frequency accepted to each marker. Default=0.05.
+#' @param maf minimum allele frequency accepted to each marker. Default=0.
 #' @param verify.posdef verify if the resulting matrix is positive-definite. Default=FALSE.
 #' @param ploidy data ploidy (an even number between 2 and 20). Default=2.
 #' @param pseudo.diploid if TRUE, uses pseudodiploid parametrization of Slater (2016).
@@ -32,9 +32,9 @@
 #' @param ratio.check if TRUE, run Mcheck with ratio data.
 #' @param weights vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).
 #' @param ploidy.correction It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE. 
-#' @param rmv.mono if monomorphic markers should be removed. Default=TRUE.
+#' @param rmv.mono if monomorphic markers should be removed. Default=FALSE.
 #' @param thresh.htzy threshold heterozigosity, remove SNPs below this threshold. Default=0.
-
+#' @param ASV if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.
 #' @return Matrix with the marker-bases relationships between the individuals
 #'
 #' @examples
@@ -64,22 +64,23 @@
 #' @author Rodrigo R Amadeu \email{rramadeu@@gmail.com}, Marcio Resende Jr, Letícia AC Lara, Ivone Oliveira, and Felipe V Ferrao
 #' 
 #' @references \emph{Covarrubias-Pazaran, G. 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
+#' @references \emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
+#' @references \emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
+#' @references \emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
 #' @references \emph{Slater, AT, et al. 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
 #' @references \emph{Su, G, et al. 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
 #' @references \emph{VanRaden, PM, 2008. Efficient methods to compute genomic predictions. Journal of dairy science, 91(11), pp.4414-4423.}
 #' @references \emph{Vitezica, ZG, et al. 2013. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genetics, 195(4), pp.1223-1230.}
 #' @references \emph{Yang, J, et al. 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
-#' @references \emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
-#' @references \emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
 #' 
 #' @export
 
 Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden", 
-                     missingValue = -9, maf = 0.05, thresh.missing = .50,
+                     missingValue = -9, maf = 0, thresh.missing = .50,
                      verify.posdef = FALSE, ploidy=2,
                      pseudo.diploid = FALSE, integer=TRUE,
-                     ratio = FALSE, impute.method = "mean", rmv.mono=TRUE, thresh.htzy=0,
-                     ratio.check = TRUE, weights = NULL, ploidy.correction = FALSE){
+                     ratio = FALSE, impute.method = "mean", rmv.mono=FALSE, thresh.htzy=0,
+                     ratio.check = TRUE, weights = NULL, ploidy.correction = FALSE, ASV=FALSE){
   Time = proc.time()
   markers = colnames(SNPmatrix)
   
@@ -296,6 +297,10 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
           " eigenvalues <= 0 \n \n")
   }
   
+  if(ASV){
+    Gmatrix = get_ASV(Gmatrix)
+  }
+  
   Time = as.matrix(proc.time() - Time)
   cat("Completed! Time =", Time[3], " seconds \n")
   gc()
@@ -303,6 +308,9 @@ Gmatrix <- function (SNPmatrix = NULL, method = "VanRaden",
 }
 
 ## Internal Functions ##
+get_ASV = function(x){
+  return( x / ( sum(diag(x)) / (nrow(x) - 1)) )
+}
 
 # Coding SNPmatrix as Slater (2016) Full autotetraploid model including non-additive effects (Presence/Absence per Genotype per Marker)
 slater_par <- function(X,ploidy){

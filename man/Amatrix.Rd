@@ -11,6 +11,7 @@ Amatrix(
   verify = TRUE,
   dominance = FALSE,
   slater = FALSE,
+  ASV = FALSE,
   ...
 )
 }
@@ -26,6 +27,8 @@ Amatrix(
 \item{dominance}{if true, returns the dominance relationship matrix}
 
 \item{slater}{if true, returns the additive autotetraploid relationship matrix as Slater (2013)}
+
+\item{ASV}{if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.}
 
 \item{...}{arguments to be passed to datatreat()}
 }
@@ -59,6 +62,8 @@ Amatrix(ped.mrode, ploidy=6, w=0.1)
 }
 \references{
 \emph{Cockerham, CC. 1954. An extension of the concept of partitioning hereditary variance for analysis of covariances among relatives when epistasis is present. Genetics 39, 859–882}
+
+\emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
 
 \emph{Henderson, CR. 1976. A simple method for computing the inverse of a numerator relationship matrix used in prediction of breeding values. Biometrics 32, 69-83}
 

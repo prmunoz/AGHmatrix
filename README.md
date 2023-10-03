@@ -35,7 +35,10 @@ Additionally there is a beta implementation to compute A matrix when parentage i
 ## Citation
 To cite this R package:
 
-Amadeu, RR, C Cellon, JW Olmstead, AAF Garcia, MFR Resende, and PR Munoz. 2016. AGHmatrix: R package to construct relationship matrices for autotetraploid and diploid species: a blueberry example. *The Plant Genome* 9(3). [doi: 10.3835/plantgenome2016.01.0009](http://dx.doi.org/10.3835/plantgenome2016.01.0009)
+## Citation
+To cite this R package:
+
+Amadeu RR, Garcia AA, Munoz PR, Ferrão LF. AGHmatrix: genetic relationship matrices in R. Bioinformatics. 2023 Jul 1;39(7):btad445. https://doi.org/10.1093/bioinformatics/btad445
 
 ## Contact
 Rodrigo R Amadeu  

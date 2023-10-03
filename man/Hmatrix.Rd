@@ -15,7 +15,8 @@ Hmatrix(
   missingValue = -9,
   maf = 0,
   ploidy = 2,
-  roundVar = 3
+  roundVar = 3,
+  ASV = FALSE
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ Hmatrix(
 \item{ploidy}{data ploidy (an even number between 2 and 20), default=2.}
 
 \item{roundVar}{only used for Munoz's method, how many digits to consider the relationship be of same class, default=2.}
+
+\item{ASV}{if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.}
 }
 \value{
 H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
@@ -74,6 +77,8 @@ Hmat_Munoz <- Hmatrix(A=Amat, G=Gmat, markers = snp.sol,
 
 }
 \references{
+\emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
+
 \emph{Munoz, PR. 2014 Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics 198, 1759-1768}
 
 \emph{Martini, JW, et al. 2018 The effect of the H-1 scaling factors tau and omega on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16}

@@ -24,6 +24,7 @@
 #' @param verify verifies pedigree file for conflictuos entries (default=TRUE).
 #' @param dominance if true, returns the dominance relationship matrix
 #' @param slater if true, returns the additive autotetraploid relationship matrix as Slater (2013)
+#' @param ASV if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.
 #' @param ... arguments to be passed to datatreat()
 #' 
 #' @return Matrix with the Relationship between the individuals.
@@ -50,11 +51,12 @@
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #' @references \emph{Cockerham, CC. 1954. An extension of the concept of partitioning hereditary variance for analysis of covariances among relatives when epistasis is present. Genetics 39, 859–882}
+#' @references \emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
 #' @references \emph{Henderson, CR. 1976. A simple method for computing the inverse of a numerator relationship matrix used in prediction of breeding values. Biometrics 32, 69-83}
 #' @references \emph{Kerr, RJ, et al. 2012. Use of the numerator relationship matrix in genetic analysis of autopolyploid species. Theoretical and Applied Genetics 124 1271-1282}
 #' @references \emph{Mrode, RA. 2014. Chapter 2: Genetic Covariance Between Relatives and Chapter 9: Non-additive Animal Models in Mrode, RA. 2014. Linear models for the prediction of animal breeding values. Cabi, 3rd edition.}
 #' @references \emph{Slater, AT, et al. 2013. Improving the analysis of low heritability complex traits for enhanced genetic gain in potato. Theoretical and Applied Genetics 127, 809-820}
-#' 
+#'
 #' @export
 
 Amatrix <- function(data = NULL,
@@ -63,6 +65,7 @@ Amatrix <- function(data = NULL,
                     verify=TRUE,
                     dominance=FALSE,
                     slater=FALSE,
+                    ASV=FALSE,
                     ...){
   if(ploidy%%2!=0)
     stop(deparse("Ploidy should be an even number"))
@@ -79,20 +82,34 @@ Amatrix <- function(data = NULL,
   if(flag) 
     stop(deparse("Please double-check your data and try again"))
   
-  
   cat("Organizing data... \n")
   orig.order <- as.character(data[,1])
   data.after.treat <- try(datatreat(data=data,unk=unk,...),silent=TRUE)
-  if(inherits(data.after.treat,"try-error")){
+  
+  # checking if order was fixed
+  flag = FALSE
+  flag = inherits(data.after.treat,"try-error")
+  if(!flag)
+    flag = (length(unique(data.after.treat$ind.data))!=nrow(data))
+
+if(flag){
       cat("To organize the data in a fast way wasn't possible... \n")
       cat("Trying to organize in a slow (naive) way... \n")
       data.sorted <- sortped(data)
       data.after.treat <- try(datatreat(data=data.sorted,unk=unk,...))
-      if(inherits(data.after.treat,"try-error")){
-          cat("It wasn't possible to organize your data chronologically... We recommend you to do it by hand or contact this package mainteiner  \n")
+
+      # checking if order was fixed
+      flag = FALSE
+      flag = inherits(data.after.treat,"try-error")
+      if(!flag)
+        flag = (length(unique(data.after.treat$ind.data))!=nrow(data))
+  
+      if(flag){
+          cat("It wasn't possible to organize your data chronologically. We recommend you to do it by hand or use the flag 'naive_sort=TRUE'. If the problem persists, please contact this package mainteiner \n")
           return()
       }
   }
+  
   data <- data.after.treat
   
   s <- data$sire
@@ -261,5 +278,11 @@ Amatrix <- function(data = NULL,
   rownames(A) <- colnames(A) <- data$ind.data
 
   A <- A[orig.order,orig.order]
+  
+  
+  if (ASV) {
+    A = get_ASV(A)
+  }
+  
   return(A)
 }

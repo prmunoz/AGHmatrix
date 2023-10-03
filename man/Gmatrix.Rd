@@ -8,7 +8,7 @@ Gmatrix(
   SNPmatrix = NULL,
   method = "VanRaden",
   missingValue = -9,
-  maf = 0.05,
+  maf = 0,
   thresh.missing = 0.5,
   verify.posdef = FALSE,
   ploidy = 2,
@@ -16,11 +16,12 @@ Gmatrix(
   integer = TRUE,
   ratio = FALSE,
   impute.method = "mean",
-  rmv.mono = TRUE,
+  rmv.mono = FALSE,
   thresh.htzy = 0,
   ratio.check = TRUE,
   weights = NULL,
-  ploidy.correction = FALSE
+  ploidy.correction = FALSE,
+  ASV = FALSE
 )
 }
 \arguments{
@@ -30,7 +31,7 @@ Gmatrix(
 
 \item{missingValue}{missing value in data. Default=-9.}
 
-\item{maf}{minimum allele frequency accepted to each marker. Default=0.05.}
+\item{maf}{minimum allele frequency accepted to each marker. Default=0.}
 
 \item{thresh.missing}{threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 0.50.}
 
@@ -46,7 +47,7 @@ Gmatrix(
 
 \item{impute.method}{"mean" to impute the missing data by the mean per marker, "mode" to impute the missing data by the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "global.mode" to impute the missing data my the mode across all marker. Default = "mean".}
 
-\item{rmv.mono}{if monomorphic markers should be removed. Default=TRUE.}
+\item{rmv.mono}{if monomorphic markers should be removed. Default=FALSE.}
 
 \item{thresh.htzy}{threshold heterozigosity, remove SNPs below this threshold. Default=0.}
 
@@ -55,6 +56,8 @@ Gmatrix(
 \item{weights}{vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).}
 
 \item{ploidy.correction}{It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE.}
+
+\item{ASV}{if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.}
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
@@ -90,6 +93,12 @@ Gmatrix.weighted <- Gmatrix(snp.sol, method="VanRaden", weights = runif(3895,0.0
 \references{
 \emph{Covarrubias-Pazaran, G. 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
 
+\emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
+
+\emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
+
+\emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
+
 \emph{Slater, AT, et al. 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
 
 \emph{Su, G, et al. 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
@@ -99,10 +108,6 @@ Gmatrix.weighted <- Gmatrix(snp.sol, method="VanRaden", weights = runif(3895,0.0
 \emph{Vitezica, ZG, et al. 2013. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genetics, 195(4), pp.1223-1230.}
 
 \emph{Yang, J, et al. 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
-
-\emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
-
-\emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
 }
 \author{
 Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, Letícia AC Lara, Ivone Oliveira, and Felipe V Ferrao

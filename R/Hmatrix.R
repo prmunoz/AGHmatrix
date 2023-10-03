@@ -30,6 +30,7 @@
 #' @param tau to be used for Martini's method, default=1. 
 #' @param omega to be used of Martini's method, default=1.
 #' @param roundVar only used for Munoz's method, how many digits to consider the relationship be of same class, default=2.
+#' @param ASV if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.
 #' 
 #' @return H Matrix with the relationship between the individuals based on pedigree and corrected by molecular information
 #'
@@ -58,6 +59,7 @@
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #' 
+#' @references \emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
 #' @references \emph{Munoz, PR. 2014 Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics 198, 1759-1768}
 #' @references \emph{Martini, JW, et al. 2018 The effect of the H-1 scaling factors tau and omega on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16}
 #' @references \emph{Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomic information. Journal of Dairy Science 92, 4656–4663}
@@ -73,7 +75,8 @@ Hmatrix <- function(A=NULL,
                      missingValue=-9,
                      maf=0,
                      ploidy=2,
-                     roundVar=3
+                     roundVar=3,
+                     ASV=FALSE
 ){
   Aorig <- A
   Gorig <- G
@@ -136,6 +139,12 @@ Hmatrix <- function(A=NULL,
     H21 = (H22-A22) %*% A22inv%*%A21
     H22 = (H22-A22)
     H = A+cbind(rbind(H11,H21),rbind(H12,H22))
+    
+    
+    if (ASV) {
+      H = get_ASV(H)
+    }
+    
     Time = as.matrix(proc.time()-Time)
     cat("\n","Completed! Time =", Time[3]/60," minutes \n")
     return(H)
@@ -170,9 +179,15 @@ Hmatrix <- function(A=NULL,
     beta <- 1 - (c+(1/(markersmatrix[Gnhat,Gnhat]))/varA)
     H <- beta*(G-A)+A ######
     Aorig[Anhat,Anhat] = H
+    
+    if (ASV) {
+      Aorig = get_ASV(Aorig)
+    }
+    
     Time = as.matrix(proc.time()-Time)
     cat("\n","Completed! Time =", Time[3]/60," minutes \n")
     cat("\n","Returning H = A matrix corrected by G... \n")
+   
     return(Aorig)
   }
 }
