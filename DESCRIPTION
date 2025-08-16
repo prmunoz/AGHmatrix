@@ -23,7 +23,8 @@ Imports:
     Matrix (>= 1.2-7.1),
     zoo (>= 1.8.6),
     Rcpp (>= 1.1.0),
-    RcppArmadillo (>= 14.6.0.1)
+    RcppArmadillo (>= 14.6.0.1),
+    matrixStats (>= 1.5.0)
 Suggests:
     knitr,
     MASS,

@@ -281,11 +281,7 @@ Gmatrix <- function(SNPmatrix = NULL,
   }
   
   if (method == "Su") {
-    TwoPQ <- 2 * (FreqP) * (1 - FreqP)
-    SNPmatrix[SNPmatrix == 2 | SNPmatrix == 0] <- 0
-    SNPmatrix <- SNPmatrix - TwoPQ
-    SNPmatrix[is.na(SNPmatrix)] <- 0
-    Gmatrix <- (SNPmatrix %*% t(SNPmatrix)) / sum(TwoPQ[1,] * (1 - TwoPQ[1,]))
+    Gmatrix <- Gmatrix_Su(SNPmatrix)
   }
   
   if (method == "Vitezica") {
