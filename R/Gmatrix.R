@@ -74,6 +74,7 @@
 #'
 #' @useDynLib AGHmatrix, .registration = TRUE
 #' @importFrom Rcpp evalCpp
+#' @importFrom matrixStats colVars
 #' @examples
 #' \dontrun{
 #' ## Diploid Example
@@ -147,9 +148,8 @@ Gmatrix <- function(SNPmatrix = NULL,
   # ==== Initial preprocessing ====
   #-----------------------------------------------------------------------------
   stopifnot(is.matrix(SNPmatrix))
-  stopifnot(method %in% c("Yang", "VanRaden", "Su", "Vitezica", "Slater", 
-                          "Endelman", "MarkersMatrix"))
   SNPmatrix <- as.matrix(data.matrix(SNPmatrix))
+  ids <- rownames(SNPmatrix)
   
   if (ploidy %% 2 != 0 || ploidy < 2 || ploidy > 20) {
     stop("ploidy must be an even number between 2 and 20")
@@ -174,23 +174,39 @@ Gmatrix <- function(SNPmatrix = NULL,
                      ratio = ratio, 
                      integer = integer)
   
-  if (!ratio || (ratio && ratio.check)) {
-    SNPmatrix <- Mcheck(SNPmatrix,
-                        ploidy = ploidy,
-                        thresh.maf = maf,
-                        rmv.mono = rmv.mono,
-                        thresh.htzy = thresh.htzy,
-                        thresh.missing = thresh.missing,
-                        impute.method = impute.method)
+  # Early return for MarkersMatrix using the raw NA pattern (parity with legacy)
+  if (identical(method, "MarkersMatrix")) {
+    if (exists("Gmatrix_MarkersMask", mode = "function")) {
+      Gmatrix <- Gmatrix_MarkersMask(SNPmatrix)
+    } else {
+      mask <- !is.na(SNPmatrix)
+      storage.mode(mask) <- "double"
+      Gmatrix <- tcrossprod(mask, mask)
+    }
+    if (!is.null(ids)) dimnames(Gmatrix) <- list(ids, ids)
+    return(Gmatrix)
   }
   
-  processed <- preprocessSNPmatrix(SNPmatrix, NA)
-  SNPmatrix <- processed$SNPmatrix
-  Frequency <- processed$Frequency
-  P <- colMeans(SNPmatrix, na.rm = TRUE)
+  #-----------------------------------------------------------------------------
+  # ==== Missing-data checks / filtering (only when requested) ====
+  #-----------------------------------------------------------------------------
+  do_mcheck <- (!ratio || (ratio && ratio.check)) &&
+    !(isTRUE(all.equal(thresh.missing, 1)) || identical(impute.method, "none"))
+  
+  if (do_mcheck) {
+    SNPmatrix <- Mcheck(
+      SNPmatrix,
+      ploidy          = ploidy,
+      thresh.maf      = maf,
+      rmv.mono        = rmv.mono,
+      thresh.htzy     = thresh.htzy,
+      thresh.missing  = thresh.missing,
+      impute.method   = impute.method
+    )
+  }
   
   #-----------------------------------------------------------------------------
-  # ==== Diagnostic info ====
+  # ==== Diagnostics ====
   #-----------------------------------------------------------------------------
   NumberMarkers <- ncol(SNPmatrix)
   nindTotal <- colSums(!is.na(SNPmatrix))
@@ -198,14 +214,16 @@ Gmatrix <- function(SNPmatrix = NULL,
   message("\tNumber of Individuals:", max(nindTotal))
   message("\tNumber of Markers:", NumberMarkers)
   message("Building G matrix using method: ", method, ", ploidy: ", ploidy)
-  if (method == "MarkersMatrix") {
-    return(Gmatrix_MarkersMask(SNPmatrix))
-  }
   
   #-----------------------------------------------------------------------------
   ## ===== Prepare frequencies =====
   #-----------------------------------------------------------------------------
+  P <- colMeans(SNPmatrix, na.rm = TRUE)
   if (ploidy == 2) {
+    denom <- 2 * colSums(!is.na(SNPmatrix))
+    f2 <- (2 * colSums(SNPmatrix == 2, na.rm = TRUE) + 
+             colSums(SNPmatrix == 1, na.rm = TRUE)) / denom
+    Frequency <- cbind(1 - f2, f2)
     FreqP <- matrix(Frequency[, 2], nrow = nrow(SNPmatrix), 
                     ncol = ncol(SNPmatrix), byrow = TRUE)
   }
@@ -229,65 +247,31 @@ Gmatrix <- function(SNPmatrix = NULL,
         TwoPQ <- sum(2 * Frequency[, 1] * Frequency[, 2])
         Gmatrix <- Gmatrix_vanraden(SNPmatrix, Frequency[, 2], TwoPQ)
       } else {
-        if (ploidy.correction) {
-          FrequencyCorr <- if (!ratio) P / ploidy else P
-          K <- if (!ratio) {
-            sum(ploidy * FrequencyCorr * (1 - FrequencyCorr))
-          } else {
-            sum(FrequencyCorr * (1 - FrequencyCorr))
-          }
-        } else {
-          # Center SNP matrix, then replace NAs with zero for matrix product
-          SNPmatrix <- scale(SNPmatrix, center = TRUE, scale = FALSE)
-          K <- sum(matrixStats::colVars(SNPmatrix, na.rm = TRUE))
-          SNPmatrix[is.na(SNPmatrix)] <- 0
-        }
-        Gmatrix <- Gmatrix_unweighted(SNPmatrix, K)
+        Gmatrix <- 
+          Gmatrix_vanraden_poly_unweighted(SNPmatrix, ploidy, ratio, 
+                                   ploidy.correction)
       }
     } else {
       weights <- weights[match(colnames(SNPmatrix), markers)]
-      
       if (ploidy == 2 && !ratio) {
-        # Protect against vector case
-        if (is.vector(Frequency)) {
-          Frequency <- cbind(1 - Frequency, Frequency)
-        }
+        if (is.vector(Frequency)) Frequency <- cbind(1 - Frequency, Frequency)
         TwoPQ <- sum(2 * Frequency[, 1] * Frequency[, 2])
-        Gmatrix <- Gmatrix_VanRaden_weighted(
-          SNPmatrix, weights, Frequency[, 2], TwoPQ
-        )
+        Gmatrix <- 
+          Gmatrix_VanRaden_weighted(SNPmatrix, weights, Frequency[, 2], TwoPQ)
       } else {
-        Z <- scale(SNPmatrix, center = TRUE, scale = FALSE)
-        
-        if (ploidy.correction) {
-          FrequencyCorr <- if (!ratio) {
-            colMeans(SNPmatrix, na.rm = TRUE) / ploidy
-          } else {
-            colMeans(SNPmatrix, na.rm = TRUE)
-          }
-          K <- if (!ratio) {
-            sum(ploidy * FrequencyCorr * (1 - FrequencyCorr))
-          } else {
-            sum(FrequencyCorr * (1 - FrequencyCorr))
-          }
-        } else {
-          K <- sum(matrixStats::colVars(Z, na.rm = TRUE))
-        }
-        
-        Z[is.na(Z)] <- 0
-        Gmatrix <- Gmatrix_general_weighted(Z, weights, K)
+        Gmatrix <- 
+          Gmatrix_vanraden_poly_weighted(SNPmatrix, as.numeric(weights), ploidy, 
+                                 ratio, ploidy.correction)
       }
     }
   }
   
   if (method == "Yang") {
     if (ploidy != 2) stop("Yang method is defined for diploids (ploidy = 2).")
-    FreqPQ <- matrix(
-      rep(2 * Frequency[, 1] * Frequency[, 2], each = nrow(SNPmatrix)),
-      ncol = ncol(SNPmatrix)
-    )
-    G.all <- (SNPmatrix^2 - (1 + 2 * FreqP) * SNPmatrix +
-                2 * (FreqP^2)) / FreqPQ
+    FreqPQ <- matrix(rep(2 * Frequency[, 1] * Frequency[, 2], 
+                         each = nrow(SNPmatrix)),
+                     ncol = ncol(SNPmatrix))
+    G.all <- (SNPmatrix^2 - (1 + 2 * FreqP) * SNPmatrix + 2 * (FreqP^2)) / FreqPQ
     G.ii <- as.matrix(colSums(t(G.all), na.rm = TRUE))
     Z <- (SNPmatrix - (2 * FreqP)) / sqrt(FreqPQ)
     G.ii.hat <- 1 + (G.ii) / NumberMarkers
@@ -297,7 +281,6 @@ Gmatrix <- function(SNPmatrix = NULL,
   }
   
   if (method == "Su") {
-    ## Recode homozygotes to 0, keep het as 1, then subtract TwoPQ
     TwoPQ <- 2 * (FreqP) * (1 - FreqP)
     SNPmatrix[SNPmatrix == 2 | SNPmatrix == 0] <- 0
     SNPmatrix <- SNPmatrix - TwoPQ
@@ -344,6 +327,7 @@ Gmatrix <- function(SNPmatrix = NULL,
   if (ASV) {
     Gmatrix <- get_ASV(Gmatrix)
   }
+  if (!is.null(ids)) dimnames(Gmatrix) <- list(ids, ids)
   
   message("Completed! Time = ", round(proc.time()[3] - Time[3], 2), " seconds")
   
@@ -352,7 +336,6 @@ Gmatrix <- function(SNPmatrix = NULL,
   attr(Gmatrix, "nmarkers") <- ncol(SNPmatrix)
   return(Gmatrix)
 }
-
 
 
 ## Internal Functions ##

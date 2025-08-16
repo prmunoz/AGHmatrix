@@ -21,10 +21,6 @@ Gmatrix_Endelman <- function(M, ploidy) {
     .Call(`_AGHmatrix_Gmatrix_Endelman`, M, ploidy)
 }
 
-Gmatrix_general_weighted <- function(Z, weights, K) {
-    .Call(`_AGHmatrix_Gmatrix_general_weighted`, Z, weights, K)
-}
-
 Gmatrix_MarkersMask <- function(M) {
     .Call(`_AGHmatrix_Gmatrix_MarkersMask`, M)
 }
@@ -37,10 +33,6 @@ Gmatrix_Su <- function(M) {
     .Call(`_AGHmatrix_Gmatrix_Su`, M)
 }
 
-Gmatrix_unweighted <- function(Z, K) {
-    .Call(`_AGHmatrix_Gmatrix_unweighted`, Z, K)
-}
-
 Gmatrix_vanraden <- function(M, FreqP, denom) {
     .Call(`_AGHmatrix_Gmatrix_vanraden`, M, FreqP, denom)
 }
@@ -49,11 +41,15 @@ Gmatrix_VanRaden_weighted <- function(M, weights, FreqP, denom) {
     .Call(`_AGHmatrix_Gmatrix_VanRaden_weighted`, M, weights, FreqP, denom)
 }
 
-Gmatrix_Vitezica <- function(M, FreqP) {
-    .Call(`_AGHmatrix_Gmatrix_Vitezica`, M, FreqP)
+Gmatrix_vanraden_poly_unweighted <- function(X, ploidy, ratio, ploidy_correction) {
+    .Call(`_AGHmatrix_Gmatrix_vanraden_poly_unweighted`, X, ploidy, ratio, ploidy_correction)
 }
 
-preprocessSNPmatrix <- function(mat, missingValue) {
-    .Call(`_AGHmatrix_preprocessSNPmatrix`, mat, missingValue)
+Gmatrix_vanraden_poly_weighted <- function(X, w, ploidy, ratio, ploidy_correction) {
+    .Call(`_AGHmatrix_Gmatrix_vanraden_poly_weighted`, X, w, ploidy, ratio, ploidy_correction)
+}
+
+Gmatrix_Vitezica <- function(M, FreqP) {
+    .Call(`_AGHmatrix_Gmatrix_Vitezica`, M, FreqP)
 }
 

@@ -76,19 +76,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Gmatrix_general_weighted
-arma::mat Gmatrix_general_weighted(arma::mat Z, const arma::vec& weights, const double K);
-RcppExport SEXP _AGHmatrix_Gmatrix_general_weighted(SEXP ZSEXP, SEXP weightsSEXP, SEXP KSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type weights(weightsSEXP);
-    Rcpp::traits::input_parameter< const double >::type K(KSEXP);
-    rcpp_result_gen = Rcpp::wrap(Gmatrix_general_weighted(Z, weights, K));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Gmatrix_MarkersMask
 arma::mat Gmatrix_MarkersMask(const arma::mat& M);
 RcppExport SEXP _AGHmatrix_Gmatrix_MarkersMask(SEXP MSEXP) {
@@ -125,18 +112,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// Gmatrix_unweighted
-arma::mat Gmatrix_unweighted(arma::mat Z, const double K);
-RcppExport SEXP _AGHmatrix_Gmatrix_unweighted(SEXP ZSEXP, SEXP KSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< const double >::type K(KSEXP);
-    rcpp_result_gen = Rcpp::wrap(Gmatrix_unweighted(Z, K));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Gmatrix_vanraden
 arma::mat Gmatrix_vanraden(const arma::mat& M, const arma::vec& FreqP, const double denom);
 RcppExport SEXP _AGHmatrix_Gmatrix_vanraden(SEXP MSEXP, SEXP FreqPSEXP, SEXP denomSEXP) {
@@ -164,6 +139,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Gmatrix_vanraden_poly_unweighted
+arma::mat Gmatrix_vanraden_poly_unweighted(const arma::mat& X, const unsigned int ploidy, const bool ratio, const bool ploidy_correction);
+RcppExport SEXP _AGHmatrix_Gmatrix_vanraden_poly_unweighted(SEXP XSEXP, SEXP ploidySEXP, SEXP ratioSEXP, SEXP ploidy_correctionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const unsigned int >::type ploidy(ploidySEXP);
+    Rcpp::traits::input_parameter< const bool >::type ratio(ratioSEXP);
+    Rcpp::traits::input_parameter< const bool >::type ploidy_correction(ploidy_correctionSEXP);
+    rcpp_result_gen = Rcpp::wrap(Gmatrix_vanraden_poly_unweighted(X, ploidy, ratio, ploidy_correction));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Gmatrix_vanraden_poly_weighted
+arma::mat Gmatrix_vanraden_poly_weighted(const arma::mat& X, const arma::vec& w, const unsigned int ploidy, const bool ratio, const bool ploidy_correction);
+RcppExport SEXP _AGHmatrix_Gmatrix_vanraden_poly_weighted(SEXP XSEXP, SEXP wSEXP, SEXP ploidySEXP, SEXP ratioSEXP, SEXP ploidy_correctionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type w(wSEXP);
+    Rcpp::traits::input_parameter< const unsigned int >::type ploidy(ploidySEXP);
+    Rcpp::traits::input_parameter< const bool >::type ratio(ratioSEXP);
+    Rcpp::traits::input_parameter< const bool >::type ploidy_correction(ploidy_correctionSEXP);
+    rcpp_result_gen = Rcpp::wrap(Gmatrix_vanraden_poly_weighted(X, w, ploidy, ratio, ploidy_correction));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Gmatrix_Vitezica
 arma::mat Gmatrix_Vitezica(arma::mat M, const arma::mat& FreqP);
 RcppExport SEXP _AGHmatrix_Gmatrix_Vitezica(SEXP MSEXP, SEXP FreqPSEXP) {
@@ -176,18 +180,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// preprocessSNPmatrix
-List preprocessSNPmatrix(NumericMatrix mat, double missingValue);
-RcppExport SEXP _AGHmatrix_preprocessSNPmatrix(SEXP matSEXP, SEXP missingValueSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type mat(matSEXP);
-    Rcpp::traits::input_parameter< double >::type missingValue(missingValueSEXP);
-    rcpp_result_gen = Rcpp::wrap(preprocessSNPmatrix(mat, missingValue));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_AGHmatrix_buildA_kerr_cpp", (DL_FUNC) &_AGHmatrix_buildA_kerr_cpp, 4},
@@ -195,15 +187,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_AGHmatrix_buildA_slater_cpp", (DL_FUNC) &_AGHmatrix_buildA_slater_cpp, 3},
     {"_AGHmatrix_buildDominanceMatrix_cpp", (DL_FUNC) &_AGHmatrix_buildDominanceMatrix_cpp, 3},
     {"_AGHmatrix_Gmatrix_Endelman", (DL_FUNC) &_AGHmatrix_Gmatrix_Endelman, 2},
-    {"_AGHmatrix_Gmatrix_general_weighted", (DL_FUNC) &_AGHmatrix_Gmatrix_general_weighted, 3},
     {"_AGHmatrix_Gmatrix_MarkersMask", (DL_FUNC) &_AGHmatrix_Gmatrix_MarkersMask, 1},
     {"_AGHmatrix_Gmatrix_Slater", (DL_FUNC) &_AGHmatrix_Gmatrix_Slater, 4},
     {"_AGHmatrix_Gmatrix_Su", (DL_FUNC) &_AGHmatrix_Gmatrix_Su, 1},
-    {"_AGHmatrix_Gmatrix_unweighted", (DL_FUNC) &_AGHmatrix_Gmatrix_unweighted, 2},
     {"_AGHmatrix_Gmatrix_vanraden", (DL_FUNC) &_AGHmatrix_Gmatrix_vanraden, 3},
     {"_AGHmatrix_Gmatrix_VanRaden_weighted", (DL_FUNC) &_AGHmatrix_Gmatrix_VanRaden_weighted, 4},
+    {"_AGHmatrix_Gmatrix_vanraden_poly_unweighted", (DL_FUNC) &_AGHmatrix_Gmatrix_vanraden_poly_unweighted, 4},
+    {"_AGHmatrix_Gmatrix_vanraden_poly_weighted", (DL_FUNC) &_AGHmatrix_Gmatrix_vanraden_poly_weighted, 5},
     {"_AGHmatrix_Gmatrix_Vitezica", (DL_FUNC) &_AGHmatrix_Gmatrix_Vitezica, 2},
-    {"_AGHmatrix_preprocessSNPmatrix", (DL_FUNC) &_AGHmatrix_preprocessSNPmatrix, 2},
     {NULL, NULL, 0}
 };
 

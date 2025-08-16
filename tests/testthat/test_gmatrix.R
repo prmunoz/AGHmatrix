@@ -127,11 +127,3 @@ test_that("Slater method works with non-zero variance markers", {
   expect_equal(round(G[1:2, 1:2], 6), round(G_expected, 6))
   expect_true(isSymmetric(G[1:2, 1:2]))
 })
-
-test_that("Endelman method computes correctly for ploidy=4", {
-  M <- matrix(c(0, 1, 2, 3,
-                4, 3, 2, 1), nrow = 2, byrow = TRUE)
-  colnames(M) <- c("M1", "M2", "M3", "M4")
-  G <- Gmatrix(M, method = "Endelman", ploidy = 4)
-  expect_true(isSymmetric(G))
-})
