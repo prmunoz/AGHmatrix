@@ -1,31 +1,39 @@
 Package: AGHmatrix
+Type: Package
 Title: Relationship Matrices for Diploid and Autopolyploid Species
-Version: 2.1.5
+Version: 3.0.0
 Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
     by G) relationship matrices for diploid and autopolyploid species. Several methods
     are implemented considering additive and non-additive models.
-Authors@R: c(person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rramadeu@gmail.com"),
-             person("Luis", "Ferrao", role = c("aut","ctb")),
-             person("Catherine", "Cellon", role = "ctb"),
-             person("Leticia", "Lara", role = "ctb"),
-             person("Marcio", "Resende", role = "ctb"),
-             person("Ivone", "Oliveira", role = "ctb"),
-             person("Patricio", "Munoz", role = "ctb"),
-             person("Augusto", "Garcia", role = "ctb"))
-Author: Rodrigo Amadeu [aut, cre], Luis Ferrao [aut, ctb], Catherine Cellon [ctb], Leticia Lara [ctb], Marcio Resende [ctb], 
-       Ivone Oliveira [ctb], Patricio Munoz [ctb], Augusto Garcia [ctb]
+Authors@R:
+    c(
+        person("Rodrigo","Amadeu", role = c("aut","cre"), email = "rramadeu@gmail.com"),
+        person("Luis", "Ferrao", role = c("aut","ctb")),
+        person("Thiago", "Oliveira", role = c("aut","ctb")),
+        person("Catherine", "Cellon", role = "ctb"),
+        person("Leticia", "Lara", role = "ctb"),
+        person("Marcio", "Resende", role = "ctb"),
+        person("Ivone", "Oliveira", role = "ctb"),
+        person("Patricio", "Munoz", role = "ctb"),
+        person("Augusto", "Garcia", role = "ctb")
+    )
+Maintainer: Rodrigo Amadeu <rramadeu@gmail.com>
 Depends: R (>= 3.6.0)
 Imports:
     Matrix (>= 1.2-7.1),
-    zoo (>= 1.8.6)
+    zoo (>= 1.8.6),
+    Rcpp (>= 1.1.0),
+    RcppArmadillo (>= 14.6.0.1)
 Suggests:
     knitr,
     MASS,
     rmarkdown
+LinkingTo:
+    Rcpp,
+    RcppArmadillo
 VignetteBuilder: knitr
 Encoding: UTF-8
 License: GPL-3
 URL: https://github.com/rramadeu/AGHmatrix
-Maintainer: Rodrigo Amadeu <rramadeu@gmail.com>
-RoxygenNote: 7.2.3
-NeedsCompilation: no
+RoxygenNote: 7.3.2
+SystemRequirements: C++11
