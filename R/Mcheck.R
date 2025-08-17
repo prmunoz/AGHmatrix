@@ -67,12 +67,15 @@ Mcheck <- function(SNPmatrix = NULL,
   cat("\nMissing data check: \n")
   if (any(missing.low)) {
     cat("\tTotal SNPs:", ncol(SNPmatrix), "\n")
-    cat("\t", ncol(SNPmatrix) - sum(missing.low), "SNPs dropped due to missing data threshold of", thresh.missing, "\n")
+    cat("\t", ncol(SNPmatrix) - sum(missing.low), 
+        "SNPs dropped due to missing data threshold of", 
+        thresh.missing, "\n")
     cat("\tTotal of:", sum(missing.low), " SNPs \n")
     idx.rm <- which(missing.low)
     SNPmatrix <- SNPmatrix[, idx.rm, drop = FALSE]
   } else {
-    cat("\tNo SNPs with missing data, missing threshold of =", thresh.missing, "\n")
+    cat("\tNo SNPs with missing data, missing threshold of =", 
+        thresh.missing, "\n")
   }
   
   #-----------------------------------------------------------------------------
@@ -146,17 +149,21 @@ Mcheck <- function(SNPmatrix = NULL,
   #-----------------------------------------------------------------------------
   # Heterozygosity
   #-----------------------------------------------------------------------------
-  htrz <- colSums(SNPmatrix != 0 & SNPmatrix != ploidy, na.rm = TRUE) / nrow(SNPmatrix)
+  htrz <- 
+    colSums(SNPmatrix != 0 & SNPmatrix != ploidy, na.rm = TRUE) / 
+    nrow(SNPmatrix)
   htrz.low <- htrz < thresh.htzy
   cat("\nHeterozigosity data check: \n")
   if (any(htrz.low)) {
     cat("\tTotal SNPs:", ncol(SNPmatrix), "\n")
-    cat("\t", ncol(SNPmatrix) - sum(htrz.low), "SNPs dropped due to heterozygosity threshold of", thresh.htzy, "\n")
+    cat("\t", ncol(SNPmatrix) - sum(htrz.low), 
+        "SNPs dropped due to heterozygosity threshold of", thresh.htzy, "\n")
     cat("\tTotal of:", sum(htrz.low), " SNPs \n")
     idx.rm <- which(htrz.low)
     SNPmatrix <- SNPmatrix[, idx.rm, drop = FALSE]
   } else {
-    cat("\tNo SNPs with heterozygosity, missing threshold of =", thresh.htzy, "\n")
+    cat("\tNo SNPs with heterozygosity, missing threshold of =", 
+        thresh.htzy, "\n")
   }
   
   #-----------------------------------------------------------------------------
@@ -164,7 +171,8 @@ Mcheck <- function(SNPmatrix = NULL,
   #-----------------------------------------------------------------------------
   cat("\nSummary check: \n")
   cat("\tInitial: ", ncol.init, "SNPs \n")
-  cat("\tFinal: ", ncol(SNPmatrix), " SNPs (", ncol.init - ncol(SNPmatrix), " SNPs removed) \n\n")
+  cat("\tFinal: ", ncol(SNPmatrix), " SNPs (", ncol.init - ncol(SNPmatrix), 
+      " SNPs removed) \n\n")
   
   return(SNPmatrix)
 }
