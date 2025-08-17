@@ -87,4 +87,6 @@ Hmat_Munoz <- Hmatrix(A=Amat, G=Gmat, markers = snp.sol,
 }
 \author{
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}
+
+Thiago de Paula Oliveira \email{toliveira@abacusbio.com}
 }

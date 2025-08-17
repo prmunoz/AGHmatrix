@@ -51,6 +51,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ascii_to_number
+List ascii_to_number(CharacterMatrix pedigree_data, std::string unk);
+RcppExport SEXP _AGHmatrix_ascii_to_number(SEXP pedigree_dataSEXP, SEXP unkSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix >::type pedigree_data(pedigree_dataSEXP);
+    Rcpp::traits::input_parameter< std::string >::type unk(unkSEXP);
+    rcpp_result_gen = Rcpp::wrap(ascii_to_number(pedigree_data, unk));
+    return rcpp_result_gen;
+END_RCPP
+}
+// datatreat_cpp
+List datatreat_cpp(CharacterMatrix data, int n_max, std::string unk, bool save);
+RcppExport SEXP _AGHmatrix_datatreat_cpp(SEXP dataSEXP, SEXP n_maxSEXP, SEXP unkSEXP, SEXP saveSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type n_max(n_maxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type unk(unkSEXP);
+    Rcpp::traits::input_parameter< bool >::type save(saveSEXP);
+    rcpp_result_gen = Rcpp::wrap(datatreat_cpp(data, n_max, unk, save));
+    return rcpp_result_gen;
+END_RCPP
+}
 // buildDominanceMatrix_cpp
 NumericMatrix buildDominanceMatrix_cpp(NumericMatrix A, IntegerVector s, IntegerVector d);
 RcppExport SEXP _AGHmatrix_buildDominanceMatrix_cpp(SEXP ASEXP, SEXP sSEXP, SEXP dSEXP) {
@@ -225,6 +251,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_AGHmatrix_buildA_kerr_cpp", (DL_FUNC) &_AGHmatrix_buildA_kerr_cpp, 4},
     {"_AGHmatrix_buildA_ploidy2_cpp", (DL_FUNC) &_AGHmatrix_buildA_ploidy2_cpp, 3},
     {"_AGHmatrix_buildA_slater_cpp", (DL_FUNC) &_AGHmatrix_buildA_slater_cpp, 3},
+    {"_AGHmatrix_ascii_to_number", (DL_FUNC) &_AGHmatrix_ascii_to_number, 2},
+    {"_AGHmatrix_datatreat_cpp", (DL_FUNC) &_AGHmatrix_datatreat_cpp, 4},
     {"_AGHmatrix_buildDominanceMatrix_cpp", (DL_FUNC) &_AGHmatrix_buildDominanceMatrix_cpp, 3},
     {"_AGHmatrix_Gmatrix_Endelman", (DL_FUNC) &_AGHmatrix_Gmatrix_Endelman, 2},
     {"_AGHmatrix_Gmatrix_MarkersMask", (DL_FUNC) &_AGHmatrix_Gmatrix_MarkersMask, 1},

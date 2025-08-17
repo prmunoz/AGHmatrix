@@ -13,6 +13,14 @@ buildA_slater_cpp <- function(s, d, w) {
     .Call(`_AGHmatrix_buildA_slater_cpp`, s, d, w)
 }
 
+ascii_to_number <- function(pedigree_data, unk = "0") {
+    .Call(`_AGHmatrix_ascii_to_number`, pedigree_data, unk)
+}
+
+datatreat_cpp <- function(data, n_max = 50L, unk = "0", save = FALSE) {
+    .Call(`_AGHmatrix_datatreat_cpp`, data, n_max, unk, save)
+}
+
 buildDominanceMatrix_cpp <- function(A, s, d) {
     .Call(`_AGHmatrix_buildDominanceMatrix_cpp`, A, s, d)
 }
