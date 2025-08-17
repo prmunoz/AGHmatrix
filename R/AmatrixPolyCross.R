@@ -56,6 +56,7 @@
 #' AmatrixPolyCross(pedigree,fixedParent=TRUE)
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
+#' @importFrom utils combn write.table
 #'
 #' @export
 #' 

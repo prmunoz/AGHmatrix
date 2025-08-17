@@ -53,6 +53,28 @@ Gmatrix_Vitezica <- function(M, FreqP) {
     .Call(`_AGHmatrix_Gmatrix_Vitezica`, M, FreqP)
 }
 
+#' Compute Martini block corrections (H11, H12, H21, H22 - A22)
+#'
+#' @param A12 n1 x n2 block from A
+#' @param A22 n2 x n2 block from A (genotyped)
+#' @param G22 n2 x n2 block from G (genotyped)
+#' @param tau scalar
+#' @param omega scalar
+#' @return list(H11, H12, H21, H22corr) where H22corr = H22 - A22
+H_martini_blocks <- function(A12, A22, G22, tau, omega) {
+    .Call(`_AGHmatrix_H_martini_blocks`, A12, A22, G22, tau, omega)
+}
+
+#' Compute var/mean of G by classes of rounded A, and fill varA/meanG
+#'
+#' @param G square matrix
+#' @param A square matrix (same dim as G)
+#' @param round_digits integer number of decimal places to round A
+#' @return list(varA, meanG, classes, var_by_class, mean_by_class)
+munoz_var_mean_by_Aclass <- function(G, A, round_digits) {
+    .Call(`_AGHmatrix_munoz_var_mean_by_Aclass`, G, A, round_digits)
+}
+
 slater_par_cpp <- function(X, ploidy) {
     .Call(`_AGHmatrix_slater_par_cpp`, X, ploidy)
 }

@@ -28,6 +28,7 @@
 #'
 #' @return SNPmatrix after filtering steps.
 #'
+#' @importFrom stats var
 #' @examples 
 #' data(snp.pine)
 #' M = Mcheck(snp.pine)

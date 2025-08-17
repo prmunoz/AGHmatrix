@@ -180,6 +180,34 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// H_martini_blocks
+Rcpp::List H_martini_blocks(const arma::mat& A12, const arma::mat& A22, const arma::mat& G22, const double tau, const double omega);
+RcppExport SEXP _AGHmatrix_H_martini_blocks(SEXP A12SEXP, SEXP A22SEXP, SEXP G22SEXP, SEXP tauSEXP, SEXP omegaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type A12(A12SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A22(A22SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type G22(G22SEXP);
+    Rcpp::traits::input_parameter< const double >::type tau(tauSEXP);
+    Rcpp::traits::input_parameter< const double >::type omega(omegaSEXP);
+    rcpp_result_gen = Rcpp::wrap(H_martini_blocks(A12, A22, G22, tau, omega));
+    return rcpp_result_gen;
+END_RCPP
+}
+// munoz_var_mean_by_Aclass
+Rcpp::List munoz_var_mean_by_Aclass(const arma::mat& G, const arma::mat& A, const int round_digits);
+RcppExport SEXP _AGHmatrix_munoz_var_mean_by_Aclass(SEXP GSEXP, SEXP ASEXP, SEXP round_digitsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type G(GSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const int >::type round_digits(round_digitsSEXP);
+    rcpp_result_gen = Rcpp::wrap(munoz_var_mean_by_Aclass(G, A, round_digits));
+    return rcpp_result_gen;
+END_RCPP
+}
 // slater_par_cpp
 arma::mat slater_par_cpp(const arma::mat& X, const unsigned int ploidy);
 RcppExport SEXP _AGHmatrix_slater_par_cpp(SEXP XSEXP, SEXP ploidySEXP) {
@@ -207,6 +235,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_AGHmatrix_Gmatrix_vanraden_poly_unweighted", (DL_FUNC) &_AGHmatrix_Gmatrix_vanraden_poly_unweighted, 4},
     {"_AGHmatrix_Gmatrix_vanraden_poly_weighted", (DL_FUNC) &_AGHmatrix_Gmatrix_vanraden_poly_weighted, 5},
     {"_AGHmatrix_Gmatrix_Vitezica", (DL_FUNC) &_AGHmatrix_Gmatrix_Vitezica, 2},
+    {"_AGHmatrix_H_martini_blocks", (DL_FUNC) &_AGHmatrix_H_martini_blocks, 5},
+    {"_AGHmatrix_munoz_var_mean_by_Aclass", (DL_FUNC) &_AGHmatrix_munoz_var_mean_by_Aclass, 3},
     {"_AGHmatrix_slater_par_cpp", (DL_FUNC) &_AGHmatrix_slater_par_cpp, 2},
     {NULL, NULL, 0}
 };
