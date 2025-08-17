@@ -49,7 +49,9 @@ Mcheck <- function(SNPmatrix = NULL,
                    impute.method = "mean",
                    rmv.mono = TRUE) {
   
+  #-----------------------------------------------------------------------------
   # SNP missing data
+  #-----------------------------------------------------------------------------
   ncol.init <- ncol(SNPmatrix)
   
   if (!is.na(missingValue)) {
@@ -57,7 +59,9 @@ Mcheck <- function(SNPmatrix = NULL,
     SNPmatrix[m > 0] <- NA
   }
   
+  #-----------------------------------------------------------------------------
   # Faster missing rate calculation
+  #-----------------------------------------------------------------------------
   missing <- colMeans(is.na(SNPmatrix))
   missing.low <- missing <= thresh.missing
   cat("\nMissing data check: \n")
@@ -71,7 +75,9 @@ Mcheck <- function(SNPmatrix = NULL,
     cat("\tNo SNPs with missing data, missing threshold of =", thresh.missing, "\n")
   }
   
-  # Minor allele frequency (faster)
+  #-----------------------------------------------------------------------------
+  # Minor allele frequency
+  #-----------------------------------------------------------------------------
   AF <- colMeans(SNPmatrix, na.rm = TRUE) / ploidy
   MAF <- ifelse(AF > 0.5, 1 - AF, AF)
   snps.low <- MAF < thresh.maf
@@ -85,7 +91,9 @@ Mcheck <- function(SNPmatrix = NULL,
     cat("\tNo SNPs with MAF below", thresh.maf, "\n")
   }
   
-  # Monomorphic SNPs (use fast var check)
+  #-----------------------------------------------------------------------------
+  # Monomorphic SNPs
+  #-----------------------------------------------------------------------------
   if (rmv.mono) {
     mono <- matrixStats::colVars(SNPmatrix, na.rm = TRUE) == 0
     mono[is.na(mono)] <- TRUE
@@ -100,7 +108,9 @@ Mcheck <- function(SNPmatrix = NULL,
     }
   }
   
+  #-----------------------------------------------------------------------------
   # Imputation
+  #-----------------------------------------------------------------------------
   if (impute.method == "global.mean") {
     ix <- which(is.na(SNPmatrix))
     if (length(ix) > 0) {
@@ -133,7 +143,9 @@ Mcheck <- function(SNPmatrix = NULL,
     SNPmatrix[ix] <- imp_vals[ix[, 2]]
   }
   
-  # Heterozygosity (vectorized)
+  #-----------------------------------------------------------------------------
+  # Heterozygosity
+  #-----------------------------------------------------------------------------
   htrz <- colSums(SNPmatrix != 0 & SNPmatrix != ploidy, na.rm = TRUE) / nrow(SNPmatrix)
   htrz.low <- htrz < thresh.htzy
   cat("\nHeterozigosity data check: \n")
@@ -147,7 +159,9 @@ Mcheck <- function(SNPmatrix = NULL,
     cat("\tNo SNPs with heterozygosity, missing threshold of =", thresh.htzy, "\n")
   }
   
+  #-----------------------------------------------------------------------------
   # Summary
+  #-----------------------------------------------------------------------------
   cat("\nSummary check: \n")
   cat("\tInitial: ", ncol.init, "SNPs \n")
   cat("\tFinal: ", ncol(SNPmatrix), " SNPs (", ncol.init - ncol(SNPmatrix), " SNPs removed) \n\n")
