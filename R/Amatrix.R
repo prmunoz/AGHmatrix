@@ -151,21 +151,15 @@ Amatrix <- function(data = NULL,
     if (verifyped(data)) stop("Please double-check your data and try again.")
   }
   
-  message("Organizing data...\n")
+  message("Organizing data with fast method...\n")
   data.after.treat <- try(datatreat(data = data, unk = 0, ...), silent = TRUE)
   
   if (inherits(data.after.treat, "try-error") ||
-      length(unique(data.after.treat$ind.data)) != nrow(data)) {
-    
-    message("Fast organization failed. Trying slow (naive) sorting...\n")
-    data.sorted <- sortped(data)
-    data.after.treat <- try(datatreat(data = data.sorted, unk = 0, ...))
-    
-    if (inherits(data.after.treat, "try-error") ||
-        length(unique(data.after.treat$ind.data)) != nrow(data)) {
-      stop(paste("It wasn't possible to organize your data chronologically.",
-                 "Use 'naive_sort = TRUE'."))
-    }
+      !is.list(data.after.treat) ||
+      is.null(data.after.treat$ind_data) ||
+      length(unique(data.after.treat$ind_data)) != nrow(data)) {
+    stop(paste("It wasn't possible to organize your data chronologically.",
+               "Check for conflicting pedigree entries, duplicate IDs, or circular references."))
   }
   
   #-------------------------------------------------------------------------

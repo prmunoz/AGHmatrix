@@ -40,9 +40,23 @@ datatreat <- function(data = NULL,
   if (is.null(data)) {
     stop("Select a data name")
   }
-  data <- as.matrix(data)
-  datatreat_cpp(data, n_max = n.max, unk = as.character(unk), save = save)
+  
+  # Already character matrix
+  if (inherits(data, "character") && is.matrix(data)) {
+    data_char <- data
+  } else if (is.data.frame(data) && ncol(data) == 3) {
+    # Convert data frame row-wise
+    data_char <- matrix(
+      unlist(lapply(data, as.character), use.names = FALSE),
+      ncol = 3
+    )
+  } else {
+    stop("Input must be a character matrix or a data.frame with 3 columns.")
+  }
+  
+  datatreat_cpp(data_char, n_max = n.max, unk = as.character(unk), save = save)
 }
+
 
 # This function creates a list with numeric indices given a pedigree data. 
 # Also it checks if all the listed parent name are listed before in the individual 
