@@ -53,3 +53,7 @@ Gmatrix_Vitezica <- function(M, FreqP) {
     .Call(`_AGHmatrix_Gmatrix_Vitezica`, M, FreqP)
 }
 
+slater_par_cpp <- function(X, ploidy) {
+    .Call(`_AGHmatrix_slater_par_cpp`, X, ploidy)
+}
+

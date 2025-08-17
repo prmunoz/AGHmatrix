@@ -291,7 +291,7 @@ Gmatrix <- function(SNPmatrix = NULL,
   if (method == "Slater") {
     P <- colMeans(SNPmatrix, na.rm = TRUE)
     SNPmatrix[, which(P > ploidy/2)] <- ploidy - SNPmatrix[, which(P > ploidy/2)]
-    SNPmatrix <- slater_par(SNPmatrix, ploidy = ploidy)
+    SNPmatrix <- slater_par_cpp(SNPmatrix, ploidy = ploidy)
     
     NumberMarkers <- ncol(SNPmatrix)
     Frequency     <- colMeans(SNPmatrix, na.rm = TRUE)
@@ -337,39 +337,6 @@ Gmatrix <- function(SNPmatrix = NULL,
 ## Internal Functions ##
 get_ASV = function(x){
   return( x / ( sum(diag(x)) / (nrow(x) - 1)) )
-}
-
-# Coding SNPmatrix as Slater (2016) Full autotetraploid model including non-additive effects (Presence/Absence per Genotype per Marker)
-slater_par <- function(X,ploidy){
-  prime.index <- c(3,5,7,11,13,17,19,23,29,31,37,
-                   41,43,47,53,59,61,67,71,73,79)
-  
-  NumberMarkers <- ncol(X)
-  nindTotal <- nrow(X)
-  X <- X+1
-  
-  ## Breaking intervals to use less RAM
-  temp <- seq(1,NumberMarkers,10000)
-  temp <- cbind(temp,temp+9999)
-  temp[length(temp)] <- NumberMarkers
-  prime.index <- prime.index[1:(ploidy+1)]
-  
-  ## Uses Diagonal (which is Sparse mode, uses less memmory)
-  for(i in 1:nrow(temp)){
-    X.temp <- X[,c(temp[i,1]:temp[i,2])]
-    NumberMarkers <- ncol(X.temp)
-    X.temp <- X.temp %*% t(kronecker(diag(NumberMarkers),prime.index))
-    X.temp[which(as.vector(X.temp) %in%
-                   c(prime.index*c(1:(ploidy+1))))] <- 1
-    X.temp[X.temp!=1] <- 0
-    if(i==1){
-      X_out <- X.temp
-    }else{
-      X_out <- cbind(X_out,X.temp)
-    }   
-  }
-  gc()
-  return(X_out)
 }
 
 # Internal function to check input Gmatrix arguments

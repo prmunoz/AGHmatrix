@@ -1,3 +1,4 @@
+// Thiago de Paula Oliveira
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 using namespace Rcpp;

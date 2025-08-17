@@ -180,6 +180,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// slater_par_cpp
+arma::mat slater_par_cpp(const arma::mat& X, const unsigned int ploidy);
+RcppExport SEXP _AGHmatrix_slater_par_cpp(SEXP XSEXP, SEXP ploidySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const unsigned int >::type ploidy(ploidySEXP);
+    rcpp_result_gen = Rcpp::wrap(slater_par_cpp(X, ploidy));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_AGHmatrix_buildA_kerr_cpp", (DL_FUNC) &_AGHmatrix_buildA_kerr_cpp, 4},
@@ -195,6 +207,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_AGHmatrix_Gmatrix_vanraden_poly_unweighted", (DL_FUNC) &_AGHmatrix_Gmatrix_vanraden_poly_unweighted, 4},
     {"_AGHmatrix_Gmatrix_vanraden_poly_weighted", (DL_FUNC) &_AGHmatrix_Gmatrix_vanraden_poly_weighted, 5},
     {"_AGHmatrix_Gmatrix_Vitezica", (DL_FUNC) &_AGHmatrix_Gmatrix_Vitezica, 2},
+    {"_AGHmatrix_slater_par_cpp", (DL_FUNC) &_AGHmatrix_slater_par_cpp, 2},
     {NULL, NULL, 0}
 };
 
