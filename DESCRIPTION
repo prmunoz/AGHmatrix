@@ -2,7 +2,7 @@ Package: AGHmatrix
 Type: Package
 Title: Relationship Matrices for Diploid and Autopolyploid Species
 Version: 3.0.0
-Description: Computation of A (pedigree), G (genomic-base), and H (A corrected
+Description: Fast computation of A (pedigree), G (genomic-base), and H (A corrected
     by G) relationship matrices for diploid and autopolyploid species. Several methods
     are implemented considering additive and non-additive models.
 Authors@R:
@@ -20,15 +20,13 @@ Authors@R:
 Maintainer: Rodrigo Amadeu <rramadeu@gmail.com>
 Depends: R (>= 3.6.0)
 Imports:
-    Matrix (>= 1.2-7.1),
-    zoo (>= 1.8.6),
     Rcpp (>= 1.1.0),
-    RcppArmadillo (>= 14.6.0.1),
     matrixStats (>= 1.5.0)
 Suggests:
     knitr,
     MASS,
-    rmarkdown
+    rmarkdown,
+    testthat
 LinkingTo:
     Rcpp,
     RcppArmadillo
@@ -37,4 +35,3 @@ Encoding: UTF-8
 License: GPL-3
 URL: https://github.com/rramadeu/AGHmatrix
 RoxygenNote: 7.3.2
-SystemRequirements: C++11

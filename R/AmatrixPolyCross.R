@@ -182,7 +182,7 @@ AmatrixPolyCross = function(data = NULL, fixedParent=FALSE){
   
   Time = as.matrix(proc.time() - Time)
   cat("Completed! Time =", Time[3]/60, " minutes \n")
-  rownames(A) <- colnames(A) <- data1$ind.data
+  rownames(A) <- colnames(A) <- data1$ind_data
   A <- A[orig.order, orig.order]
   return(A)
 }

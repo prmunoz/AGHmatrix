@@ -109,6 +109,7 @@
 #'   \emph{Slater, A.T., et al. (2013). Improving the analysis of low 
 #'   heritability complex traits for enhanced genetic gain in potato. 
 #'   Theoretical and Applied Genetics, 127, 809–820.}
+#' @export
 Amatrix <- function(data = NULL,
                     ploidy = 2,
                     w = 0,

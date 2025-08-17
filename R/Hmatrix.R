@@ -59,10 +59,11 @@
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
 #' @author Thiago de Paula Oliveira \email{toliveira@abacusbio.com}
+#' @importFrom stats approx
 #' @references \emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
 #' @references \emph{Munoz, PR. 2014 Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics 198, 1759-1768}
 #' @references \emph{Martini, JW, et al. 2018 The effect of the H-1 scaling factors tau and omega on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16}
-#' @references \emph{Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomic information. Journal of Dairy Science 92, 4656–4663}
+#' @references \emph{Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomic information. Journal of Dairy Science 92, 4656-4663}
 #' @export
 Hmatrix <- function(A=NULL,
                     G=NULL,
@@ -115,11 +116,11 @@ Hmatrix <- function(A=NULL,
   # in G but not in A
   idxAmiss <- is.na(match(Gn, An))
   if (any(!idxAmiss)) {
-    # order we’ll keep in G submatrix
+    # order we'll keep in G submatrix
     Gnhat <- Gn[!idxAmiss]             
   } else Gnhat <- Gn
   if (any(!idxGmiss)) {
-    # order we’ll keep in A submatrix (Munoz method)
+    # order we'll keep in A submatrix (Munoz method)
     Anhat <- An[!idxGmiss]
   } else Anhat <- An
   
@@ -197,7 +198,7 @@ Hmatrix <- function(A=NULL,
     A <- Aorig[Anhat, Anhat, drop = FALSE]
     G <- Gorig[Gnhat, Gnhat, drop = FALSE]
     
-    # MarkersMatrix computed on raw markers, then subset in G’s order
+    # MarkersMatrix computed on raw markers, then subset in G's order
     if (is.null(markers))
       stop("Aborting: For Munoz method you need to specify 'markers'.")
     Mm <- as.matrix(data.matrix(markers))
@@ -211,7 +212,7 @@ Hmatrix <- function(A=NULL,
       markersmatrix <- markersmatrix[Gnhat, Gnhat, drop = FALSE]
     } else {
       if (nrow(markersmatrix) != length(Gnhat))
-        stop("MarkersMatrix has no rownames and size doesn’t match G.")
+        stop("MarkersMatrix has no rownames and size doesn't match G.")
     }
     
     # C++ calculation
@@ -237,7 +238,7 @@ Hmatrix <- function(A=NULL,
     beta <- 1 - (c + invM / varA)
     Hloc <- beta * (G - A) + A
     
-    # write back into A’s frame at Anhat (legacy)
+    # write back into A's frame at Anhat (legacy)
     H <- Aorig
     H[Anhat, Anhat] <- Hloc
     

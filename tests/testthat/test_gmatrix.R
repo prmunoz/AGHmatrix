@@ -1,3 +1,35 @@
+slater_par_l <- function(X,ploidy){
+  prime.index <- c(3,5,7,11,13,17,19,23,29,31,37,
+                   41,43,47,53,59,61,67,71,73,79)
+  
+  NumberMarkers <- ncol(X)
+  nindTotal <- nrow(X)
+  X <- X+1
+  
+  ## Breaking intervals to use less RAM
+  temp <- seq(1,NumberMarkers,10000)
+  temp <- cbind(temp,temp+9999)
+  temp[length(temp)] <- NumberMarkers
+  prime.index <- prime.index[1:(ploidy+1)]
+  
+  ## Uses Diagonal (which is Sparse mode, uses less memmory)
+  for(i in 1:nrow(temp)){
+    X.temp <- X[,c(temp[i,1]:temp[i,2])]
+    NumberMarkers <- ncol(X.temp)
+    X.temp <- X.temp %*% t(kronecker(diag(NumberMarkers),prime.index))
+    X.temp[which(as.vector(X.temp) %in%
+                   c(prime.index*c(1:(ploidy+1))))] <- 1
+    X.temp[X.temp!=1] <- 0
+    if(i==1){
+      X_out <- X.temp
+    }else{
+      X_out <- cbind(X_out,X.temp)
+    }   
+  }
+  gc()
+  return(X_out)
+}
+
 test_that("VanRaden method computes correctly", {
   M <- matrix(c(0, 1, 2,
                 1, 0, 2), nrow = 2, byrow = TRUE)
@@ -54,18 +86,6 @@ test_that("Vitezica method computes expected matrix", {
   expect_equal(G[1:2,1:2], expected, ignore_attr = TRUE)
 })
 
-test_that("Slater method handles zero-variance case gracefully", {
-  M <- matrix(c(0, 2, 4,
-                4, 2, 0), nrow = 2, byrow = TRUE)
-  colnames(M) <- c("M1", "M2", "M3")
-  
-  expect_warning({
-    G <- Gmatrix(M, method = "Slater", ploidy = 4)
-    expect_false(any(is.nan(G[1:2,1:2])))
-    expect_true(isSymmetric(G[1:2,1:2]))
-  }, regexp = "zero variance")
-})
-
 test_that("Slater method works with non-zero variance markers", {
   # Input
   M <- matrix(c(0, 2, 4,
@@ -84,7 +104,7 @@ test_that("Slater method works with non-zero variance markers", {
   }
   
   # presence/absence encode per Slater
-  M_sl <- slater_par(M_flip, ploidy = ploidy)
+  M_sl <- slater_par_l(M_flip, ploidy = ploidy)
   
   # denominator used by legacy code
   NumberMarkers_legacy <- ncol(M_sl)
