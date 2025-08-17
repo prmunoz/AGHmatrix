@@ -255,3 +255,4 @@ test_that("Martini path reorders/expands A to idH = unique(c(idG,idA))",{
     expect_identical(rownames(res$new), rownames(res$old))
   })
 })
+
