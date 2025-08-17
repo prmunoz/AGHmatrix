@@ -209,7 +209,7 @@ Amatrix <- function(data = NULL,
     message(paste("Warning: Matrix contains NA values. Use",
                   "'verifyped()' to check data.\n"))
   
-  rownames(A) <- colnames(A) <- data$ind.data
+  rownames(A) <- colnames(A) <- data$ind_data
   A <- A[orig.order, orig.order]
   
   if (ASV) {
