@@ -1,49 +1,40 @@
 // Thiago de Paula Oliveira
 
 #include <Rcpp.h>
+#include <algorithm>
 using namespace Rcpp;
+
+// External function declaration
 List ascii_to_number(CharacterMatrix pedigree_data, std::string unk = "0");
 
 // [[Rcpp::export]]
 List datatreat_cpp(CharacterMatrix data, int n_max = 50, std::string unk = "0", bool save = false) {
-  int indicator = 0;
-  IntegerVector k(2, NA_INTEGER);
-  CharacterMatrix new_data = clone(data);
   int n = data.nrow();
+  CharacterMatrix new_data = clone(data);
+  IntegerVector k(2, NA_INTEGER);
+  IntegerVector ind = seq(0, n - 1);
+  IntegerVector right_pos(n, NA_INTEGER);
+  int indicator = 0;
   
   for (int i = 1; i <= n_max; ++i) {
-    if (i > 1) {
-      data = new_data;
-    }
+    if (i > 1) data = new_data;
     
     List pedigree = ascii_to_number(data, unk);
     IntegerVector sire = pedigree["sire"];
     IntegerVector dire = pedigree["dire"];
-    IntegerVector ind = seq(0, n - 1);
-    IntegerVector right_pos(n, NA_INTEGER);
     
-    IntegerVector parent = sire;
-    std::string parent_ind = "sire";
+    IntegerVector parent = (indicator % 2 == 0) ? sire : dire;
+    std::string parent_ind = (indicator % 2 == 0) ? "sire" : "dire";
     
-    if (indicator % 2 == 1) {
-      parent = dire;
-      parent_ind = "dire";
-    }
-    
-    for (int j = 0; j < n; ++j) {
-      if (std::find(ind.begin(), ind.begin() + j + 1, parent[j]) == ind.begin() + j + 1 &&
-          !IntegerVector::is_na(parent[j])) {
-          auto it = std::find(ind.begin(), ind.end(), parent[j]);
-        if (it != ind.end()) {
-          right_pos[j] = std::distance(ind.begin(), it);
-        }
-      }
-    }
-    
+    std::fill(right_pos.begin(), right_pos.end(), NA_INTEGER);
     std::vector<int> error;
+    
     for (int j = 0; j < n; ++j) {
-      if (!IntegerVector::is_na(parent[j]) && parent[j] > j) {
+      int p = parent[j];
+      if (!IntegerVector::is_na(p) && p > j) {
         error.push_back(j);
+      } else if (!IntegerVector::is_na(p)) {
+        right_pos[j] = std::find(ind.begin(), ind.end(), p) - ind.begin();
       }
     }
     
@@ -103,7 +94,5 @@ List datatreat_cpp(CharacterMatrix data, int n_max = 50, std::string unk = "0", 
     }
   }
   
-  // Fallback in case loop exits unexpectedly
   stop("Unexpected termination of sorting loop.");
 }
-

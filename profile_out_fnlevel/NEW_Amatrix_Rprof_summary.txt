@@ -1,0 +1,41 @@
+$by.self
+                     self.time self.pct total.time total.pct mem.total
+"datatreat_cpp"           0.38    32.20       0.52     44.07       0.8
+"gc"                      0.38    32.20       0.38     32.20       0.3
+"<Anonymous>"             0.22    18.64       1.16     98.31     382.7
+"buildA_ploidy2_cpp"      0.16    13.56       0.28     23.73     190.9
+"tryCatchOne"             0.02     1.69       0.66     55.93       0.9
+"anyNA"                   0.02     1.69       0.02      1.69       0.0
+
+$by.total
+                      total.time total.pct mem.total self.time self.pct
+"profile_task"              1.18    100.00     382.7      0.00     0.00
+"withCallingHandlers"       1.18    100.00     382.7      0.00     0.00
+"<Anonymous>"               1.16     98.31     382.7      0.22    18.64
+"eval"                      1.16     98.31     382.7      0.00     0.00
+"suppressMessages"          1.16     98.31     382.7      0.00     0.00
+"suppressWarnings"          1.16     98.31     382.7      0.00     0.00
+"tryCatchOne"               0.66     55.93       0.9      0.02     1.69
+"tryCatch"                  0.66     55.93       0.9      0.00     0.00
+"tryCatchList"              0.66     55.93       0.9      0.00     0.00
+"datatreat"                 0.64     54.24       0.9      0.00     0.00
+"doTryCatch"                0.64     54.24       0.9      0.00     0.00
+"try"                       0.64     54.24       0.9      0.00     0.00
+"datatreat_cpp"             0.52     44.07       0.8      0.38    32.20
+"gc"                        0.38     32.20       0.3      0.38    32.20
+".doTrace"                  0.38     32.20       0.3      0.00     0.00
+"eval.parent"               0.38     32.20       0.3      0.00     0.00
+"lobstr::mem_used"          0.38     32.20       0.3      0.00     0.00
+"new_bytes"                 0.38     32.20       0.3      0.00     0.00
+"structure"                 0.38     32.20       0.3      0.00     0.00
+"buildA_ploidy2_cpp"        0.28     23.73     190.9      0.16    13.56
+"anyNA"                     0.02      1.69       0.0      0.02     1.69
+".rs.callAs"                0.02      1.69       0.0      0.00     0.00
+"utils::Rprof"              0.02      1.69       0.0      0.00     0.00
+
+$sample.interval
+[1] 0.02
+
+$sampling.time
+[1] 1.18
+

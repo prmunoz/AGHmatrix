@@ -1,6 +1,7 @@
 // Thiago de Paula Oliveira
 // ascii_to_number.cpp
 #include <Rcpp.h>
+#include <unordered_map>
 using namespace Rcpp;
 
 // [[Rcpp::export]]
@@ -10,36 +11,32 @@ List ascii_to_number(CharacterMatrix pedigree_data, std::string unk = "0") {
     Rcpp::stop("Data must have exactly 3 columns");
   }
   
-  // Check for duplicate IDs
-  std::set<std::string> seen;
+  // Map to check duplicates and index individuals
+  std::unordered_map<std::string, int> id_map;
+  id_map[unk] = 0;
+  
+  CharacterVector ind_names(n);
   for (int i = 0; i < n; ++i) {
     std::string id = Rcpp::as<std::string>(pedigree_data(i, 0));
-    if (!seen.insert(id).second) {
+    if (id_map.find(id) != id_map.end()) {
       Rcpp::stop("Duplicate individual ID found: " + id);
     }
+    id_map[id] = i + 1;
+    ind_names[i] = id;
   }
   
-  // Create full list of names with unk first (like legacy R)
-  CharacterVector ind_data(n + 1);
-  ind_data[0] = unk;
-  for (int i = 0; i < n; ++i) {
-    ind_data[i + 1] = pedigree_data(i, 0);
-  }
-  
-  CharacterVector sire_data = pedigree_data(_, 1);
-  CharacterVector dire_data = pedigree_data(_, 2);
   IntegerVector sire(n), dire(n);
   
   for (int i = 0; i < n; ++i) {
-    auto it_sire = std::find(ind_data.begin(), ind_data.end(), sire_data[i]);
-    auto it_dire = std::find(ind_data.begin(), ind_data.end(), dire_data[i]);
+    std::string sire_id = Rcpp::as<std::string>(pedigree_data(i, 1));
+    std::string dire_id = Rcpp::as<std::string>(pedigree_data(i, 2));
     
-    sire[i] = (it_sire != ind_data.end()) ? std::distance(ind_data.begin(), it_sire) : NA_INTEGER;
-    dire[i] = (it_dire != ind_data.end()) ? std::distance(ind_data.begin(), it_dire) : NA_INTEGER;
+    auto it_sire = id_map.find(sire_id);
+    auto it_dire = id_map.find(dire_id);
+    
+    sire[i] = (it_sire != id_map.end()) ? it_sire->second : NA_INTEGER;
+    dire[i] = (it_dire != id_map.end()) ? it_dire->second : NA_INTEGER;
   }
-  
-  // Return names of individuals (no 'unk')
-  CharacterVector ind_names = pedigree_data(_, 0);
   
   return List::create(
     _["sire"] = sire,
