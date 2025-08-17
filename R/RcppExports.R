@@ -17,6 +17,10 @@ ascii_to_number <- function(pedigree_data, unk = "0") {
     .Call(`_AGHmatrix_ascii_to_number`, pedigree_data, unk)
 }
 
+check_matrix <- function(obj) {
+    invisible(.Call(`_AGHmatrix_check_matrix`, obj))
+}
+
 datatreat_cpp <- function(data, n_max = 50L, unk = "0", save = FALSE) {
     .Call(`_AGHmatrix_datatreat_cpp`, data, n_max, unk, save)
 }

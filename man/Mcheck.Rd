@@ -44,5 +44,9 @@ M = Mcheck(snp.pine)
 
 }
 \author{
-Luis F V Ferrao and Rodrigo Amadeu, \email{rramadeu@gmail.com}
+Luis F V Ferrao
+
+Rodrigo Amadeu, \email{rramadeu@gmail.com}
+
+Thiago de Paula Oliveira \email{toliveira@abacusbio.com}
 }

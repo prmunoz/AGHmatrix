@@ -147,7 +147,7 @@ Gmatrix <- function(SNPmatrix = NULL,
   #-----------------------------------------------------------------------------
   # ==== Initial preprocessing ====
   #-----------------------------------------------------------------------------
-  stopifnot(is.matrix(SNPmatrix))
+  check_matrix((SNPmatrix))
   SNPmatrix <- as.matrix(data.matrix(SNPmatrix))
   ids <- rownames(SNPmatrix)
   

@@ -63,6 +63,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// check_matrix
+void check_matrix(SEXP obj);
+RcppExport SEXP _AGHmatrix_check_matrix(SEXP objSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type obj(objSEXP);
+    check_matrix(obj);
+    return R_NilValue;
+END_RCPP
+}
 // datatreat_cpp
 List datatreat_cpp(CharacterMatrix data, int n_max, std::string unk, bool save);
 RcppExport SEXP _AGHmatrix_datatreat_cpp(SEXP dataSEXP, SEXP n_maxSEXP, SEXP unkSEXP, SEXP saveSEXP) {
@@ -252,6 +262,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_AGHmatrix_buildA_ploidy2_cpp", (DL_FUNC) &_AGHmatrix_buildA_ploidy2_cpp, 3},
     {"_AGHmatrix_buildA_slater_cpp", (DL_FUNC) &_AGHmatrix_buildA_slater_cpp, 3},
     {"_AGHmatrix_ascii_to_number", (DL_FUNC) &_AGHmatrix_ascii_to_number, 2},
+    {"_AGHmatrix_check_matrix", (DL_FUNC) &_AGHmatrix_check_matrix, 1},
     {"_AGHmatrix_datatreat_cpp", (DL_FUNC) &_AGHmatrix_datatreat_cpp, 4},
     {"_AGHmatrix_buildDominanceMatrix_cpp", (DL_FUNC) &_AGHmatrix_buildDominanceMatrix_cpp, 3},
     {"_AGHmatrix_Gmatrix_Endelman", (DL_FUNC) &_AGHmatrix_Gmatrix_Endelman, 2},
