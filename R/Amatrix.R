@@ -210,8 +210,13 @@ Amatrix <- function(data = NULL,
     message(paste("Warning: Matrix contains NA values. Use",
                   "'verifyped()' to check data.\n"))
   
-  rownames(A) <- colnames(A) <- data$ind_data
-  A <- A[orig.order, orig.order]
+  dimnames(A) <- list(data$ind_data, data$ind_data)
+  
+  # Only reorder if necessary
+  if (!all(orig.order == data$ind_data)) {
+    idx <- match(orig.order, data$ind_data)
+    A <- A[idx, idx, drop = FALSE]
+  }
   
   if (ASV) {
     A <- get_ASV(A)
