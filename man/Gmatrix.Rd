@@ -15,7 +15,7 @@ Gmatrix(
   pseudo.diploid = FALSE,
   integer = TRUE,
   ratio = FALSE,
-  impute.method = "none",
+  impute.method = "mean",
   rmv.mono = FALSE,
   thresh.htzy = 0,
   ratio.check = TRUE,
@@ -44,7 +44,7 @@ product (similar to Covarrubias-Pazaran, 2006).}
 
 \item{thresh.missing}{threshold on missing data, SNPs below of this 
 frequency value will be maintained, if equal to 1, no threshold and 
-imputation is considered. Default = 0.50.}
+imputation is considered. Default = 1.}
 
 \item{verify.posdef}{verify if the resulting matrix is positive-definite. 
 Default=FALSE.}

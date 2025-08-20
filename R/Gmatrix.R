@@ -39,7 +39,7 @@
 #' @param missingValue missing value in data. Default=-9.
 #' @param thresh.missing threshold on missing data, SNPs below of this 
 #' frequency value will be maintained, if equal to 1, no threshold and 
-#' imputation is considered. Default = 0.50.
+#' imputation is considered. Default = 1.
 #' @param maf minimum allele frequency accepted to each marker. Default=0.
 #' @param verify.posdef verify if the resulting matrix is positive-definite. 
 #' Default=FALSE.
@@ -130,13 +130,13 @@ Gmatrix <- function(SNPmatrix = NULL,
                     method = "VanRaden", 
                     missingValue = -9, 
                     maf = 0, 
-                    thresh.missing = 0.50,
+                    thresh.missing = 0.5,
                     verify.posdef = FALSE, 
                     ploidy = 2,
                     pseudo.diploid = FALSE, 
                     integer = TRUE,
                     ratio = FALSE, 
-                    impute.method = "none", 
+                    impute.method = "mean", 
                     rmv.mono = FALSE, 
                     thresh.htzy = 0,
                     ratio.check = TRUE,
