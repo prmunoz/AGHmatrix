@@ -15,7 +15,7 @@ Gmatrix(
   pseudo.diploid = FALSE,
   integer = TRUE,
   ratio = FALSE,
-  impute.method = "mean",
+  impute.method = "none",
   rmv.mono = FALSE,
   thresh.htzy = 0,
   ratio.check = TRUE,
@@ -63,7 +63,7 @@ computed the scaled product of the matrix (as in "VanRaden" method).}
 marker, "mode" to impute the missing data by the mode per marker, 
 "global.mean" to impute the missing data by the mean across all markers,
 "global.mode" to impute the missing data my the mode across all marker. 
-Default = "mean".}
+Default = "none".}
 
 \item{rmv.mono}{if monomorphic markers should be removed. Default=FALSE.}
 

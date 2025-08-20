@@ -52,7 +52,7 @@
 #' marker, "mode" to impute the missing data by the mode per marker, 
 #' "global.mean" to impute the missing data by the mean across all markers,
 #' "global.mode" to impute the missing data my the mode across all marker. 
-#' Default = "mean".
+#' Default = "none".
 #' @param integer if FALSE, not check for integer numbers. Default=TRUE.
 #' @param ratio.check if TRUE, run Mcheck with ratio data.
 #' @param weights vector with weights for each marker. Only works if 
@@ -136,7 +136,7 @@ Gmatrix <- function(SNPmatrix = NULL,
                     pseudo.diploid = FALSE, 
                     integer = TRUE,
                     ratio = FALSE, 
-                    impute.method = "mean", 
+                    impute.method = "none", 
                     rmv.mono = FALSE, 
                     thresh.htzy = 0,
                     ratio.check = TRUE,

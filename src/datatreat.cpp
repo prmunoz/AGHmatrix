@@ -2,7 +2,6 @@
 
 #include <Rcpp.h>
 #include <algorithm>
-#include <unordered_map> // Include for index_map
 using namespace Rcpp;
 
 // External function declaration
@@ -27,24 +26,15 @@ List datatreat_cpp(CharacterMatrix data, int n_max = 50, std::string unk = "0", 
     IntegerVector parent = (indicator % 2 == 0) ? sire : dire;
     std::string parent_ind = (indicator % 2 == 0) ? "sire" : "dire";
     
-    // Precompute parent index positions in 'ind'
-    std::unordered_map<int, int> index_map;
-    for (int j = 0; j < n; ++j) {
-      index_map[ind[j]] = j;
-    }
-    
     std::fill(right_pos.begin(), right_pos.end(), NA_INTEGER);
     std::vector<int> error;
     
     for (int j = 0; j < n; ++j) {
       int p = parent[j];
-      if (!IntegerVector::is_na(p)) {
-        if (p > j) {
-          error.push_back(j);
-        } else {
-          auto it = index_map.find(p);
-          right_pos[j] = (it != index_map.end()) ? it->second : NA_INTEGER;
-        }
+      if (!IntegerVector::is_na(p) && p > j) {
+        error.push_back(j);
+      } else if (!IntegerVector::is_na(p)) {
+        right_pos[j] = std::find(ind.begin(), ind.end(), p) - ind.begin();
       }
     }
     
@@ -106,4 +96,3 @@ List datatreat_cpp(CharacterMatrix data, int n_max = 50, std::string unk = "0", 
   
   stop("Unexpected termination of sorting loop.");
 }
-
