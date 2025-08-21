@@ -87,6 +87,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// diploid_p0p2_TwoPQ_cpp
+Rcpp::List diploid_p0p2_TwoPQ_cpp(const arma::mat& M);
+RcppExport SEXP _AGHmatrix_diploid_p0p2_TwoPQ_cpp(SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(diploid_p0p2_TwoPQ_cpp(M));
+    return rcpp_result_gen;
+END_RCPP
+}
 // buildDominanceMatrix_cpp
 NumericMatrix buildDominanceMatrix_cpp(NumericMatrix A, IntegerVector s, IntegerVector d);
 RcppExport SEXP _AGHmatrix_buildDominanceMatrix_cpp(SEXP ASEXP, SEXP sSEXP, SEXP dSEXP) {
@@ -264,6 +275,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_AGHmatrix_ascii_to_number", (DL_FUNC) &_AGHmatrix_ascii_to_number, 2},
     {"_AGHmatrix_check_matrix", (DL_FUNC) &_AGHmatrix_check_matrix, 1},
     {"_AGHmatrix_datatreat_cpp", (DL_FUNC) &_AGHmatrix_datatreat_cpp, 4},
+    {"_AGHmatrix_diploid_p0p2_TwoPQ_cpp", (DL_FUNC) &_AGHmatrix_diploid_p0p2_TwoPQ_cpp, 1},
     {"_AGHmatrix_buildDominanceMatrix_cpp", (DL_FUNC) &_AGHmatrix_buildDominanceMatrix_cpp, 3},
     {"_AGHmatrix_Gmatrix_Endelman", (DL_FUNC) &_AGHmatrix_Gmatrix_Endelman, 2},
     {"_AGHmatrix_Gmatrix_MarkersMask", (DL_FUNC) &_AGHmatrix_Gmatrix_MarkersMask, 1},

@@ -25,6 +25,10 @@ datatreat_cpp <- function(data, n_max = 50L, unk = "0", save = FALSE) {
     .Call(`_AGHmatrix_datatreat_cpp`, data, n_max, unk, save)
 }
 
+diploid_p0p2_TwoPQ_cpp <- function(M) {
+    .Call(`_AGHmatrix_diploid_p0p2_TwoPQ_cpp`, M)
+}
+
 buildDominanceMatrix_cpp <- function(A, s, d) {
     .Call(`_AGHmatrix_buildDominanceMatrix_cpp`, A, s, d)
 }

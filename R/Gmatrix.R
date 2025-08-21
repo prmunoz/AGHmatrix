@@ -220,14 +220,14 @@ Gmatrix <- function(SNPmatrix = NULL,
   #-----------------------------------------------------------------------------
   P <- colMeans(SNPmatrix, na.rm = TRUE)
   if (ploidy == 2) { 
-    denom <- 2 * colSums(!is.na(SNPmatrix))
-    p0 <- (2 * colSums(SNPmatrix == 0, na.rm = TRUE) + 
-             colSums(SNPmatrix == 1, na.rm = TRUE)) / denom 
-    p2 <- (2 * colSums(SNPmatrix == 2, na.rm = TRUE) + 
-             colSums(SNPmatrix == 1, na.rm = TRUE)) / denom 
-    Frequency <- cbind(p0, p2) 
-    FreqP <- matrix(Frequency[, 2], nrow = nrow(SNPmatrix), 
-                    ncol = ncol(SNPmatrix), byrow = TRUE) 
+    fr   <- diploid_p0p2_TwoPQ_cpp(SNPmatrix)
+    p0   <- as.numeric(fr$p0)
+    p2   <- as.numeric(fr$p2)
+    TwoPQ <- as.numeric(fr$TwoPQ)
+    
+    Frequency <- cbind(p0, p2)
+    FreqP     <- matrix(p2, nrow = nrow(SNPmatrix), ncol = ncol(SNPmatrix), 
+                        byrow = TRUE)
     }
   
   if (ploidy > 2 && pseudo.diploid) {
@@ -246,24 +246,20 @@ Gmatrix <- function(SNPmatrix = NULL,
   if (method == "VanRaden") {
     if (is.null(weights)) {
       if (ploidy == 2 && !ratio) {
-        TwoPQ <- sum(2 * Frequency[, 1] * Frequency[, 2])
         Gmatrix <- Gmatrix_vanraden(SNPmatrix, Frequency[, 2], TwoPQ)
       } else {
-        Gmatrix <- 
-          Gmatrix_vanraden_poly_unweighted(SNPmatrix, ploidy, ratio, 
-                                   ploidy.correction)
+        Gmatrix <- Gmatrix_vanraden_poly_unweighted(SNPmatrix, ploidy, ratio, 
+                                                    ploidy.correction)
       }
     } else {
       weights <- weights[match(colnames(SNPmatrix), markers)]
       if (ploidy == 2 && !ratio) {
-        if (is.vector(Frequency)) Frequency <- cbind(1 - Frequency, Frequency)
-        TwoPQ <- sum(2 * Frequency[, 1] * Frequency[, 2])
-        Gmatrix <- 
-          Gmatrix_VanRaden_weighted(SNPmatrix, weights, Frequency[, 2], TwoPQ)
+        Gmatrix <- Gmatrix_VanRaden_weighted(SNPmatrix, weights, 
+                                             Frequency[, 2], TwoPQ)
       } else {
         Gmatrix <- 
-          Gmatrix_vanraden_poly_weighted(SNPmatrix, as.numeric(weights), ploidy, 
-                                 ratio, ploidy.correction)
+          Gmatrix_vanraden_poly_weighted(SNPmatrix, as.numeric(weights), 
+                                         ploidy, ratio, ploidy.correction)
       }
     }
   }

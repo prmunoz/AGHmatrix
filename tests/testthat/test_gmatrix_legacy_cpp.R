@@ -389,16 +389,16 @@ test_that("new Gmatrix matches legacy on snp.pine", {
                info = {
                  d <- round(G_VanRadenPine_curr,4) - round(G_VanRadenPine,4)
                  paste0("Rounded(4) mismatch in pine with missings. ",
-                        "max|Δ|=", max(abs(d)), 
-                        ", nnz(Δ)=", sum(d != 0))
+                        "max|delta|=", max(abs(d)), 
+                        ", nnz(delta)=", sum(d != 0))
                })
   
   expect_false(any(round(G_VanRadenPine2_curr, 4) != round(G_VanRadenPine2, 4)),
                info = {
                  d <- round(G_VanRadenPine2_curr,4) - round(G_VanRadenPine2,4)
                  paste0("Rounded(4) mismatch in fake-imputed pine. ",
-                        "max|Δ|=", max(abs(d)), 
-                        ", nnz(Δ)=", sum(d != 0))
+                        "max|delta|=", max(abs(d)), 
+                        ", nnz(delta)=", sum(d != 0))
                })
   
   # symmetry checks ---
