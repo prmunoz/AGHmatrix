@@ -130,13 +130,13 @@ Gmatrix <- function(SNPmatrix = NULL,
                     method = "VanRaden", 
                     missingValue = -9, 
                     maf = 0, 
-                    thresh.missing = 0.5,
+                    thresh.missing = 1,
                     verify.posdef = FALSE, 
                     ploidy = 2,
                     pseudo.diploid = FALSE, 
                     integer = TRUE,
                     ratio = FALSE, 
-                    impute.method = "mean", 
+                    impute.method = "none", 
                     rmv.mono = FALSE, 
                     thresh.htzy = 0,
                     ratio.check = TRUE,
@@ -219,14 +219,16 @@ Gmatrix <- function(SNPmatrix = NULL,
   ## ===== Prepare frequencies =====
   #-----------------------------------------------------------------------------
   P <- colMeans(SNPmatrix, na.rm = TRUE)
-  if (ploidy == 2) {
+  if (ploidy == 2) { 
     denom <- 2 * colSums(!is.na(SNPmatrix))
-    f2 <- (2 * colSums(SNPmatrix == 2, na.rm = TRUE) + 
-             colSums(SNPmatrix == 1, na.rm = TRUE)) / denom
-    Frequency <- cbind(1 - f2, f2)
+    p0 <- (2 * colSums(SNPmatrix == 0, na.rm = TRUE) + 
+             colSums(SNPmatrix == 1, na.rm = TRUE)) / denom 
+    p2 <- (2 * colSums(SNPmatrix == 2, na.rm = TRUE) + 
+             colSums(SNPmatrix == 1, na.rm = TRUE)) / denom 
+    Frequency <- cbind(p0, p2) 
     FreqP <- matrix(Frequency[, 2], nrow = nrow(SNPmatrix), 
-                    ncol = ncol(SNPmatrix), byrow = TRUE)
-  }
+                    ncol = ncol(SNPmatrix), byrow = TRUE) 
+    }
   
   if (ploidy > 2 && pseudo.diploid) {
     SNPmatrix[, P > ploidy / 2] <- ploidy - SNPmatrix[, P > ploidy / 2]

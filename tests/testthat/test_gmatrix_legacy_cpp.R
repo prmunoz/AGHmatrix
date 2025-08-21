@@ -361,3 +361,50 @@ test_that("All diploid methods return symmetric matrices with correct size",{
     expect_true(isSymmetric(target)); expect_identical(dim(target), c(nrow(X), nrow(X)))
   }
 })
+
+test_that("new Gmatrix matches legacy on snp.pine", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
+  # Load data
+  data(snp.pine, package = "AGHmatrix")
+  
+  # Do a fake imputation for the second comparison
+  snp.pine.fake <- ifelse(snp.pine == -9, 1, snp.pine)
+  
+  # New implementation
+  G_VanRadenPine  <- Gmatrix(SNPmatrix = snp.pine,      missingValue = -9,
+                             maf = 0, method = "VanRaden")
+  G_VanRadenPine2 <- Gmatrix(SNPmatrix = snp.pine.fake, missingValue = -9,
+                             maf = 0, method = "VanRaden")
+  
+  # Legacy implementation
+  G_VanRadenPine_curr  <- Gmatrix_legacy(SNPmatrix = snp.pine,      missingValue = -9,
+                                         maf = 0, method = "VanRaden")
+  G_VanRadenPine2_curr <- Gmatrix_legacy(SNPmatrix = snp.pine.fake, missingValue = -9,
+                                         maf = 0, method = "VanRaden")
+  
+  expect_false(any(round(G_VanRadenPine_curr,  4) != round(G_VanRadenPine,  4)),
+               info = {
+                 d <- round(G_VanRadenPine_curr,4) - round(G_VanRadenPine,4)
+                 paste0("Rounded(4) mismatch in pine with missings. ",
+                        "max|Δ|=", max(abs(d)), 
+                        ", nnz(Δ)=", sum(d != 0))
+               })
+  
+  expect_false(any(round(G_VanRadenPine2_curr, 4) != round(G_VanRadenPine2, 4)),
+               info = {
+                 d <- round(G_VanRadenPine2_curr,4) - round(G_VanRadenPine2,4)
+                 paste0("Rounded(4) mismatch in fake-imputed pine. ",
+                        "max|Δ|=", max(abs(d)), 
+                        ", nnz(Δ)=", sum(d != 0))
+               })
+  
+  # symmetry checks ---
+  expect_true(isSymmetric(G_VanRadenPine))
+  expect_true(isSymmetric(G_VanRadenPine2))
+  expect_true(isSymmetric(G_VanRadenPine_curr))
+  expect_true(isSymmetric(G_VanRadenPine2_curr))
+})
+
