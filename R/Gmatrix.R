@@ -174,24 +174,11 @@ Gmatrix <- function(SNPmatrix = NULL,
                      ratio = ratio, 
                      integer = integer)
   
-  # Early return for MarkersMatrix using the raw NA pattern (parity with legacy)
-  if (identical(method, "MarkersMatrix")) {
-    if (exists("Gmatrix_MarkersMask", mode = "function")) {
-      Gmatrix <- Gmatrix_MarkersMask(SNPmatrix)
-    } else {
-      mask <- !is.na(SNPmatrix)
-      storage.mode(mask) <- "double"
-      Gmatrix <- tcrossprod(mask, mask)
-    }
-    if (!is.null(ids)) dimnames(Gmatrix) <- list(ids, ids)
-    return(Gmatrix)
-  }
-  
   #-----------------------------------------------------------------------------
   # ==== Missing-data checks / filtering (only when requested) ====
   #-----------------------------------------------------------------------------
   do_mcheck <- (!ratio || (ratio && ratio.check)) &&
-    !(isTRUE(all.equal(thresh.missing, 1)) || identical(impute.method, "none"))
+    !identical(impute.method, "none")
   
   if (do_mcheck) {
     SNPmatrix <- Mcheck(
@@ -204,6 +191,20 @@ Gmatrix <- function(SNPmatrix = NULL,
       impute.method   = impute.method
     )
   }
+  
+  # Compute MarkersMatrix AFTER Mcheck filtering/imputation
+  if (identical(method, "MarkersMatrix")) {
+    if (exists("Gmatrix_MarkersMask", mode = "function")) {
+      Gmatrix <- Gmatrix_MarkersMask(SNPmatrix)
+    } else {
+      mask <- !is.na(SNPmatrix)
+      storage.mode(mask) <- "double"
+      Gmatrix <- tcrossprod(mask, mask)
+    }
+    if (!is.null(ids)) dimnames(Gmatrix) <- list(ids, ids)
+    return(Gmatrix)
+  }
+  
   
   #-----------------------------------------------------------------------------
   ## ===== Prepare frequencies =====
