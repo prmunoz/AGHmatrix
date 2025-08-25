@@ -1,10 +1,115 @@
 # Parity tests between legacy R maths and the new C++ 
 
 # Legacy Helpers
-Mcheck_l <- function(SNPmatrix, ploidy, thresh.maf, rmv.mono, thresh.htzy, 
-                   thresh.missing, impute.method){
-  stopifnot(is.matrix(SNPmatrix))
-  SNPmatrix
+Mcheck_l = function(SNPmatrix = NULL,
+                  ploidy=2,
+                  missingValue = -9,
+                  thresh.maf = 0.05,
+                  thresh.missing = 0.9,
+                  thresh.htzy = 0, 
+                  impute.method = "mean",
+                  rmv.mono=TRUE){
+  
+  # SNP missing data
+  ncol.init <- ncol(SNPmatrix)
+  
+  if (!is.na(missingValue)) {
+    m <- match(SNPmatrix, missingValue, 0)
+    SNPmatrix[m > 0] <- NA
+  }
+  
+  missing <- apply(SNPmatrix, 2, function(x) sum(is.na(x))/nrow(SNPmatrix))
+  missing.low = missing <= thresh.missing
+  cat("\nMissing data check: \n")
+  if(any(missing.low)){
+    cat("\tTotal SNPs:", ncol(SNPmatrix),"\n")
+    cat("\t",ncol(SNPmatrix) - sum(missing.low), "SNPs dropped due to missing data threshold of", thresh.missing,"\n")
+    cat("\tTotal of:",sum(missing.low), " SNPs \n")
+    idx.rm <- which(missing.low)
+    SNPmatrix <- SNPmatrix[, idx.rm, drop=FALSE]
+  } else{
+    cat("\tNo SNPs with missing data, missing threshold of = ", thresh.missing,"\n")
+  }
+  
+  # Minor alele frequency
+  MAF <- apply(SNPmatrix, 2, function(x) {
+    AF <- mean(x, na.rm = T)/ploidy
+    MAF <- ifelse(AF > 0.5, 1 - AF, AF) # Minor allele freq can be ref allele or not
+  })
+  snps.low <- MAF < thresh.maf
+  cat("\nMAF check: \n")
+  if(any(snps.low)){
+    cat("\t",sum(snps.low), "SNPs dropped with MAF below", thresh.maf,"\n")
+    cat("\tTotal:",ncol(SNPmatrix) - sum(snps.low), " SNPs \n")
+    idx.rm <- which(snps.low)
+    SNPmatrix <- SNPmatrix[, -idx.rm, drop=FALSE]
+  } else{
+    cat("\tNo SNPs with MAF below", thresh.maf,"\n")
+  }
+  
+  # monomorphic SNPs
+  if(rmv.mono){
+    mono = (apply(SNPmatrix, 2, var, na.rm=TRUE)==0)
+    mono[is.na(mono)] = TRUE
+    cat("\nMonomorphic check: \n")
+    if(any(mono)){
+      cat("\t",sum(mono), "monomorphic SNPs \n")
+      cat("\tTotal:",ncol(SNPmatrix) - sum(mono), "SNPs \n")
+      idx.rm <- which(mono)
+      SNPmatrix <- SNPmatrix[, -idx.rm, drop=FALSE]
+    } else{
+      cat("\tNo monomorphic SNPs \n")
+    }
+  }
+  
+  
+  # Imputation
+  if(impute.method=="global.mean"){
+    ix <- which(is.na(SNPmatrix))
+    if (length(ix) > 0) {
+      SNPmatrix[ix] <- mean(SNPmatrix,na.rm = TRUE)
+    }
+  }
+  
+  if(impute.method=="global.mode"){
+    ix <- which(is.na(SNPmatrix))
+    if (length(ix) > 0) {
+      SNPmatrix[ix] <- as.integer(names(which.max(table(SNPmatrix))))
+    }
+  }
+  
+  if(impute.method=="mean"){
+    imputvalue = apply(SNPmatrix,2,mean,na.rm=TRUE)
+    ix = which(is.na(SNPmatrix),arr.ind=TRUE)
+    SNPmatrix[ix] = imputvalue[ix[,2]]
+  }
+  
+  if(impute.method=="mode"){
+    imputvalue = apply(SNPmatrix, 2, function(x) as.integer(names(which.max(table(x)))))
+    ix = which(is.na(SNPmatrix),arr.ind=TRUE)
+    SNPmatrix[ix] = imputvalue[ix[,2]]
+  }    
+  
+  
+  # Heterozigosity
+  htrz <- apply(SNPmatrix, 2, function(x) sum( x!= 0 & x != ploidy,na.rm=T)/nrow(SNPmatrix))
+  htrz.low = htrz < thresh.htzy 
+  cat("\nHeterozigosity data check: \n")
+  if(any(htrz.low)){
+    cat("\tTotal SNPs:", ncol(SNPmatrix),"\n")
+    cat("\t",ncol(SNPmatrix) - sum(htrz.low), "SNPs dropped due to heterozygosity threshold of", thresh.htzy,"\n")
+    cat("\tTotal of:",sum(htrz.low), " SNPs \n")
+    idx.rm <- which(htrz.low)
+    SNPmatrix <- SNPmatrix[, idx.rm, drop=FALSE]
+  } else{
+    cat("\tNo SNPs with heterozygosity, missing threshold of = ", thresh.htzy,"\n")
+  }
+  
+  # Total of SNPs
+  cat("\nSummary check: \n")
+  cat("\tInitial: ", ncol.init, "SNPs \n")
+  cat("\tFinal: ", ncol(SNPmatrix), " SNPs (", ncol.init - ncol(SNPmatrix), " SNPs removed) \n \n")
+  return(SNPmatrix)
 }
 
 get_ASV_l <- function(x){ x / ( sum(diag(x)) / (nrow(x) - 1)) }

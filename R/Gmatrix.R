@@ -130,13 +130,13 @@ Gmatrix <- function(SNPmatrix = NULL,
                     method = "VanRaden", 
                     missingValue = -9, 
                     maf = 0, 
-                    thresh.missing = 1,
+                    thresh.missing = 0.50,
                     verify.posdef = FALSE, 
                     ploidy = 2,
                     pseudo.diploid = FALSE, 
                     integer = TRUE,
                     ratio = FALSE, 
-                    impute.method = "none", 
+                    impute.method = "mean", 
                     rmv.mono = FALSE, 
                     thresh.htzy = 0,
                     ratio.check = TRUE,
@@ -206,16 +206,6 @@ Gmatrix <- function(SNPmatrix = NULL,
   }
   
   #-----------------------------------------------------------------------------
-  # ==== Diagnostics ====
-  #-----------------------------------------------------------------------------
-  NumberMarkers <- ncol(SNPmatrix)
-  nindTotal <- colSums(!is.na(SNPmatrix))
-  message("Initial data: ")
-  message("\tNumber of Individuals:", max(nindTotal))
-  message("\tNumber of Markers:", NumberMarkers)
-  message("Building G matrix using method: ", method, ", ploidy: ", ploidy)
-  
-  #-----------------------------------------------------------------------------
   ## ===== Prepare frequencies =====
   #-----------------------------------------------------------------------------
   P <- colMeans(SNPmatrix, na.rm = TRUE)
@@ -272,6 +262,7 @@ Gmatrix <- function(SNPmatrix = NULL,
     G.all <- (SNPmatrix^2 - (1 + 2 * FreqP) * SNPmatrix + 2 * (FreqP^2)) / FreqPQ
     G.ii <- as.matrix(colSums(t(G.all), na.rm = TRUE))
     Z <- (SNPmatrix - (2 * FreqP)) / sqrt(FreqPQ)
+    NumberMarkers <- ncol(SNPmatrix)
     G.ii.hat <- 1 + (G.ii) / NumberMarkers
     Z[is.na(Z)] <- 0
     Gmatrix <- (tcrossprod(Z, Z)) / NumberMarkers
