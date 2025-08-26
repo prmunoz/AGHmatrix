@@ -179,6 +179,7 @@ Gmatrix <- function(SNPmatrix = NULL,
   #-----------------------------------------------------------------------------
   do_mcheck <- (!ratio || (ratio && ratio.check)) &&
     !identical(impute.method, "none")
+  nmarkers_pre_mcheck <- ncol(SNPmatrix) 
   
   if (do_mcheck) {
     SNPmatrix <- Mcheck(
@@ -257,16 +258,25 @@ Gmatrix <- function(SNPmatrix = NULL,
   
   if (method == "Yang") {
     if (ploidy != 2) stop("Yang method is defined for diploids (ploidy = 2).")
-    FreqPQ <- matrix(rep(2 * Frequency[, 1] * Frequency[, 2], 
-                         each = nrow(SNPmatrix)),
-                     ncol = ncol(SNPmatrix))
+    
+    # FreqPQ replicated by rows (legacy layout)
+    FreqPQ <- matrix(
+      rep(2 * Frequency[, 1] * Frequency[, 2], each = nrow(SNPmatrix)),
+      ncol = ncol(SNPmatrix)
+    )
+    
+    # Per-marker diagonal expectation terms
     G.all <- (SNPmatrix^2 - (1 + 2 * FreqP) * SNPmatrix + 2 * (FreqP^2)) / FreqPQ
-    G.ii <- as.matrix(colSums(t(G.all), na.rm = TRUE))
+    G.ii  <- as.matrix(colSums(t(G.all), na.rm = TRUE))
+    
+    # Standardised Z
     Z <- (SNPmatrix - (2 * FreqP)) / sqrt(FreqPQ)
-    NumberMarkers <- ncol(SNPmatrix)
-    G.ii.hat <- 1 + (G.ii) / NumberMarkers
     Z[is.na(Z)] <- 0
-    Gmatrix <- (tcrossprod(Z, Z)) / NumberMarkers
+    
+    G.ii.hat <- 1 + (G.ii) / nmarkers_pre_mcheck
+    
+    # Final G and diagonal replacement
+    Gmatrix <- tcrossprod(Z, Z) / nmarkers_pre_mcheck
     diag(Gmatrix) <- G.ii.hat
   }
   

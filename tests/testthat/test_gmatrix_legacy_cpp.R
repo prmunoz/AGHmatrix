@@ -468,10 +468,6 @@ test_that("All diploid methods return symmetric matrices with correct size",{
 })
 
 test_that("new Gmatrix matches legacy on snp.pine", {
-  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
-             MKL_NUM_THREADS      = "1",
-             OMP_NUM_THREADS      = "1")
-  
   # Load data
   data(snp.pine, package = "AGHmatrix")
   
@@ -513,3 +509,87 @@ test_that("new Gmatrix matches legacy on snp.pine", {
   expect_true(isSymmetric(G_VanRadenPine2_curr))
 })
 
+test_that("new Gmatrix matches legacy (Su) on snp.pine", {
+  # Load data
+  data(snp.pine, package = "AGHmatrix")
+  
+  # Do a fake imputation for the second comparison
+  snp.pine.fake <- ifelse(snp.pine == -9, 1, snp.pine)
+  
+  # New implementation
+  G_SuPine  <- Gmatrix(SNPmatrix = snp.pine,      missingValue = -9,
+                       maf = 0.05, method = "Su")
+  G_SuPine2 <- Gmatrix(SNPmatrix = snp.pine.fake, missingValue = -9,
+                       maf = 0.05, method = "Su")
+  
+  # Legacy implementation
+  G_SuPine_curr  <- Gmatrix_legacy(SNPmatrix = snp.pine,      missingValue = -9,
+                                   maf = 0.05, method = "Su")
+  G_SuPine2_curr <- Gmatrix_legacy(SNPmatrix = snp.pine.fake, missingValue = -9,
+                                   maf = 0.05, method = "Su")
+  
+  # Equality up to rounding(4)
+  expect_false(any(round(G_SuPine_curr,  4) != round(G_SuPine,  4)),
+               info = {
+                 d <- round(G_SuPine_curr,4) - round(G_SuPine,4)
+                 paste0("Rounded(4) mismatch in pine (Su) with missings. ",
+                        "max|delta|=", max(abs(d)), 
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  expect_false(any(round(G_SuPine2_curr, 4) != round(G_SuPine2, 4)),
+               info = {
+                 d <- round(G_SuPine2_curr,4) - round(G_SuPine2,4)
+                 paste0("Rounded(4) mismatch in fake-imputed pine (Su). ",
+                        "max|delta|=", max(abs(d)), 
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  # Symmetry checks
+  expect_true(isSymmetric(G_SuPine))
+  expect_true(isSymmetric(G_SuPine2))
+  expect_true(isSymmetric(G_SuPine_curr))
+  expect_true(isSymmetric(G_SuPine2_curr))
+})
+
+
+test_that("new Gmatrix matches legacy (Yang) on snp.pine", {
+  # Load data
+  data(snp.pine, package = "AGHmatrix")
+  
+  # Do a fake imputation for the second comparison
+  snp.pine.fake <- ifelse(snp.pine == -9, 1, snp.pine)
+  
+  # New implementation
+  G_YangPine  <- Gmatrix(SNPmatrix = snp.pine,      missingValue = -9,
+                         maf = 0.05, method = "Yang")
+  G_YangPine2 <- Gmatrix(SNPmatrix = snp.pine.fake, missingValue = -9,
+                         maf = 0.05, method = "Yang")
+  
+  # Legacy implementation
+  G_YangPine_curr  <- Gmatrix_legacy(SNPmatrix = snp.pine,      missingValue = -9,
+                                     maf = 0.05, method = "Yang")
+  G_YangPine2_curr <- Gmatrix_legacy(SNPmatrix = snp.pine.fake, missingValue = -9,
+                                     maf = 0.05, method = "Yang")
+  
+  # Equality up to rounding(4)
+  expect_false(any(round(G_YangPine_curr,  4) != round(G_YangPine,  4)),
+               info = {
+                 d <- round(G_YangPine_curr,4) - round(G_YangPine,4)
+                 paste0("Rounded(4) mismatch in pine (Yang) with missings. ",
+                        "max|delta|=", max(abs(d)), 
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  expect_false(any(round(G_YangPine2_curr, 4) != round(G_YangPine2, 4)),
+               info = {
+                 d <- round(G_YangPine2_curr,4) - round(G_YangPine2,4)
+                 paste0("Rounded(4) mismatch in fake-imputed pine (Yang). ",
+                        "max|delta|=", max(abs(d)), 
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  # Symmetry checks
+  expect_true(isSymmetric(G_YangPine))
+  expect_true(isSymmetric(G_YangPine2))
+  expect_true(isSymmetric(G_YangPine_curr))
+  expect_true(isSymmetric(G_YangPine2_curr))
+})
