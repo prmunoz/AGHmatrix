@@ -15,12 +15,14 @@ arma::mat slater_par_cpp(const arma::mat& X, const unsigned int ploidy){
     for (uword i = 0; i < n; ++i){
       const double v = col[i];
       if (!std::isnan(v)) {
-        // Accept only valid discrete dosages 0 ... ploidy
-        const long dv = static_cast<long>(v);
-        if (dv >= 0 && dv <= static_cast<long>(ploidy)){
-          // column index for genotype level dv
-          const uword cj = j * glev + static_cast<uword>(dv);
-          out(i, cj) = 1.0;
+        // accept only exact integers 0..ploidy (legacy semantics)
+        const double vr = std::round(v);
+        if (std::fabs(v - vr) < 1e-12) {
+          const long dv = static_cast<long>(vr);
+          if (dv >= 0 && dv <= static_cast<long>(ploidy)) {
+            const uword cj = j * glev + static_cast<uword>(dv);
+            out(i, cj) = 1.0;
+          }
         }
       }
       // else: NA stays 0 (effectively treats NA as absence)

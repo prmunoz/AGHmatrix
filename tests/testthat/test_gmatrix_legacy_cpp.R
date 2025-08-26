@@ -467,20 +467,30 @@ test_that("All diploid methods return symmetric matrices with correct size",{
   }
 })
 
-test_that("new Gmatrix matches legacy on snp.pine", {
+# Helper used across tests
+delta_summary <- function(A, B) {
+  D <- round(A, 4) - round(B, 4)
+  c(max_abs = max(abs(D)), nnz = sum(D != 0))
+}
+
+test_that("new Gmatrix matches VanRaden legacy on snp.pine (diploid)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
   # Load data
   data(snp.pine, package = "AGHmatrix")
   
-  # Do a fake imputation for the second comparison
+  # Fake imputation
   snp.pine.fake <- ifelse(snp.pine == -9, 1, snp.pine)
   
-  # New implementation
+  # New
   G_VanRadenPine  <- Gmatrix(SNPmatrix = snp.pine,      missingValue = -9,
                              maf = 0, method = "VanRaden")
   G_VanRadenPine2 <- Gmatrix(SNPmatrix = snp.pine.fake, missingValue = -9,
                              maf = 0, method = "VanRaden")
   
-  # Legacy implementation
+  # Legacy
   G_VanRadenPine_curr  <- Gmatrix_legacy(SNPmatrix = snp.pine,      missingValue = -9,
                                          maf = 0, method = "VanRaden")
   G_VanRadenPine2_curr <- Gmatrix_legacy(SNPmatrix = snp.pine.fake, missingValue = -9,
@@ -490,7 +500,7 @@ test_that("new Gmatrix matches legacy on snp.pine", {
                info = {
                  d <- round(G_VanRadenPine_curr,4) - round(G_VanRadenPine,4)
                  paste0("Rounded(4) mismatch in pine with missings. ",
-                        "max|delta|=", max(abs(d)), 
+                        "max|delta|=", max(abs(d)),
                         ", nnz(delta)=", sum(d != 0))
                })
   
@@ -498,98 +508,373 @@ test_that("new Gmatrix matches legacy on snp.pine", {
                info = {
                  d <- round(G_VanRadenPine2_curr,4) - round(G_VanRadenPine2,4)
                  paste0("Rounded(4) mismatch in fake-imputed pine. ",
-                        "max|delta|=", max(abs(d)), 
+                        "max|delta|=", max(abs(d)),
                         ", nnz(delta)=", sum(d != 0))
                })
   
-  # symmetry checks ---
+  # Symmetry
   expect_true(isSymmetric(G_VanRadenPine))
   expect_true(isSymmetric(G_VanRadenPine2))
   expect_true(isSymmetric(G_VanRadenPine_curr))
   expect_true(isSymmetric(G_VanRadenPine2_curr))
 })
 
-test_that("new Gmatrix matches legacy (Su) on snp.pine", {
-  # Load data
-  data(snp.pine, package = "AGHmatrix")
+test_that("new Gmatrix matches legacy (Yang) on snp.pine (diploid)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
   
-  # Do a fake imputation for the second comparison
+  data(snp.pine, package = "AGHmatrix")
   snp.pine.fake <- ifelse(snp.pine == -9, 1, snp.pine)
   
-  # New implementation
-  G_SuPine  <- Gmatrix(SNPmatrix = snp.pine,      missingValue = -9,
-                       maf = 0.05, method = "Su")
-  G_SuPine2 <- Gmatrix(SNPmatrix = snp.pine.fake, missingValue = -9,
-                       maf = 0.05, method = "Su")
-  
-  # Legacy implementation
-  G_SuPine_curr  <- Gmatrix_legacy(SNPmatrix = snp.pine,      missingValue = -9,
-                                   maf = 0.05, method = "Su")
-  G_SuPine2_curr <- Gmatrix_legacy(SNPmatrix = snp.pine.fake, missingValue = -9,
-                                   maf = 0.05, method = "Su")
-  
-  # Equality up to rounding(4)
-  expect_false(any(round(G_SuPine_curr,  4) != round(G_SuPine,  4)),
-               info = {
-                 d <- round(G_SuPine_curr,4) - round(G_SuPine,4)
-                 paste0("Rounded(4) mismatch in pine (Su) with missings. ",
-                        "max|delta|=", max(abs(d)), 
-                        ", nnz(delta)=", sum(d != 0))
-               })
-  expect_false(any(round(G_SuPine2_curr, 4) != round(G_SuPine2, 4)),
-               info = {
-                 d <- round(G_SuPine2_curr,4) - round(G_SuPine2,4)
-                 paste0("Rounded(4) mismatch in fake-imputed pine (Su). ",
-                        "max|delta|=", max(abs(d)), 
-                        ", nnz(delta)=", sum(d != 0))
-               })
-  
-  # Symmetry checks
-  expect_true(isSymmetric(G_SuPine))
-  expect_true(isSymmetric(G_SuPine2))
-  expect_true(isSymmetric(G_SuPine_curr))
-  expect_true(isSymmetric(G_SuPine2_curr))
-})
-
-
-test_that("new Gmatrix matches legacy (Yang) on snp.pine", {
-  # Load data
-  data(snp.pine, package = "AGHmatrix")
-  
-  # Do a fake imputation for the second comparison
-  snp.pine.fake <- ifelse(snp.pine == -9, 1, snp.pine)
-  
-  # New implementation
+  # New
   G_YangPine  <- Gmatrix(SNPmatrix = snp.pine,      missingValue = -9,
                          maf = 0.05, method = "Yang")
   G_YangPine2 <- Gmatrix(SNPmatrix = snp.pine.fake, missingValue = -9,
                          maf = 0.05, method = "Yang")
   
-  # Legacy implementation
+  # Legacy
   G_YangPine_curr  <- Gmatrix_legacy(SNPmatrix = snp.pine,      missingValue = -9,
                                      maf = 0.05, method = "Yang")
   G_YangPine2_curr <- Gmatrix_legacy(SNPmatrix = snp.pine.fake, missingValue = -9,
                                      maf = 0.05, method = "Yang")
   
-  # Equality up to rounding(4)
   expect_false(any(round(G_YangPine_curr,  4) != round(G_YangPine,  4)),
                info = {
                  d <- round(G_YangPine_curr,4) - round(G_YangPine,4)
                  paste0("Rounded(4) mismatch in pine (Yang) with missings. ",
-                        "max|delta|=", max(abs(d)), 
+                        "max|delta|=", max(abs(d)),
                         ", nnz(delta)=", sum(d != 0))
                })
   expect_false(any(round(G_YangPine2_curr, 4) != round(G_YangPine2, 4)),
                info = {
                  d <- round(G_YangPine2_curr,4) - round(G_YangPine2,4)
                  paste0("Rounded(4) mismatch in fake-imputed pine (Yang). ",
-                        "max|delta|=", max(abs(d)), 
+                        "max|delta|=", max(abs(d)),
                         ", nnz(delta)=", sum(d != 0))
                })
   
-  # Symmetry checks
   expect_true(isSymmetric(G_YangPine))
   expect_true(isSymmetric(G_YangPine2))
   expect_true(isSymmetric(G_YangPine_curr))
   expect_true(isSymmetric(G_YangPine2_curr))
+})
+
+test_that("new Gmatrix matches legacy (Su) on snp.pine (diploid)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
+  data(snp.pine, package = "AGHmatrix")
+  snp.pine.fake <- ifelse(snp.pine == -9, 1, snp.pine)
+  
+  # New
+  G_SuPine  <- Gmatrix(SNPmatrix = snp.pine,      missingValue = -9,
+                       maf = 0.05, method = "Su")
+  G_SuPine2 <- Gmatrix(SNPmatrix = snp.pine.fake, missingValue = -9,
+                       maf = 0.05, method = "Su")
+  
+  # Legacy
+  G_SuPine_curr  <- Gmatrix_legacy(SNPmatrix = snp.pine,      missingValue = -9,
+                                   maf = 0.05, method = "Su")
+  G_SuPine2_curr <- Gmatrix_legacy(SNPmatrix = snp.pine.fake, missingValue = -9,
+                                   maf = 0.05, method = "Su")
+  
+  expect_false(any(round(G_SuPine_curr,  4) != round(G_SuPine,  4)),
+               info = {
+                 d <- round(G_SuPine_curr,4) - round(G_SuPine,4)
+                 paste0("Rounded(4) mismatch in pine (Su) with missings. ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  expect_false(any(round(G_SuPine2_curr, 4) != round(G_SuPine2, 4)),
+               info = {
+                 d <- round(G_SuPine2_curr,4) - round(G_SuPine2,4)
+                 paste0("Rounded(4) mismatch in fake-imputed pine (Su). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  expect_true(isSymmetric(G_SuPine))
+  expect_true(isSymmetric(G_SuPine2))
+  expect_true(isSymmetric(G_SuPine_curr))
+  expect_true(isSymmetric(G_SuPine2_curr))
+})
+
+test_that("new Gmatrix matches legacy (Vitezica) on snp.pine (diploid)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
+  data(snp.pine, package = "AGHmatrix")
+  snp.pine.fake <- ifelse(snp.pine == -9, 1, snp.pine)
+  
+  # New
+  G_VitPine  <- Gmatrix(SNPmatrix = snp.pine,      missingValue = -9,
+                        maf = 0.05, method = "Vitezica")
+  G_VitPine2 <- Gmatrix(SNPmatrix = snp.pine.fake, missingValue = -9,
+                        maf = 0.05, method = "Vitezica")
+  
+  # Legacy
+  G_VitPine_curr  <- Gmatrix_legacy(SNPmatrix = snp.pine,      missingValue = -9,
+                                    maf = 0.05, method = "Vitezica")
+  G_VitPine2_curr <- Gmatrix_legacy(SNPmatrix = snp.pine.fake, missingValue = -9,
+                                    maf = 0.05, method = "Vitezica")
+  
+  expect_false(any(round(G_VitPine_curr,  4) != round(G_VitPine,  4)),
+               info = {
+                 d <- round(G_VitPine_curr,4) - round(G_VitPine,4)
+                 paste0("Rounded(4) mismatch in pine (Vitezica) with missings. ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  expect_false(any(round(G_VitPine2_curr, 4) != round(G_VitPine2, 4)),
+               info = {
+                 d <- round(G_VitPine2_curr,4) - round(G_VitPine2,4)
+                 paste0("Rounded(4) mismatch in fake-imputed pine (Vitezica). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  expect_true(isSymmetric(G_VitPine))
+  expect_true(isSymmetric(G_VitPine2))
+  expect_true(isSymmetric(G_VitPine_curr))
+  expect_true(isSymmetric(G_VitPine2_curr))
+})
+
+test_that("new MarkersMatrix matches legacy on snp.pine (diploid)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
+  data(snp.pine, package = "AGHmatrix")
+  snp.pine.fake <- ifelse(snp.pine == -9, 1, snp.pine)
+  
+  # New
+  G_MM      <- Gmatrix(SNPmatrix = snp.pine,      missingValue = -9,
+                       maf = 0.05, method = "MarkersMatrix")
+  G_MM2     <- Gmatrix(SNPmatrix = snp.pine.fake, missingValue = -9,
+                       maf = 0.05, method = "MarkersMatrix")
+  
+  # Legacy
+  G_MM_curr  <- Gmatrix_legacy(SNPmatrix = snp.pine,      missingValue = -9,
+                               maf = 0.05, method = "MarkersMatrix")
+  G_MM2_curr <- Gmatrix_legacy(SNPmatrix = snp.pine.fake, missingValue = -9,
+                               maf = 0.05, method = "MarkersMatrix")
+  
+  expect_false(any(round(G_MM_curr,  4) != round(G_MM,  4)),
+               info = {
+                 d <- round(G_MM_curr,4) - round(G_MM,4)
+                 paste0("Rounded(4) mismatch in pine (MarkersMatrix). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  expect_false(any(round(G_MM2_curr, 4) != round(G_MM2, 4)),
+               info = {
+                 d <- round(G_MM2_curr,4) - round(G_MM2,4)
+                 paste0("Rounded(4) mismatch in fake-imputed pine (MarkersMatrix). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  expect_true(isSymmetric(G_MM))
+  expect_true(isSymmetric(G_MM2))
+  expect_true(isSymmetric(G_MM_curr))
+  expect_true(isSymmetric(G_MM2_curr))
+})
+
+test_that("new Gmatrix matches VanRaden legacy on snp.sol (ploidy=4)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
+  data(snp.sol, package = "AGHmatrix")
+  snp.sol.fake <- ifelse(snp.sol == -9, 2, snp.sol)  # mid-dosage fake impute for tetraploids
+  
+  # New
+  G_VR4   <- Gmatrix(SNPmatrix = snp.sol,      method = "VanRaden",
+                     ploidy = 4, missingValue = -9, maf = 0.05)
+  G_VR4_2 <- Gmatrix(SNPmatrix = snp.sol.fake, method = "VanRaden",
+                     ploidy = 4, missingValue = -9, maf = 0.05)
+  
+  # Legacy
+  G_VR4_curr   <- Gmatrix_legacy(SNPmatrix = snp.sol,      method = "VanRaden",
+                                 ploidy = 4, missingValue = -9, maf = 0.05)
+  G_VR4_2_curr <- Gmatrix_legacy(SNPmatrix = snp.sol.fake, method = "VanRaden",
+                                 ploidy = 4, missingValue = -9, maf = 0.05)
+  
+  expect_false(any(round(G_VR4_curr,  4) != round(G_VR4,  4)),
+               info = {
+                 d <- round(G_VR4_curr,4) - round(G_VR4,4)
+                 paste0("Rounded(4) mismatch (VanRaden, ploidy=4). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  expect_false(any(round(G_VR4_2_curr, 4) != round(G_VR4_2, 4)),
+               info = {
+                 d <- round(G_VR4_2_curr,4) - round(G_VR4_2,4)
+                 paste0("Rounded(4) mismatch fake-imputed (VanRaden, ploidy=4). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  expect_true(isSymmetric(G_VR4))
+  expect_true(isSymmetric(G_VR4_2))
+  expect_true(isSymmetric(G_VR4_curr))
+  expect_true(isSymmetric(G_VR4_2_curr))
+})
+
+test_that("new Gmatrix matches legacy (Slater) on snp.sol (ploidy=4)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
+  data(snp.sol, package = "AGHmatrix")
+  snp.sol.fake <- ifelse(snp.sol == -9, 2, snp.sol)
+  
+  # New
+  G_Sl4   <- Gmatrix(SNPmatrix = snp.sol,      method = "Slater",
+                     ploidy = 4, missingValue = -9, maf = 0.05)
+  G_Sl4_2 <- Gmatrix(SNPmatrix = snp.sol.fake, method = "Slater",
+                     ploidy = 4, missingValue = -9, maf = 0.05)
+  
+  # Legacy
+  G_Sl4_curr   <- Gmatrix_legacy(SNPmatrix = snp.sol,      method = "Slater",
+                                 ploidy = 4, missingValue = -9, maf = 0.05)
+  G_Sl4_2_curr <- Gmatrix_legacy(SNPmatrix = snp.sol.fake, method = "Slater",
+                                 ploidy = 4, missingValue = -9, maf = 0.05)
+  
+  expect_false(any(round(G_Sl4_curr,  4) != round(G_Sl4,  4)),
+               info = {
+                 d <- round(G_Sl4_curr,4) - round(G_Sl4,4)
+                 paste0("Rounded(4) mismatch (Slater, ploidy=4). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  expect_false(any(round(G_Sl4_2_curr, 4) != round(G_Sl4_2, 4)),
+               info = {
+                 d <- round(G_Sl4_2_curr,4) - round(G_Sl4_2,4)
+                 paste0("Rounded(4) mismatch fake-imputed (Slater, ploidy=4). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  expect_true(isSymmetric(G_Sl4))
+  expect_true(isSymmetric(G_Sl4_2))
+  expect_true(isSymmetric(G_Sl4_curr))
+  expect_true(isSymmetric(G_Sl4_2_curr))
+})
+
+test_that("new Gmatrix matches legacy (Endelman) on snp.sol (ploidy=4)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
+  data(snp.sol, package = "AGHmatrix")
+  snp.sol.fake <- ifelse(snp.sol == -9, 2, snp.sol)
+  
+  # New
+  G_End4   <- Gmatrix(SNPmatrix = snp.sol,      method = "Endelman",
+                      ploidy = 4, missingValue = -9, maf = 0.05)
+  G_End4_2 <- Gmatrix(SNPmatrix = snp.sol.fake, method = "Endelman",
+                      ploidy = 4, missingValue = -9, maf = 0.05)
+  
+  # Legacy
+  G_End4_curr   <- Gmatrix_legacy(SNPmatrix = snp.sol,      method = "Endelman",
+                                  ploidy = 4, missingValue = -9, maf = 0.05)
+  G_End4_2_curr <- Gmatrix_legacy(SNPmatrix = snp.sol.fake, method = "Endelman",
+                                  ploidy = 4, missingValue = -9, maf = 0.05)
+  
+  expect_false(any(round(G_End4_curr,  4) != round(G_End4,  4)),
+               info = {
+                 d <- round(G_End4_curr,4) - round(G_End4,4)
+                 paste0("Rounded(4) mismatch (Endelman, ploidy=4). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  expect_false(any(round(G_End4_2_curr, 4) != round(G_End4_2, 4)),
+               info = {
+                 d <- round(G_End4_2_curr,4) - round(G_End4_2,4)
+                 paste0("Rounded(4) mismatch fake-imputed (Endelman, ploidy=4). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  expect_true(isSymmetric(G_End4))
+  expect_true(isSymmetric(G_End4_2))
+  expect_true(isSymmetric(G_End4_curr))
+  expect_true(isSymmetric(G_End4_2_curr))
+})
+
+test_that("new Gmatrix matches VanRaden legacy (pseudo-diploid) on snp.sol (ploidy=4, pseudo=TRUE)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
+  data(snp.sol, package = "AGHmatrix")
+  snp.sol.fake <- ifelse(snp.sol == -9, 2, snp.sol)
+  
+  # New
+  G_VRpd   <- Gmatrix(SNPmatrix = snp.sol,      method = "VanRaden",
+                      ploidy = 4, pseudo.diploid = TRUE,
+                      missingValue = -9, maf = 0.05)
+  G_VRpd_2 <- Gmatrix(SNPmatrix = snp.sol.fake, method = "VanRaden",
+                      ploidy = 4, pseudo.diploid = TRUE,
+                      missingValue = -9, maf = 0.05)
+  
+  # Legacy
+  G_VRpd_curr   <- Gmatrix_legacy(SNPmatrix = snp.sol,      method = "VanRaden",
+                                  ploidy = 4, pseudo.diploid = TRUE,
+                                  missingValue = -9, maf = 0.05)
+  G_VRpd_2_curr <- Gmatrix_legacy(SNPmatrix = snp.sol.fake, method = "VanRaden",
+                                  ploidy = 4, pseudo.diploid = TRUE,
+                                  missingValue = -9, maf = 0.05)
+  
+  expect_false(any(round(G_VRpd_curr,  4) != round(G_VRpd,  4)),
+               info = {
+                 d <- round(G_VRpd_curr,4) - round(G_VRpd,4)
+                 paste0("Rounded(4) mismatch (VanRaden pseudo-diploid, ploidy=4). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  expect_false(any(round(G_VRpd_2_curr, 4) != round(G_VRpd_2, 4)),
+               info = {
+                 d <- round(G_VRpd_2_curr,4) - round(G_VRpd_2,4)
+                 paste0("Rounded(4) mismatch fake-imputed (VanRaden pseudo-diploid, ploidy=4). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  expect_true(isSymmetric(G_VRpd))
+  expect_true(isSymmetric(G_VRpd_2))
+  expect_true(isSymmetric(G_VRpd_curr))
+  expect_true(isSymmetric(G_VRpd_2_curr))
+})
+
+test_that("new Gmatrix matches VanRaden legacy on snp.pine with weights (diploid)", {
+  Sys.setenv(OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS      = "1",
+             OMP_NUM_THREADS      = "1")
+  
+  data(snp.pine, package = "AGHmatrix")
+  # Weights matched by column name (legacy/new both re-align by names)
+  set.seed(123)
+  w <- runif(ncol(snp.pine), min = 0.001, max = 0.1)
+  names(w) <- colnames(snp.pine)
+  
+  G_w   <- Gmatrix(SNPmatrix = snp.pine, missingValue = -9, maf = 0.05,
+                   method = "VanRaden", weights = w)
+  G_w_c <- Gmatrix_legacy(SNPmatrix = snp.pine, missingValue = -9, maf = 0.05,
+                          method = "VanRaden", weights = w)
+  
+  expect_false(any(round(G_w_c,  4) != round(G_w,  4)),
+               info = {
+                 d <- round(G_w_c,4) - round(G_w,4)
+                 paste0("Rounded(4) mismatch (VanRaden weighted). ",
+                        "max|delta|=", max(abs(d)),
+                        ", nnz(delta)=", sum(d != 0))
+               })
+  
+  expect_true(isSymmetric(G_w))
+  expect_true(isSymmetric(G_w_c))
 })
