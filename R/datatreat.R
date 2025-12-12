@@ -13,198 +13,68 @@
 # 									
 #########################################
 
-#' Organizes pedigree data in a chronological way
+#' Organizes pedigree data in a chronological way using C++
 #'
-#' This function organizes pedigree data in a chronological way and return 3 lists: i) parental 1 values (numeric); ii) parental 2 values (numeric); iii) real names of the individuals. Also save a .txt file with new pedigree file.
-#' @param data name of the pedigree data frame. Default=NULL.
-#' @param unk the code of the data missing. Default=0.
-#' @param n.max max number of iteractions to get the chronological order. Default = 50
-#' @param save if TRUE, save the genealogy in a .txt file
+#' This function organizes pedigree data in a chronological way and returns a list:
+#' i) parental 1 values (numeric); ii) parental 2 values (numeric); iii) individual names.
+#' Also saves a `.txt` file if `save = TRUE`.
 #'
-#' @return list with parental 1, parental 2, and real names of the individuals (key) also saves a txt file with the new chronological pedigree.
+#' @param data A 3-column data frame or matrix with individual, sire, and dam
+#' @param unk Code for unknown parent (default = 0)
+#' @param n.max Max number of iterations (default = 50)
+#' @param save If TRUE, saves the reordered pedigree to a text file
 #'
-#' @examples 
-#' data(ped.mrode)
-#' datatreat(ped.mrode)
-#'
-#' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
-#'
+#' @return A list with elements: sire (numeric), dire (numeric), ind_data (names)
+#' @author Rodrigo R. Amadeu \email{rramadeu@gmail.com}
+#' @author Thiago de Paula Oliveira
+#' 
 #' @export
-
-datatreat <- function(data=NULL,
-                       n.max=50,
-                       unk=0,
-                       save=FALSE
-                       ){
-    indicator <- k <-  0
-    if(is.null(data))
-        stop(deparse("Select a data name"))
-
-    
-    for( i in 1:n.max){
-
-                                        #Data Treatment
-      if( i == 1){
-          data <- as.matrix(data)
-          k <- rep(NA,2) #only for don't stop the loop on the first time
-      }
-      if( i > 1 )
-          data <- new.data
-      pedigree <- asciitonumber(data,unk=unk)
-      ind.data <- pedigree$ind.data
-      sire <- pedigree$sire
-      dire <- pedigree$dire
-      ind <- c(1:length(sire))
-
-      right.pos <- rep(NA, length=length(sire))
-
-  #Verify alternatively sire and dire each iteraction+1
-      parent <- sire
-      parent.ind <- "sire"
-
-      if( indicator%%2 == 1 ){
-      parent <- dire
-      parent.ind <- "dire"
+#'
+#' @examples
+#' # data(ped.mrode)
+#' # datatreat(ped.mrode)
+datatreat <- function(data = NULL,
+                      n.max = 50,
+                      unk = 0,
+                      save = FALSE) {
+  if (is.null(data)) {
+    stop("Select a data name")
   }
-
-
-      for ( j in 1:length(parent)){
-      if( is.na(match(parent[j], ind[1:j])) && parent[j] != 0){
-          right.pos[j] <- which(ind == parent[j])
-      }
+  
+  # Already character matrix
+  if (inherits(data, "character") && is.matrix(data)) {
+    data_char <- data
+  } else if (is.data.frame(data) && ncol(data) == 3) {
+    # Convert data frame row-wise
+    data_char <- matrix(
+      unlist(lapply(data, as.character), use.names = FALSE),
+      ncol = 3
+    )
+  } else {
+    stop("Input must be a character matrix or a data.frame with 3 columns.")
   }
-
-      error <- c()
-      for( j in 1:length(parent))
-          if( parent[j] > j)
-              error <- c(error,j)
-
-                                        #Print the step point
-      if( save ){
-      cat( paste("iteraction #",i,parent.ind,"\n",sep=""))
-      cat( paste(error,"\n"))
-  }
-
-
-                                        #Right positions of the new data
-      if( length(error) > 0 ){
-          after <- which( !is.na(right.pos))
-          before <- right.pos[after]
-          for( j in 1:length(before)){
-              if( j == 1 || before[j] != before[j-1] ){
-                  ind[after[j]] <- before[j]
-                  ind[before[j]] <- after[j]
-              }
-          }
-      }
-      new.data <- data[ind,]
-
-
-                                        # Verify changes in the loop
-      lastk <- k #indicator that there is no more changes in the last parent
-      k <- length(error) #indicator that no changes
-
-
-      if (  k == 0 )
-          indicator = indicator+1
-
-      if ( i != 1 && k == 0 && lastk == 0 ){
-          cat("Your data was chronologically organized with success. \n")
-          if(save){
-            cat(paste("orgnew.txt",sep=""))
-            write.table(new.data,  file=paste("orgped.txt",sep=""), quote=FALSE, row.names=FALSE, col.names=FALSE)
-        }
-          return(pedigree)
-      }
-
-      if ( i == n.max ){
-          cat("Your data was not chronologically organized with sucess. Check your data with missing.data function and/or verify the individuals in the 2 last iteractions above descripted (the number is the row in the file: \n")
-          cat(paste("orgped.txt",sep=""))
-          write.table(new.data, file=paste("orgped.txt",sep=""), quote=FALSE, row.names=FALSE, col.names=FALSE)
-          return(pedigree)
-      }
-  }
+  
+  datatreat_cpp(data_char, n_max = n.max, unk = as.character(unk), save = save)
 }
+
 
 # This function creates a list with numeric indices given a pedigree data. 
 # Also it checks if all the listed parent name are listed before in the individual 
 # name column and if the parent exist in the matrix . 
-asciitonumber <- function(
-  pedigree.data,
-  unk=0
-){
-  if( ncol(pedigree.data) != 3 ){
-    print("Data with more than 3 columns, please verify")
-    return()
+#' Convert pedigree names to numeric indices using C++
+#'
+#' @param pedigree.data A 3-column matrix or data frame with individual, sire, and dam
+#' @param unk Code for unknown parent (default = "0")
+#' @return A list with sire, dam, and individual names
+#' @author Rodrigo R. Amadeu \email{rramadeu@gmail.com}
+#' @author Thiago de Paula Oliveira
+#' @export
+asciitonumber <- function(pedigree.data, unk = 0) {
+  pedigree.data <- as.matrix(pedigree.data)
+  if (ncol(pedigree.data) != 3) {
+    stop("Data with more than 3 columns, please verify")
   }
-  ind.data <- as.vector(c(unk,pedigree.data[,1]))
-  sire.data <- as.vector(pedigree.data[,2])
-  dire.data <- as.vector(pedigree.data[,3])
-  sire <- match(sire.data, ind.data)
-  dire <- match(dire.data, ind.data)
-  ind <- as.vector(c(1:length(ind.data)))
-  sire <- sire-1
-  dire <- dire-1
-  ind <- ind[-length(ind)]
-  ind.data <- ind.data[-1]
-  pedigree <- list(sire=sire,dire=dire,ind.data=pedigree.data[ind,1])
-  return(pedigree)
-}
-
-# This function organizes pedigree data in a chronological way and return 3 lists: 
-# i) parental 1 values (numeric); ii) parental 2 values (numeric); iii) real names of 
-# the individuals. Also save a .txt file with new pedigree file.
-sortped<-function(data = NULL, loop.in = 1000, loop.between = 100, print = FALSE)
-{   
-  if (is.null(data)) 
-    stop(deparse("Please define the variable data"))
-  
-  stop.loop.1 <- stop.loop.2 <- FALSE
-  
-  for(j in 1:loop.between){
-    if(print) cat(paste("looping between...",print(j)))
-    
-    for(i in 1:loop.in){
-      if(print) cat(paste("looping in first parent...",print(i)))
-      ind<-data[,1]
-      sire<-data[,2]
-      dire<-data[,3]
-      index<-1:length(ind)
-      compare<-match(dire,ind)
-      compare[which(is.na(compare))]<-0
-      loop<-which(compare>index)
-      newindex<-index
-      newindex[loop[1]]<-compare[loop[1]]
-      newindex[compare[loop[1]]]<-loop[1]
-      data<-data[newindex,]
-      if(print) print(length(loop))
-      if( length(loop) == 0 && i == 1)
-        stop.loop.1 <- TRUE
-      if(length(loop)==0) break
-    }
-    
-    for(i in 1:loop.in){
-      if(print) cat(paste("looping in second parent...",print(i))) 
-      ind<-data[,1]
-      sire<-data[,2]
-      dire<-data[,3]
-      index<-1:length(ind)
-      compare<-match(sire,ind)
-      compare[which(is.na(compare))]<-0
-      loop<-which(compare>index)
-      newindex<-index
-      newindex[loop[1]]<-compare[loop[1]]
-      newindex[compare[loop[1]]]<-loop[1]
-      data<-data[newindex,]
-      if(print) print(length(loop))
-      if( length(loop) == 0 && i == 1)
-        stop.loop.2 <- TRUE
-      if( length(loop) == 0 ) break
-    }
-    
-    if( stop.loop.1 && stop.loop.2) break
-  }
-  return(data)
+  ascii_to_number(pedigree.data, as.character(unk))
 }
 
 # This function verify which rows in a pedigree data has missing parental or conflictuos data

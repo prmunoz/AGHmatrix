@@ -2,30 +2,33 @@
 % Please edit documentation in R/datatreat.R
 \name{datatreat}
 \alias{datatreat}
-\title{Organizes pedigree data in a chronological way}
+\title{Organizes pedigree data in a chronological way using C++}
 \usage{
 datatreat(data = NULL, n.max = 50, unk = 0, save = FALSE)
 }
 \arguments{
-\item{data}{name of the pedigree data frame. Default=NULL.}
+\item{data}{A 3-column data frame or matrix with individual, sire, and dam}
 
-\item{n.max}{max number of iteractions to get the chronological order. Default = 50}
+\item{n.max}{Max number of iterations (default = 50)}
 
-\item{unk}{the code of the data missing. Default=0.}
+\item{unk}{Code for unknown parent (default = 0)}
 
-\item{save}{if TRUE, save the genealogy in a .txt file}
+\item{save}{If TRUE, saves the reordered pedigree to a text file}
 }
 \value{
-list with parental 1, parental 2, and real names of the individuals (key) also saves a txt file with the new chronological pedigree.
+A list with elements: sire (numeric), dire (numeric), ind_data (names)
 }
 \description{
-This function organizes pedigree data in a chronological way and return 3 lists: i) parental 1 values (numeric); ii) parental 2 values (numeric); iii) real names of the individuals. Also save a .txt file with new pedigree file.
+This function organizes pedigree data in a chronological way and returns a list:
+i) parental 1 values (numeric); ii) parental 2 values (numeric); iii) individual names.
+Also saves a `.txt` file if `save = TRUE`.
 }
 \examples{
-data(ped.mrode)
-datatreat(ped.mrode)
-
+# data(ped.mrode)
+# datatreat(ped.mrode)
 }
 \author{
-Rodrigo R Amadeu, \email{rramadeu@gmail.com}
+Rodrigo R. Amadeu \email{rramadeu@gmail.com}
+
+Thiago de Paula Oliveira
 }

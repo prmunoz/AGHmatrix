@@ -25,53 +25,86 @@ Gmatrix(
 )
 }
 \arguments{
-\item{SNPmatrix}{matrix (n x m), where n is is individual names and m is marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, missingValue).}
+\item{SNPmatrix}{matrix (n x m), where n is is individual names and m is 
+marker names (coded inside the matrix as 0, 1, 2, ..., ploidy, and, 
+missingValue).}
 
-\item{method}{"Yang" or "VanRaden" for marker-based additive relationship matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. "Slater" for full-autopolyploid model including non-additive effects. "Endelman" for autotetraploid dominant (digentic) relationship matrix. "MarkersMatrix" for a matrix with the amount of shared markers between individuals (3). Default is "VanRaden", for autopolyploids will be computed a scaled product (similar to Covarrubias-Pazaran, 2006).}
+\item{method}{"Yang" or "VanRaden" for marker-based additive relationship 
+matrix. "Su" or "Vitezica" for marker-based dominance relationship matrix. 
+"Slater" for full-autopolyploid model including non-additive effects.
+"Endelman" for autotetraploid dominant (digentic) relationship matrix. 
+"MarkersMatrix" for a matrix with the amount of shared markers between 
+individuals (3).
+Default is "VanRaden", for autopolyploids will be computed a scaled 
+product (similar to Covarrubias-Pazaran, 2006).}
 
 \item{missingValue}{missing value in data. Default=-9.}
 
 \item{maf}{minimum allele frequency accepted to each marker. Default=0.}
 
-\item{thresh.missing}{threshold on missing data, SNPs below of this frequency value will be maintained, if equal to 1, no threshold and imputation is considered. Default = 0.50.}
+\item{thresh.missing}{threshold on missing data, SNPs below of this 
+frequency value will be maintained, if equal to 1, no threshold and 
+imputation is considered. Default = 1.}
 
-\item{verify.posdef}{verify if the resulting matrix is positive-definite. Default=FALSE.}
+\item{verify.posdef}{verify if the resulting matrix is positive-definite. 
+Default=FALSE.}
 
 \item{ploidy}{data ploidy (an even number between 2 and 20). Default=2.}
 
-\item{pseudo.diploid}{if TRUE, uses pseudodiploid parametrization of Slater (2016).}
+\item{pseudo.diploid}{if TRUE, uses pseudodiploid parametrization of 
+Slater (2016).}
 
 \item{integer}{if FALSE, not check for integer numbers. Default=TRUE.}
 
-\item{ratio}{if TRUE, molecular data are considered ratios and its computed the scaled product of the matrix (as in "VanRaden" method).}
+\item{ratio}{if TRUE, molecular data are considered ratios and its 
+computed the scaled product of the matrix (as in "VanRaden" method).}
 
-\item{impute.method}{"mean" to impute the missing data by the mean per marker, "mode" to impute the missing data by the mode per marker, "global.mean" to impute the missing data by the mean across all markers, "global.mode" to impute the missing data my the mode across all marker. Default = "mean".}
+\item{impute.method}{"mean" to impute the missing data by the mean per 
+marker, "mode" to impute the missing data by the mode per marker, 
+"global.mean" to impute the missing data by the mean across all markers,
+"global.mode" to impute the missing data my the mode across all marker. 
+Default = "none".}
 
 \item{rmv.mono}{if monomorphic markers should be removed. Default=FALSE.}
 
-\item{thresh.htzy}{threshold heterozigosity, remove SNPs below this threshold. Default=0.}
+\item{thresh.htzy}{threshold heterozigosity, remove SNPs below this 
+threshold. Default=0.}
 
 \item{ratio.check}{if TRUE, run Mcheck with ratio data.}
 
-\item{weights}{vector with weights for each marker. Only works if method="VanRaden". Default is a vector of 1's (equal weight).}
+\item{weights}{vector with weights for each marker. Only works if 
+method="VanRaden". Default is a vector of 1's (equal weight).}
 
-\item{ploidy.correction}{It sets the denominator (correction) of the crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models. If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" of each marker as method 1 in VanRaden 2008 and Endelman (2018). When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". If FALSE, it uses the sum of the sampling variance of each marker. Default = FALSE.}
+\item{ploidy.correction}{It sets the denominator (correction) of the 
+crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models.
+If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" 
+of each marker as method 1 in VanRaden 2008 and Endelman (2018).
+When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". 
+If FALSE, it uses the sum of the sampling variance of each marker. 
+Default = FALSE.}
 
-\item{ASV}{if TRUE, transform matrix into average semivariance (ASV) equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of Fieldmann et al. (2022). Default = FALSE.}
+\item{ASV}{if TRUE, transform matrix into average semivariance (ASV) 
+equivalent (K = K / (trace(K) / (nrow(K)-1))). Details formula 2 of 
+Fieldmann et al. (2022). Default = FALSE.}
 }
 \value{
 Matrix with the marker-bases relationships between the individuals
 }
 \description{
-Given a matrix (individual x markers), a method, a missing value, and a maf threshold, return a additive or non-additive relationship matrix. For diploids, the methods "Yang" and "VanRaden" for additive relationship matrices, and "Su" and "Vitezica" for non-additive relationship matrices are implemented. For autopolyploids, the method "VanRaden" for additive relationship, method "Slater" for full-autopolyploid model including non-additive effects, and pseudo-diploid parametrization are implemented. Weights are implemented for "VanRaden" method as described in Liu (2020).
+Given a matrix (individual x markers), a method, a missing value, and a maf 
+threshold, return a additive or non-additive relationship matrix.
+For diploids, the methods "Yang" and "VanRaden" for additive relationship 
+matrices, and "Su" and "Vitezica" for non-additive relationship matrices 
+are implemented. For autopolyploids, the method "VanRaden" for additive 
+relationship, method "Slater" for full-autopolyploid model including 
+non-additive effects, and pseudo-diploid parametrization are implemented.
+Weights are implemented for "VanRaden" method as described in Liu (2020).
 }
 \examples{
 \dontrun{
 ## Diploid Example
 data(snp.pine)
-#Verifying if data is coded as 0,1,2 and missing value.
 str(snp.pine)
-#Build G matrices
 Gmatrix.Yang <- Gmatrix(snp.pine, method="Yang", missingValue=-9, maf=0.05)
 Gmatrix.VanRaden <- Gmatrix(snp.pine, method="VanRaden", missingValue=-9, maf=0.05)
 Gmatrix.Su <- Gmatrix(snp.pine, method="Su", missingValue=-9, maf=0.05)
@@ -79,36 +112,58 @@ Gmatrix.Vitezica <- Gmatrix(snp.pine, method="Vitezica", missingValue=-9, maf=0.
 
 ## Autetraploid example
 data(snp.sol)
-#Build G matrices
 Gmatrix.VanRaden <- Gmatrix(snp.sol, method="VanRaden", ploidy=4)
 Gmatrix.Endelman <- Gmatrix(snp.sol, method="Endelman", ploidy=4) 
 Gmatrix.Slater <- Gmatrix(snp.sol, method="Slater", ploidy=4)
 Gmatrix.Pseudodiploid <- Gmatrix(snp.sol, method="VanRaden", ploidy=4, pseudo.diploid=TRUE) 
-
-#Build G matrix with weights
 Gmatrix.weighted <- Gmatrix(snp.sol, method="VanRaden", weights = runif(3895,0.001,0.1), ploidy=4)
 }
 
 }
 \references{
-\emph{Covarrubias-Pazaran, G. 2016. Genome assisted prediction of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
+\emph{Covarrubias-Pazaran, G. 2016. Genome assisted prediction 
+of quantitative traits using the R package sommer. PLoS ONE 11(6):1-15.}
 
-\emph{Endelman, JB, et al., 2018. Genetic variance partitioning and genome-wide prediction with allele dosage information in autotetraploid potato. Genetics, 209(1) pp. 77-87.}
+\emph{Endelman, JB, et al., 2018. Genetic variance partitioning 
+and genome-wide prediction with allele dosage information in autotetraploid 
+potato. Genetics, 209(1) pp. 77-87.}
 
-\emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
+\emph{Feldmann MJ, et al. 2022. Average semivariance directly 
+yields accurate estimates of the genomic variance in complex trait analyses. 
+G3 (Bethesda), 12(6).}
 
-\emph{Liu, A, et al. 2020. Weighted single-step genomic best linear unbiased prediction integrating variants selected from sequencing data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
+\emph{Liu, A, et al. 2020. Weighted single-step genomic best 
+linear unbiased prediction integrating variants selected from sequencing 
+data by association and bioinformatics analyses. Genet Sel Evol 52, 48.}
 
-\emph{Slater, AT, et al. 2016. Improving genetic gain with genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
+\emph{Slater, AT, et al. 2016. Improving genetic gain with 
+genomic selection in autotetraploid potato. The Plant Genome 9(3), pp.1-15.}
 
-\emph{Su, G, et al. 2012. Estimating additive and non-additive genetic variances and predicting genetic merits using genome-wide dense single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
+\emph{Su, G, et al. 2012. Estimating additive and non-additive 
+genetic variances and predicting genetic merits using genome-wide dense 
+single nucleotide polymorphism markers. PloS one, 7(9), p.e45293.}
 
-\emph{VanRaden, PM, 2008. Efficient methods to compute genomic predictions. Journal of dairy science, 91(11), pp.4414-4423.}
+\emph{VanRaden, PM, 2008. Efficient methods to compute genomic 
+predictions. Journal of dairy science, 91(11), pp.4414-4423.}
 
-\emph{Vitezica, ZG, et al. 2013. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genetics, 195(4), pp.1223-1230.}
+\emph{Vitezica, ZG, et al. 2013. On the additive and dominant 
+variance and covariance of individuals within the genomic selection scope. 
+Genetics, 195(4), pp.1223-1230.}
 
-\emph{Yang, J, et al. 2010. Common SNPs explain a large proportion of the heritability for human height. Nature genetics, 42(7), pp.565-569.}
+\emph{Yang, J, et al. 2010. Common SNPs explain a large 
+proportion of the heritability for human height. Nature genetics, 42(7), 
+pp.565-569.}
 }
 \author{
-Rodrigo R Amadeu \email{rramadeu@gmail.com}, Marcio Resende Jr, Letícia AC Lara, Ivone Oliveira, and Felipe V Ferrao
+Rodrigo R. Amadeu \email{rramadeu@gmail.com}
+
+Thiago de Paula Oliveira \email{toliveira@abacusbio.com}
+
+Marcio Resende Jr.
+
+Letícia A. C. Lara
+
+Ivone Oliveira
+
+Felipe V. Ferrao
 }

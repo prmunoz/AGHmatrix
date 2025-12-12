@@ -58,136 +58,201 @@
 #' }
 #'
 #' @author Rodrigo R Amadeu, \email{rramadeu@@gmail.com}
-#' 
+#' @author Thiago de Paula Oliveira \email{toliveira@abacusbio.com}
+#' @importFrom stats approx
 #' @references \emph{Feldmann MJ, et al. 2022. Average semivariance directly yields accurate estimates of the genomic variance in complex trait analyses. G3 (Bethesda), 12(6).}
 #' @references \emph{Munoz, PR. 2014 Unraveling additive from nonadditive effects using genomic relationship matrices. Genetics 198, 1759-1768}
 #' @references \emph{Martini, JW, et al. 2018 The effect of the H-1 scaling factors tau and omega on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16}
-#' @references \emph{Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomic information. Journal of Dairy Science 92, 4656–4663}
+#' @references \emph{Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomic information. Journal of Dairy Science 92, 4656-4663}
 #' @export
-
 Hmatrix <- function(A=NULL,
-                     G=NULL,
-                     markers=NULL,
-                     c=0,
-                     method="Martini",
-                     tau=1,
-                     omega=1,
-                     missingValue=-9,
-                     maf=0,
-                     ploidy=2,
-                     roundVar=3,
-                     ASV=FALSE
-){
-  Aorig <- A
-  Gorig <- G
+                    G=NULL,
+                    markers=NULL,
+                    c=0,
+                    method="Martini",
+                    tau=1,
+                    omega=1,
+                    missingValue=-9,
+                    maf=0,
+                    ploidy=2,
+                    roundVar=3,
+                    ASV=FALSE){
+  #-----------------------------------------------------------------------------
+  # pre-checks
+  #-----------------------------------------------------------------------------
+  if (is.null(A) || is.null(G))
+    stop("Please provide both A and G.")
   
-  Time = proc.time()
+  valid_methods <- c("Martini", "Munoz")
+  if (!is.character(method) || length(method) != 1L || 
+      !(method %in% valid_methods)) {
+    stop("Invalid `method`: ", sQuote(method),
+         ". Allowed methods: ", paste(sQuote(valid_methods), collapse = ", "), 
+         ".", call. = FALSE)
+  }
+  
+  # Basic input checks
+  if (!is.matrix(A) || !is.matrix(G))
+    stop("A and G must be matrices.")
+  
+  if (is.null(rownames(A)) || is.null(colnames(A)) ||
+      is.null(rownames(G)) || is.null(colnames(G)))
+    stop("A and G must be square with dimnames (IDs).")
+  
+  if (!identical(rownames(A), colnames(A)) ||
+      !identical(rownames(G), colnames(G)))
+    stop("A and G must be square with matching row/colnames in each.")
+  
+  Aorig <- A; Gorig <- G
+  An <- rownames(Aorig); Gn <- rownames(Gorig)
+  
+  Time <- proc.time()
   cat("Comparing the matrices... \n")
-  An <- rownames(Aorig)
-  Gn <- rownames(Gorig)
-  missingGmatrix <- which(is.na(match(An,Gn)))
-  missingAmatrix <- which(is.na(match(Gn,An)))
-  if(length(missingAmatrix)>0){
-    Gnhat <- Gn[-missingAmatrix]
-  }else{
-    Gnhat <- Gn
-  }
+  #-----------------------------------------------------------------------------
+  # Missing pattern
+  #-----------------------------------------------------------------------------
+  # in A but not in G
+  idxGmiss <- is.na(match(An, Gn))
+  # in G but not in A
+  idxAmiss <- is.na(match(Gn, An))
+  if (any(!idxAmiss)) {
+    # order we'll keep in G submatrix
+    Gnhat <- Gn[!idxAmiss]             
+  } else Gnhat <- Gn
+  if (any(!idxGmiss)) {
+    # order we'll keep in A submatrix (Munoz method)
+    Anhat <- An[!idxGmiss]
+  } else Anhat <- An
   
-  if(length(missingGmatrix)>0){
-    Anhat <- An[-missingGmatrix]    
-  }else{
-    Anhat <- An
-  }
+  #-----------------------------------------------------------------------------
+  # keep G on its available IDs
+  #-----------------------------------------------------------------------------
+  G <- Gorig[Gnhat, Gnhat, drop = FALSE]
+  elapsed <- (proc.time() - Time)[["elapsed"]]
+  cat("Completed! Time =", elapsed / 60, "minutes\n")
   
-  A <- Aorig#[Anhat,Anhat]
-  G <- Gorig[Gnhat,Gnhat]
-  
-  missingGmatrix <- An[missingGmatrix]
-  missingAmatrix <- Gn[missingAmatrix]
-  
-  Time = as.matrix(proc.time()-Time)
-  cat("Completed! Time =", Time[3]/60," minutes \n")
-  
+  #-----------------------------------------------------------------------------
+  # main dispatch
+  #-----------------------------------------------------------------------------
   cat("Computing the H matrix... \n")
+  Time <- proc.time()
   
-  Time = proc.time()
-  
-  if(method=="Martini"){
-    idA <-rownames(A)
-    idG <- rownames(G)
-    idH <- unique(c(idG,idA))
+  #-----------------------------------------------------------------------------
+  # Martini
+  #-----------------------------------------------------------------------------
+  if (method == "Martini") {
+    # build the global ID order
+    idH <- unique(c(rownames(G), rownames(Aorig)))
     idH <- rev(idH)
-    A <- A[idH,idH]
     
-    index = is.na(match(idH,idG))
-    A11 <- A[index,index]
-    A12 <- A[index,!index]
-    A21 <- A[!index,index]
-    A22 <- A[!index,!index]
-    G22 <- G[idH[!index],idH[!index]]
-    #if(is.singular.matrix(G22))
-    #  stop(deparse("Matrix G22 is singular (not invertible)"))
-    A22inv = solve(A22) #A is always invertible
-    G22inv = try(solve(G22),silent=TRUE)
-    if(inherits(G22inv,"try-error")){
-      cat(G22inv)
-      stop("G22 not inverting with solve(), try a different/modified G matrix")
+    # reindex A once in that order
+    A <- Aorig[idH, idH, drop = FALSE]
+    inG <- !is.na(match(idH, rownames(G)))
+    # partition indices
+    idxAonly <- which(!inG)  # in A only
+    idxG     <- which(inG)   # in G (genotyped)
+    
+    # pull the blocks we need
+    A12 <- A[idxAonly, idxG, drop=FALSE]
+    A22 <- A[idxG,     idxG, drop=FALSE]
+    # same order as A22
+    G22 <- G[idH[idxG], idH[idxG], drop=FALSE]
+    
+    # C++ core (does all inversions and multiplications)
+    blk <- H_martini_blocks(A12, A22, G22, tau = tau, omega = omega)
+    H11 <- blk$H11
+    H12 <- blk$H12
+    H21 <- blk$H21
+    H22corr <- blk$H22corr
+    
+    # start from A and add corrections in-place by blocks
+    H <- A
+    if (length(idxAonly)) {
+      H[idxAonly, idxAonly] <- H[idxAonly, idxAonly] + H11
+      H[idxAonly, idxG]     <- H[idxAonly, idxG]     + H12
+      H[idxG,     idxAonly] <- H[idxG,     idxAonly] + H21
     }
-    H22 = solve((tau*G22inv+(1-omega)*A22inv))
-    H11 = A12 %*% A22inv %*% (H22-A22) %*% A22inv %*% A21  
-    H12 = A12 %*% A22inv %*% (H22-A22)
-    H21 = (H22-A22) %*% A22inv%*%A21
-    H22 = (H22-A22)
-    H = A+cbind(rbind(H11,H21),rbind(H12,H22))
-    
-    
-    if (ASV) {
-      H = get_ASV(H)
+    if (length(idxG)) {
+      H[idxG, idxG] <- H[idxG, idxG] + H22corr
     }
     
-    Time = as.matrix(proc.time()-Time)
+    if (ASV) H <- get_ASV(H)
+    
+    # attributes
+    nm <- attr(Gorig, "nmarkers", exact = TRUE)
+    if (is.null(nm)) nm <- NA_integer_
+    attr(H, "method")   <- method
+    attr(H, "ploidy")   <- ploidy
+    attr(H, "nmarkers") <- nm
+    
+    Time <- as.matrix(proc.time()-Time)
     cat("\n","Completed! Time =", Time[3]/60," minutes \n")
     return(H)
   }
   
-  if(method=="Munoz"){
-    A <- Aorig[Anhat,Anhat]
-    if(is.null(markers))
-      stop("Aborting: For Munoz method you need to specify method object")
-    markersmatrix <- Gmatrix(markers,method="MarkersMatrix",ploidy=ploidy,missingValue=missingValue,maf=maf)
+  #-----------------------------------------------------------------------------
+  # Munoz
+  #-----------------------------------------------------------------------------
+  if (method == "Munoz") {
+    # A in A-order on Anhat; G in G-order on Gnhat.
+    A <- Aorig[Anhat, Anhat, drop = FALSE]
+    G <- Gorig[Gnhat, Gnhat, drop = FALSE]
     
-    #Computing the Variance of G by A classes (A rounded by roundVar)
-    classes <- as.numeric(levels(as.factor(A)))
-    classes <- unique(round(classes,roundVar))
-    n <- length(classes)
-    varA <- meanG <- matrix(NA,nrow=nrow(A),ncol=nrow(A))
-    varAclasses <- c()
-    for(i in 1:n){
-      varA[round(A,roundVar)==classes[i]] <- varAclasses[i] <- var(G[round(A,roundVar)==classes[i]])
-      meanG[round(A,roundVar)==classes[i]]  <- mean(G[round(A,roundVar)==classes[i]])
+    # MarkersMatrix computed on raw markers, then subset in G's order
+    if (is.null(markers))
+      stop("Aborting: For Munoz method you need to specify 'markers'.")
+    Mm <- as.matrix(data.matrix(markers))
+    if (!is.na(missingValue)) Mm[Mm == missingValue] <- NA
+    markersmatrix <- Gmatrix_MarkersMask(Mm)
+    # give it names (needed for character subsetting)
+    if (!is.null(rownames(Mm))) {
+      dimnames(markersmatrix) <- list(rownames(Mm), rownames(Mm))
+    }
+    if (!is.null(rownames(markersmatrix))) {
+      markersmatrix <- markersmatrix[Gnhat, Gnhat, drop = FALSE]
+    } else {
+      if (nrow(markersmatrix) != length(Gnhat))
+        stop("MarkersMatrix has no rownames and size doesn't match G.")
     }
     
-    varAclasses[varAclasses==0] = NA
-    varAclasses[is.infinite(varAclasses)] <- NA
-    tmp <- which(is.na(varAclasses))
-    for(i in 1:length(tmp)){
-      varAclasses[tmp[i]]<-zoo::na.approx(varAclasses)[tmp[i]]
-      varA[round(A,roundVar)==classes[tmp[i]]] <- varAclasses[tmp[i]]
+    # C++ calculation
+    agg <- munoz_var_mean_by_Aclass(G, A, round_digits = roundVar)
+    varA     <- agg$varA
+    classes  <- as.numeric(agg$classes)
+    v_by_cls <- as.numeric(agg$var_by_class)
+    v_by_cls[v_by_cls == 0]         <- NA_real_
+    v_by_cls[is.infinite(v_by_cls)] <- NA_real_
+    if (anyNA(v_by_cls)) {
+      filled <- approx(x = seq_along(v_by_cls), y = v_by_cls,
+                       xout = seq_along(v_by_cls), rule = 2)$y
+      # rebuild varA
+      class_id <- match(round(A, roundVar), classes)
+      varA <- matrix(filled[class_id], nrow(A), ncol(A),
+                     dimnames = dimnames(A))
     }
     
-    #Computaing beta and H
-    beta <- 1 - (c+(1/(markersmatrix[Gnhat,Gnhat]))/varA)
-    H <- beta*(G-A)+A ######
-    Aorig[Anhat,Anhat] = H
+    # beta and H
+    if (any(markersmatrix <= 0, na.rm = TRUE))
+      stop("MarkersMatrix contains zeros or negatives; cannot compute 1/count.")
+    invM <- 1 / markersmatrix
+    beta <- 1 - (c + invM / varA)
+    Hloc <- beta * (G - A) + A
     
-    if (ASV) {
-      Aorig = get_ASV(Aorig)
-    }
+    # write back into A's frame at Anhat (legacy)
+    H <- Aorig
+    H[Anhat, Anhat] <- Hloc
     
-    Time = as.matrix(proc.time()-Time)
+    if (ASV) H <- get_ASV(H)
+    
+    # attributes
+    nm <- tryCatch(ncol(markers), error = function(e) NA_integer_)
+    attr(H, "method")   <- method
+    attr(H, "ploidy")   <- ploidy
+    attr(H, "nmarkers") <- nm
+    
+    Time <- as.matrix(proc.time() - Time)
     cat("\n","Completed! Time =", Time[3]/60," minutes \n")
     cat("\n","Returning H = A matrix corrected by G... \n")
-   
-    return(Aorig)
+    return(H)
   }
 }

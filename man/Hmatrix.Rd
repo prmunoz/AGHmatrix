@@ -83,8 +83,10 @@ Hmat_Munoz <- Hmatrix(A=Amat, G=Gmat, markers = snp.sol,
 
 \emph{Martini, JW, et al. 2018 The effect of the H-1 scaling factors tau and omega on the structure of H in the single-step procedure. Genetics Selection Evolution 50(1), 16}
 
-\emph{Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomic information. Journal of Dairy Science 92, 4656–4663}
+\emph{Legarra, A, et al. 2009 A relationship matrix including full pedigree and genomic information. Journal of Dairy Science 92, 4656-4663}
 }
 \author{
 Rodrigo R Amadeu, \email{rramadeu@gmail.com}
+
+Thiago de Paula Oliveira \email{toliveira@abacusbio.com}
 }
