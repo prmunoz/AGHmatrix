@@ -83,7 +83,7 @@ formatmatrix <- function(
   
   Time = as.matrix(proc.time()-Time[3])
     
-  attr(columns, "rowNames") <- rownames(data) #necessary to ingest in asremlr as an R object
+  attr(columns, "rownames") <- rownames(data) #necessary to ingest in asremlr as an R object
   
   cat("Completed! Time =", Time[3]/60," minutes \n")
   if(return)
