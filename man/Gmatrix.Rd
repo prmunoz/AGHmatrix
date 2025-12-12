@@ -76,7 +76,7 @@ threshold. Default=0.}
 method="VanRaden". Default is a vector of 1's (equal weight).}
 
 \item{ploidy.correction}{It sets the denominator (correction) of the 
-rossprod. Used only when ploidy > 2 for "VanRaden" and ratio models.
+crossprod. Used only when ploidy > 2 for "VanRaden" and ratio models.
 If TRUE, it uses the sum of "Ploidy" times "Frequency" times "(1-Frequency)" 
 of each marker as method 1 in VanRaden 2008 and Endelman (2018).
 When ratio=TRUE, it uses "1/Ploidy" times "Frequency" times "(1-Frequency)". 
