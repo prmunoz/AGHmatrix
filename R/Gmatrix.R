@@ -7,9 +7,10 @@
 # 									
 # Written by Rodrigo Rampazo Amadeu 			
 # Contributors: Marcio Resende Jr, Leticia AC Lara, Ivone Oliveira, Luis Felipe V Ferrao
-# 									
+# Thiago Oliveira
+#
 # First version: Feb-2014 					
-# Last update: 05-Aug-2021 						
+# Last update: 21-Jul-2026 						
 # License: GPL-3	
 # 									
 #####################################################################
@@ -316,8 +317,8 @@ Gmatrix <- function(SNPmatrix = NULL,
   if (verify.posdef) {
     e.values <- eigen(Gmatrix, symmetric = TRUE)$values
     indicator <- sum(e.values <= 0)
-    if (indicator > 0) message("\t Matrix is NOT positive definite. It has ", 
-                               indicator, " eigenvalues <= 0")
+    if (indicator > 0) cat("\t Matrix is NOT positive definite. It has ",
+                           indicator, " eigenvalues <= 0 \n")
   }
   
   if (ASV) {
@@ -325,11 +326,8 @@ Gmatrix <- function(SNPmatrix = NULL,
   }
   if (!is.null(ids)) dimnames(Gmatrix) <- list(ids, ids)
   
-  message("Completed! Time = ", round(proc.time()[3] - Time[3], 2), " seconds")
-  
-  attr(Gmatrix, "method") <- method
-  attr(Gmatrix, "ploidy") <- ploidy
-  attr(Gmatrix, "nmarkers") <- ncol(SNPmatrix)
+  cat("Completed! Time =", round(proc.time()[3] - Time[3], 2), " seconds \n")
+
   return(Gmatrix)
 }
 

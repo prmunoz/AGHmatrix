@@ -8,7 +8,7 @@
 # Written by Rodrigo Rampazo Amadeu and Thiago de Paula Oliveira
 # 									
 # First version: Feb-2014 
-# Last update: 12-July-2024 						
+# Last update: 21-July-2026 						
 # License: GPL-3
 # 								
 #########################################################################
@@ -148,11 +148,11 @@ Amatrix <- function(data = NULL,
   orig.order <- as.character(data[[1]])
   
   if (verify) {
-    message("Verifying conflicting data...\n")
+    cat("Verifying conflicting data...\n")
     if (verifyped(data)) stop("Please double-check your data and try again.")
   }
-  
-  message("Organizing data with fast method...\n")
+
+  cat("Organizing data with fast method...\n")
   data.after.treat <- try(datatreat(data = data, unk = 0, ...), silent = TRUE)
   
   if (inherits(data.after.treat, "try-error") ||
@@ -175,30 +175,28 @@ Amatrix <- function(data = NULL,
     stop("Sire and dam columns must be numeric vectors of equal length.")
   
   if (n > 1000)
-    message("Processing large pedigree data. It may take a couple of minutes...\n")
-  
+    cat("Processing large pedigree data. It may take a couple of minutes...\n")
+
   start_time <- Sys.time()
-  
+
   if (ploidy == 2) {
-    message("Constructing matrix A using ploidy = 2\n")
+    cat("Constructing matrix A using ploidy = 2\n")
     A <- buildA_ploidy2_cpp(s, d, n)
     if (dominance) {
-      message("Constructing dominance relationship matrix\n")
+      cat("Constructing dominance relationship matrix\n")
       A <- buildDominanceMatrix_cpp(A, s, d)
     }
-    
+
   } else if (slater && ploidy == 4) {
-    message(
-      sprintf(
-        "Constructing matrix A using Slater et al. (2014), ploidy = 4, w = %.2f\n", 
-        w))
+    cat(sprintf(
+      "Constructing matrix A using Slater et al. (2014), ploidy = 4, w = %.2f\n",
+      w))
     A <- buildA_slater_cpp(s, d, w)
-    
+
   } else {
-    message(
-      sprintf(
-        "Constructing matrix A using Kerr et al. (2012), ploidy = %d, w = %.2f\n", 
-        ploidy, w))
+    cat(sprintf(
+      "Constructing matrix A using Kerr et al. (2012), ploidy = %d, w = %.2f\n",
+      ploidy, w))
     v <- ploidy / 2
     A <- buildA_kerr_cpp(s, d, w, v)
   }
@@ -207,8 +205,8 @@ Amatrix <- function(data = NULL,
   # 4. Post-processing
   #-------------------------------------------------------------------------
   if (anyNA(A))
-    message(paste("Warning: Matrix contains NA values. Use",
-                  "'verifyped()' to check data.\n"))
+    cat(paste("Warning: Matrix contains NA values. Use",
+              "'verifyped()' to check data.\n"))
   
   dimnames(A) <- list(data$ind_data, data$ind_data)
   
@@ -232,7 +230,7 @@ Amatrix <- function(data = NULL,
   }
   
   elapsed <- difftime(Sys.time(), start_time, units = "mins")
-  message("Completed! Time =", round(elapsed, 2), "minutes\n")
+  cat("Completed! Time =", round(elapsed, 2), "minutes\n")
   
   return(A)
 }
